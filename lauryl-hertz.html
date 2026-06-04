@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hertz × Salesforce — AI in the Flow of Work</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --hz:      #FFD100;
+    --hz-dim:  #B39200;
+    --hz-glow: #FFD10044;
+    --hz-dark: #1A1200;
+    --bg:      #060604;
+    --card:    #0D0C08;
+    --border:  #1E1C12;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Stage pills ── */
+  .stage-bar { display: flex; gap: 10px; margin-bottom: 14px; z-index: 10; }
+  .stage-pill {
+    padding: 6px 20px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; letter-spacing: .04em;
+    cursor: pointer; border: 2px solid transparent;
+    transition: all .35s; opacity: .38;
+  }
+  .stage-pill.active { opacity: 1; }
+  .s1        { background: #141414; border-color: #3a3a3a; color: #888; }
+  .s1.active { background: #1f1f1f; border-color: #777; color: #ddd; }
+  .s2        { background: #120f00; border-color: var(--hz-dim); color: var(--hz); }
+  .s2.active { background: var(--hz); border-color: var(--hz); color: #000; font-weight: 800; }
+  .s3        { background: #120f00; border-color: var(--hz); color: var(--hz); }
+  .s3.active {
+    background: linear-gradient(135deg, var(--hz), #FFA500);
+    border-color: var(--hz); color: #000; font-weight: 800;
+    box-shadow: 0 0 22px var(--hz-glow);
+  }
+
+  /* ── Console wrapper ── */
+  .console-wrapper { position: relative; width: 1110px; max-width: 96vw; }
+
+  .console {
+    width: 100%; background: #0D0C08;
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid #222;
+    box-shadow: 0 28px 90px #00000088;
+    transition: filter .55s ease, border-color .55s ease, box-shadow .55s ease;
+  }
+  .stage-1 .console { filter: grayscale(1) brightness(.82) contrast(1.05); border-color: #333; }
+  .stage-2 .console {
+    filter: none; border-color: #3a2f00;
+    box-shadow: 0 28px 90px #00000088, 0 0 0 1px #FFD10022;
+  }
+  .stage-3 .console {
+    filter: none; border-color: var(--hz);
+    box-shadow: 0 28px 90px #00000088, 0 0 50px #FFD10033, 0 0 0 2px #FFD10055;
+  }
+
+  /* ══ SALESFORCE + HERTZ CONSOLE CHROME ══ */
+
+  .sf-nav {
+    height: 50px; background: #050500;
+    display: flex; align-items: center; padding: 0 16px; gap: 10px;
+    border-bottom: 2px solid var(--hz);
+  }
+  .hz-logo {
+    font-size: 17px; font-weight: 900; font-style: italic; letter-spacing: -.01em;
+    background: var(--hz); color: #000; padding: 3px 11px 3px 9px; border-radius: 4px;
+  }
+  .hz-powered { font-size: 10px; color: #444; margin-left: -2px; white-space: nowrap; }
+  .nav-tabs   { display: flex; gap: 2px; margin-left: 10px; }
+  .nav-tab {
+    padding: 5px 14px; border-radius: 6px 6px 0 0; font-size: 12px;
+    color: #555; cursor: pointer; border: 1px solid transparent; border-bottom: none;
+  }
+  .nav-tab.active { background: #131108; color: var(--hz); border-color: #2a2600; }
+  .nav-icons { margin-left: auto; display: flex; gap: 10px; font-size: 17px; opacity: .4; }
+
+  .sf-body { display: flex; height: 522px; }
+
+  /* Left: queue */
+  .sidebar {
+    width: 222px; background: #080800; border-right: 1px solid #1a1800;
+    display: flex; flex-direction: column; font-size: 12px; overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar-head {
+    padding: 10px 12px 6px; color: var(--hz); font-weight: 700; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .07em; border-bottom: 1px solid #1a1800;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .omni-badge {
+    background: #166534; color: #86efac;
+    font-size: 10px; padding: 2px 7px; border-radius: 999px; font-weight: 700;
+  }
+  .case-item {
+    padding: 9px 12px; border-bottom: 1px solid #110f00;
+    cursor: pointer; transition: background .15s; position: relative;
+  }
+  .case-item:hover  { background: #110f00; }
+  .case-item.active { background: #1a1400; border-left: 3px solid var(--hz); padding-left: 9px; }
+  .c-num { color: var(--hz); font-weight: 700; font-size: 11px; }
+  .c-sub { color: #555; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+  .c-pri {
+    position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+    font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: .03em;
+  }
+  .hi  { background: #450a0a; color: #fca5a5; }
+  .med { background: #431407; color: #fdba74; }
+  .lo  { background: #14532d; color: #86efac; }
+
+  .omni-strip {
+    margin-top: auto; border-top: 1px solid #1a1800; padding: 8px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .omni-lbl { color: var(--hz); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .omni-row { display: flex; justify-content: space-between; color: #444; font-size: 11px; }
+  .omni-val { color: #bbb; font-weight: 600; }
+  .omni-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: #16a34a; margin-right: 5px; box-shadow: 0 0 6px #16a34a88;
+  }
+
+  /* Center: record */
+  .main { flex: 1; background: #0A0900; display: flex; flex-direction: column; overflow: hidden; }
+
+  .rec-header {
+    padding: 13px 20px 10px; background: #0D0B00;
+    border-bottom: 1px solid #1a1800;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .case-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg,#1a1400,#2f2500);
+    border: 1px solid #FFD10044;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .case-title { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.3; }
+  .case-meta  { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .c-meta     { font-size: 12px; color: #444; }
+  .c-meta span { color: var(--hz); font-weight: 600; }
+  .rec-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+  .btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
+  .btn-p { background: var(--hz); color: #000; }
+  .btn-s { background: #1a1400; color: var(--hz); border-color: #2a2000; }
+
+  .rec-tabs { display: flex; background: #0D0B00; border-bottom: 1px solid #1a1800; padding: 0 20px; }
+  .rec-tab {
+    padding: 8px 16px; font-size: 12px; color: #444; cursor: pointer;
+    border-bottom: 2px solid transparent; transition: all .2s;
+  }
+  .rec-tab.active { color: var(--hz); border-bottom-color: var(--hz); }
+
+  /* Fields — with locked/unlocked states */
+  .fields-grid {
+    padding: 14px 20px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 11px 18px; overflow-y: auto; flex: 1;
+  }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .f-lbl {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+    color: #3a3a3a; font-weight: 600; display: flex; align-items: center; gap: 4px;
+  }
+  .f-val { font-size: 13px; color: #ddd; font-weight: 500; }
+  .f-val.link { color: var(--hz); text-decoration: underline; cursor: pointer; }
+  .f-val.esc  { color: #f87171; }
+  .f-val.ok   { color: #4ade80; }
+  .f-val.gold { color: var(--hz); }
+
+  /* Locked field: masked in stage-1, revealed in stage-2+ */
+  .locked-val .masked   { display: block; color: #2e2e2e; font-family: monospace; letter-spacing: .1em; }
+  .locked-val .revealed { display: none;  color: #ddd; }
+  .stage-2 .locked-val .masked,
+  .stage-3 .locked-val .masked  { display: none; }
+  .stage-2 .locked-val .revealed,
+  .stage-3 .locked-val .revealed { display: block; }
+
+  /* Right: activity */
+  .right-panel {
+    width: 272px; background: #070600; border-left: 1px solid #1a1800;
+    display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+  }
+  .right-head {
+    padding: 12px 14px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .07em; color: var(--hz);
+    border-bottom: 1px solid #1a1800; background: #0D0B00;
+  }
+  .act-list { overflow-y: auto; flex: 1; }
+  .act-item { padding: 8px 14px; border-bottom: 1px solid #0f0e0044; display: flex; gap: 8px; }
+  .act-av {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .av-y { background: #2a2000; color: var(--hz); border: 1px solid #FFD10044; }
+  .av-r { background: #3f0808; color: #f87171; }
+  .av-g { background: #14532d; color: #4ade80; }
+  .av-d { background: #111; color: #444; }
+  .act-title { font-size: 12px; color: #ddd; font-weight: 600; }
+  .act-body  { font-size: 11px; color: #3a3a3a; margin-top: 2px; line-height: 1.4; }
+  .act-time  { font-size: 10px; color: #282828; margin-top: 2px; }
+
+  .compose-box { border-top: 1px solid #1a1800; padding: 10px 14px; background: #0D0B00; }
+  .compose-lbl { font-size: 10px; color: var(--hz); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .compose-inner {
+    background: #060500; border: 1px solid #1a1800; border-radius: 7px;
+    padding: 8px 10px; font-size: 12px; color: #252525; line-height: 1.4;
+  }
+
+  /* ══════════════════════
+     STAGE OVERLAY LAYERS
+  ══════════════════════ */
+
+  /* Stage 1 — FLS freeze overlay */
+  .fls-layer {
+    position: absolute; inset: 0; pointer-events: none;
+    opacity: 0; transition: opacity .5s; z-index: 5;
+  }
+  .stage-1 .fls-layer { opacity: 1; }
+  .fls-banner {
+    position: absolute; top: 58px; left: 50%; transform: translateX(-50%);
+    background: #111; border: 1px solid #444; border-radius: 8px;
+    padding: 9px 22px; font-size: 13px; color: #999;
+    white-space: nowrap; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 30px #000a;
+  }
+
+  /* Stage 2 — queue glow */
+  .queue-glow {
+    position: absolute; top: 52px; bottom: 0; left: 0; width: 222px;
+    pointer-events: none; opacity: 0; transition: opacity .55s; z-index: 4;
+    background: linear-gradient(90deg, #FFD10014 0%, transparent 100%);
+    border-right: 2px solid #FFD10033;
+  }
+  .stage-2 .queue-glow { opacity: 1; }
+
+  .flow-arrows {
+    position: absolute; top: 52px; left: 0; right: 0; bottom: 0;
+    pointer-events: none; opacity: 0; transition: opacity .55s; z-index: 4;
+  }
+  .stage-2 .flow-arrows { opacity: 1; }
+  .f-arrow {
+    position: absolute; color: var(--hz); font-size: 20px;
+    animation: parrow 1.7s ease-in-out infinite;
+  }
+  @keyframes parrow {
+    0%,100% { opacity: .2; transform: translateX(0); }
+    50%     { opacity: 1;  transform: translateX(5px); }
+  }
+
+  /* Stage 3 — neon star layer */
+  .star-layer {
+    position: absolute; inset: 0; pointer-events: none;
+    opacity: 0; transition: opacity .6s; z-index: 6;
+    overflow: hidden; border-radius: 12px;
+  }
+  .stage-3 .star-layer { opacity: 1; }
+  .star {
+    position: absolute;
+    animation: sfloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+  @keyframes sfloat {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); }
+    33%  { transform: translateY(-9px) rotate(14deg) scale(1.15); }
+    66%  { transform: translateY(4px) rotate(-9deg) scale(.94); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
+  }
+
+  /* Stage 3 — Agentforce badge */
+  .af-badge {
+    position: absolute; top: 62px; right: 18px;
+    background: linear-gradient(135deg, #1a1400, #2f2500);
+    border: 2px solid var(--hz); border-radius: 12px;
+    padding: 10px 18px; z-index: 7;
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transition: opacity .6s .15s;
+    box-shadow: 0 0 32px #FFD10055, 0 0 70px #FFA50022;
+  }
+  .stage-3 .af-badge { opacity: 1; }
+  .af-icon  { font-size: 26px; }
+  .af-title { font-size: 15px; font-weight: 800; color: var(--hz); text-shadow: 0 0 14px #FFD10088; }
+  .af-sub   { font-size: 10px; color: var(--hz-dim); font-weight: 500; margin-top: 1px; }
+
+  /* Stage 3 — AI draft response */
+  .ai-draft {
+    position: absolute; bottom: 18px; right: 18px; width: 262px;
+    background: #0c0a00ee; border: 1.5px solid var(--hz); border-radius: 10px;
+    padding: 12px 14px; z-index: 7;
+    opacity: 0; transition: opacity .6s .28s;
+    box-shadow: 0 0 26px #FFD10033; font-size: 12px;
+  }
+  .stage-3 .ai-draft { opacity: 1; }
+  .ai-lbl { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--hz); letter-spacing: .08em; margin-bottom: 7px; }
+  .ai-text { color: #bbb; line-height: 1.5; }
+  .ai-acts { display: flex; gap: 6px; margin-top: 9px; }
+  .ai-btn  { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
+  .ai-send { background: var(--hz); color: #000; box-shadow: 0 0 12px #FFD10066; }
+  .ai-edit { background: #1a1400; color: var(--hz); border-color: #FFD10033; }
+
+  /* Stage 3 — Fragmentation panel */
+  .frag-panel {
+    position: absolute; top: 128px; left: 234px; width: 224px;
+    background: #080600ee; border: 1.5px solid #dc2626; border-radius: 10px;
+    padding: 11px 14px; z-index: 7;
+    opacity: 0; transition: opacity .6s .38s;
+    box-shadow: 0 0 22px #dc262622; font-size: 11px;
+  }
+  .stage-3 .frag-panel { opacity: 1; }
+  .frag-lbl { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #dc2626; letter-spacing: .06em; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+  .frag-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 6px; }
+  .frag-tool  {
+    background: #180404; border: 1px solid #dc262633; border-radius: 5px;
+    padding: 5px 6px; font-size: 10px; color: #dc2626; text-align: center;
+    opacity: .75; line-height: 1.3;
+  }
+  .frag-chaos { font-size: 10px; color: #3a3a3a; text-align: center; line-height: 1.5; margin-bottom: 5px; }
+  .frag-arrow { text-align: center; color: var(--hz); font-size: 13px; font-weight: 700; margin: 3px 0; letter-spacing: .02em; }
+  .frag-fix {
+    background: #1a1400; border: 1px solid #FFD10055; border-radius: 6px;
+    padding: 7px 8px; font-size: 11px; color: var(--hz); font-weight: 600; text-align: center; line-height: 1.4;
+  }
+
+  /* Stage 3 — Databricks panel */
+  .db-panel {
+    position: absolute; top: 362px; left: 234px; width: 224px;
+    background: #080600ee; border: 1.5px solid #FF6B35; border-radius: 10px;
+    padding: 11px 14px; z-index: 7;
+    opacity: 0; transition: opacity .6s .48s;
+    box-shadow: 0 0 22px #FF6B3522; font-size: 11px;
+  }
+  .stage-3 .db-panel { opacity: 1; }
+  .db-lbl { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #FF6B35; letter-spacing: .06em; margin-bottom: 9px; display: flex; align-items: center; gap: 5px; }
+  .db-flow { display: flex; align-items: stretch; gap: 5px; margin-bottom: 8px; }
+  .db-box {
+    flex: 1; background: #120900; border: 1px solid #FF6B3533;
+    border-radius: 6px; padding: 6px 5px; color: #FF6B35;
+    font-size: 10px; font-weight: 700; text-align: center; line-height: 1.4;
+  }
+  .db-box.sf { color: var(--hz); background: #120f00; border-color: #FFD10033; }
+  .db-arr { color: #555; font-size: 14px; display: flex; align-items: center; }
+  .db-note { font-size: 10px; color: #3a3a3a; line-height: 1.5; border-top: 1px solid #1a1800; padding-top: 7px; }
+  .db-note b { color: var(--hz); font-weight: 600; }
+
+  /* ── Bottom nav ── */
+  .stage-caption { font-size: 15px; font-weight: 700; color: #fff; text-align: center; height: 24px; margin-bottom: 4px; }
+  .stage-sub     { font-size: 12px; color: #3a3a3a; text-align: center; height: 18px; margin-bottom: 10px; }
+  .nav-hint {
+    margin-top: 13px; font-size: 12px; color: #252525;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-arr {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #111; border: 1px solid #1e1e1e;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; transition: all .2s;
+  }
+  .nav-arr:hover { background: #1a1400; color: var(--hz); border-color: #FFD10033; }
+  .nav-arr.off   { opacity: .18; pointer-events: none; }
+
+</style>
+</head>
+<body>
+
+<!-- Pills -->
+<div class="stage-bar">
+  <div class="stage-pill s1 active" onclick="go(1)">① Governed Foundation</div>
+  <div class="stage-pill s2" onclick="go(2)">② AI in the Flow</div>
+  <div class="stage-pill s3" onclick="go(3)">③ One Platform ✦</div>
+</div>
+
+<div class="stage-caption" id="cap">Your data. Governed. Only authorized AI can touch it.</div>
+<div class="stage-sub"     id="sub">Salesforce already powers the screens Hertz employees use every day</div>
+
+<div class="console-wrapper stage-1" id="wrapper">
+
+  <!-- ══ CONSOLE ══ -->
+  <div class="console">
+
+    <!-- Nav -->
+    <div class="sf-nav">
+      <div class="hz-logo">Hertz</div>
+      <div class="hz-powered">powered by Salesforce</div>
+      <div class="nav-tabs">
+        <div class="nav-tab active">Cases</div>
+        <div class="nav-tab">Fleet</div>
+        <div class="nav-tab">Accounts</div>
+        <div class="nav-tab">Knowledge</div>
+      </div>
+      <div class="nav-icons">🔔 👤 ⚙️</div>
+    </div>
+
+    <div class="sf-body">
+
+      <!-- Queue -->
+      <div class="sidebar">
+        <div class="sidebar-head">
+          Omni Queue
+          <span class="omni-badge">● Live</span>
+        </div>
+
+        <div class="case-item active">
+          <div class="c-num">00841293</div>
+          <div class="c-sub">Damage dispute — Tesla Model Y</div>
+          <span class="c-pri hi">HIGH</span>
+        </div>
+        <div class="case-item">
+          <div class="c-num">00841267</div>
+          <div class="c-sub">EV charging failure — LAS</div>
+          <span class="c-pri med">MED</span>
+        </div>
+        <div class="case-item">
+          <div class="c-num">00841251</div>
+          <div class="c-sub">Fleet availability — ORD hub</div>
+          <span class="c-pri med">MED</span>
+        </div>
+        <div class="case-item">
+          <div class="c-num">00841239</div>
+          <div class="c-sub">Corp billing dispute — Deloitte</div>
+          <span class="c-pri hi">HIGH</span>
+        </div>
+        <div class="case-item">
+          <div class="c-num">00841214</div>
+          <div class="c-sub">Roadside assist — I-95</div>
+          <span class="c-pri lo">LOW</span>
+        </div>
+
+        <div class="omni-strip">
+          <div class="omni-lbl"><span class="omni-dot"></span>Live Queue</div>
+          <div class="omni-row"><span>Queue depth</span><span class="omni-val">21</span></div>
+          <div class="omni-row"><span>Avg handle</span><span class="omni-val">7m 14s</span></div>
+          <div class="omni-row"><span>SLA at-risk</span><span class="omni-val" style="color:#f87171">6</span></div>
+        </div>
+      </div>
+
+      <!-- Record -->
+      <div class="main">
+        <div class="rec-header">
+          <div class="case-icon">🚗</div>
+          <div>
+            <div class="case-title">Damage Dispute — 2024 Tesla Model Y · LAX Return</div>
+            <div class="case-meta">
+              <span class="c-meta">Case <span>#00841293</span></span>
+              <span class="c-meta">Account: <span>Meridian Logistics Corp</span></span>
+              <span class="c-meta">Status: <span class="esc">Escalated</span></span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="btn btn-s">View Photos</button>
+            <button class="btn btn-p">Resolve Case</button>
+          </div>
+        </div>
+
+        <div class="rec-tabs">
+          <div class="rec-tab active">Details</div>
+          <div class="rec-tab">Vehicle History</div>
+          <div class="rec-tab">Photos (4)</div>
+          <div class="rec-tab">Activity</div>
+        </div>
+
+        <div class="fields-grid">
+
+          <div class="field">
+            <div class="f-lbl">Renter</div>
+            <div class="f-val">James Chen</div>
+          </div>
+          <div class="field">
+            <div class="f-lbl">Membership Tier</div>
+            <div class="f-val gold">Platinum — #1 Club Gold</div>
+          </div>
+          <div class="field">
+            <div class="f-lbl">Incident</div>
+            <div class="f-val">Jun 3, 2026 · LAX Return</div>
+          </div>
+
+          <div class="field">
+            <div class="f-lbl">Driver License # 🔒</div>
+            <div class="f-val locked-val">
+              <span class="masked">●●●●●●●●●●</span>
+              <span class="revealed">D4921-83001-CA</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="f-lbl">Contract # 🔒</div>
+            <div class="f-val locked-val">
+              <span class="masked">●●●●●●●●●●</span>
+              <span class="revealed">HZ-2026-0481923</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="f-lbl">Insurance Policy 🔒</div>
+            <div class="f-val locked-val">
+              <span class="masked">●●●●●●●●●●</span>
+              <span class="revealed">AMEX Platinum CDW</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="f-lbl">Vehicle VIN 🔒</div>
+            <div class="f-val locked-val">
+              <span class="masked">●●●●●●●●●●</span>
+              <span class="revealed link">5YJYGDEE7MF1•••••</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="f-lbl">Damage Estimate 🔒</div>
+            <div class="f-val locked-val">
+              <span class="masked">●●●●●●●●●●</span>
+              <span class="revealed esc">$1,400 — Side mirror</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="f-lbl">Rental History</div>
+            <div class="f-val link">47 trips · 0 prior claims</div>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <div class="f-lbl">Customer Statement</div>
+            <div class="f-val" style="color:#555;line-height:1.55;font-size:12px">
+              Platinum member disputes $1,400 mirror damage charge. Claims pre-existing damage at LAX pickup — has timestamped photos. 47-trip relationship, zero prior claims. Corporate account: Meridian Logistics at $2.4M ARR.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right: activity -->
+      <div class="right-panel">
+        <div class="right-head">Activity &amp; Feed</div>
+        <div class="act-list">
+          <div class="act-item">
+            <div class="act-av av-r">!</div>
+            <div>
+              <div class="act-title">Case Escalated</div>
+              <div class="act-body">Platinum + corporate $2.4M ARR — auto-escalated to senior agent</div>
+              <div class="act-time">10:23 AM</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-av av-y">JC</div>
+            <div>
+              <div class="act-title">Email — Customer</div>
+              <div class="act-body">"This charge is wrong. I photographed that mirror before I took the keys."</div>
+              <div class="act-time">9:58 AM</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-av av-d">📷</div>
+            <div>
+              <div class="act-title">Photos Uploaded</div>
+              <div class="act-body">4 photos — customer timestamped, show mirror pre-departure LAX</div>
+              <div class="act-time">9:55 AM</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-av av-g">⚡</div>
+            <div>
+              <div class="act-title">Vehicle Log Pulled</div>
+              <div class="act-body">47 prior rentals, 0 claims. LAX check-out inspection: incomplete mirror notation found.</div>
+              <div class="act-time">Auto-fetched</div>
+            </div>
+          </div>
+        </div>
+        <div class="compose-box">
+          <div class="compose-lbl">💬 Compose Reply</div>
+          <div class="compose-inner">Click to write a response to James Chen...</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /console -->
+
+  <!-- ══ OVERLAYS ══ -->
+
+  <!-- Stage 1 -->
+  <div class="fls-layer">
+    <div class="fls-banner">
+      🔒 Field-Level Security active — 5 sensitive fields restricted by role &amp; data policy
+    </div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="queue-glow"></div>
+  <div class="flow-arrows">
+    <div class="f-arrow" style="top:168px;left:220px">→</div>
+    <div class="f-arrow" style="top:228px;left:220px;animation-delay:.5s">→</div>
+    <div class="f-arrow" style="top:288px;left:220px;animation-delay:1s">→</div>
+  </div>
+
+  <!-- Stage 3 stars -->
+  <div class="star-layer" id="stars"></div>
+
+  <!-- Stage 3 Agentforce badge -->
+  <div class="af-badge">
+    <div class="af-icon">✦</div>
+    <div>
+      <div class="af-title">Agentforce Active</div>
+      <div class="af-sub">5 autonomous actions completed</div>
+    </div>
+  </div>
+
+  <!-- Stage 3 AI draft -->
+  <div class="ai-draft">
+    <div class="ai-lbl">✦ AI Draft — Damage Resolution</div>
+    <div class="ai-text">
+      "Hi James — I've cross-referenced your photos with our LAX check-out inspection log. The mirror damage pre-dates your rental. The $1,400 charge is reversed, effective immediately. As a Platinum member with 47 trips, your account is also credited $150. We value your relationship with Hertz."
+    </div>
+    <div class="ai-acts">
+      <button class="ai-btn ai-send">✓ Send</button>
+      <button class="ai-btn ai-edit">Edit</button>
+    </div>
+  </div>
+
+  <!-- Stage 3 Fragmentation panel -->
+  <div class="frag-panel">
+    <div class="frag-lbl">⚠ Fragmentation Risk</div>
+    <div class="frag-tools">
+      <div class="frag-tool">AI Tool A<br><span style="font-size:9px;opacity:.6">No Hertz data</span></div>
+      <div class="frag-tool">AI Tool B<br><span style="font-size:9px;opacity:.6">No governance</span></div>
+      <div class="frag-tool">AI Tool C<br><span style="font-size:9px;opacity:.6">Separate UI</span></div>
+      <div class="frag-tool">AI Tool D<br><span style="font-size:9px;opacity:.6">Shadow AI risk</span></div>
+    </div>
+    <div class="frag-chaos">4 tools · 4 data copies · agents switch screens<br>4 governance gaps · 4 security reviews</div>
+    <div class="frag-arrow">↓ Salesforce unifies this</div>
+    <div class="frag-fix">✦ One screen · One platform<br>Einstein Trust Layer governs all of it</div>
+  </div>
+
+  <!-- Stage 3 Databricks panel -->
+  <div class="db-panel">
+    <div class="db-lbl">⚡ Databricks Connected</div>
+    <div class="db-flow">
+      <div class="db-box">Hertz<br>Data Lake<br><span style="font-size:9px;opacity:.7">Delta / Unity</span></div>
+      <div class="db-arr">→</div>
+      <div class="db-box">Data<br>Cloud<br><span style="font-size:9px;opacity:.7">Zero-copy</span></div>
+      <div class="db-arr">→</div>
+      <div class="db-box sf">Agent<br>force<br><span style="font-size:9px;opacity:.7">Grounded</span></div>
+    </div>
+    <div class="db-note">
+      <b>No data duplication.</b> Agentforce reads your<br>
+      Databricks models directly — damage prediction,<br>
+      fleet demand, customer LTV. All governed by<br>
+      <b>Einstein Trust Layer.</b>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-hint">
+  <div class="nav-arr off" id="prev" onclick="prev()">←</div>
+  <span id="nlbl">Stage 1 of 3</span>
+  <div class="nav-arr" id="next" onclick="nxt()">→</div>
+</div>
+
+<script>
+let s = 1;
+
+const CAPS = {
+  1: ["Your data. Governed. Only authorized AI can touch it.",
+      "Salesforce already powers the screens Hertz employees use every day"],
+  2: ["Your team. Their screen. AI meets Hertz employees where they already work.",
+      "Omni-Channel routing + Service Console — zero new tools, zero retraining"],
+  3: ["One platform. Your Databricks data. Zero fragmentation.",
+      "Agentforce + Data Cloud + Databricks — AI in the flow of work, not beside it ✦"]
+};
+
+const STARS = [
+  {t:'7%',  l:'9%',  d:'0s',    sz:'32px', c:'✦', col:'#FFD100'},
+  {t:'13%', l:'51%', d:'.45s',  sz:'22px', c:'★', col:'#FFA500'},
+  {t:'5%',  l:'75%', d:'.7s',   sz:'38px', c:'✦', col:'#FFD100'},
+  {t:'56%', l:'5%',  d:'.3s',   sz:'24px', c:'✸', col:'#FFB800'},
+  {t:'74%', l:'43%', d:'1s',    sz:'18px', c:'✦', col:'#ffffff'},
+  {t:'84%', l:'18%', d:'.6s',   sz:'30px', c:'★', col:'#FFD100'},
+  {t:'40%', l:'90%', d:'.2s',   sz:'26px', c:'✦', col:'#FFA500'},
+  {t:'91%', l:'76%', d:'.9s',   sz:'20px', c:'✸', col:'#FFD100'},
+  {t:'50%', l:'58%', d:'.5s',   sz:'16px', c:'✦', col:'#ffffff'},
+  {t:'21%', l:'33%', d:'1.25s', sz:'14px', c:'★', col:'#FFB800'},
+  {t:'95%', l:'50%', d:'.15s',  sz:'28px', c:'✦', col:'#FFD100'},
+];
+
+const layer = document.getElementById('stars');
+STARS.forEach(x => {
+  const el = document.createElement('div');
+  el.className = 'star';
+  el.textContent = x.c;
+  el.style.cssText = `top:${x.t};left:${x.l};font-size:${x.sz};color:${x.col};animation-delay:${x.d};text-shadow:0 0 14px ${x.col},0 0 28px ${x.col}88`;
+  layer.appendChild(el);
+});
+
+function go(n) {
+  s = n;
+  document.getElementById('wrapper').className = 'console-wrapper stage-' + n;
+  document.querySelectorAll('.stage-pill').forEach((p,i) => p.classList.toggle('active', i+1===n));
+  document.getElementById('cap').textContent  = CAPS[n][0];
+  document.getElementById('sub').textContent  = CAPS[n][1];
+  document.getElementById('nlbl').textContent = `Stage ${n} of 3`;
+  document.getElementById('prev').classList.toggle('off', n===1);
+  document.getElementById('next').classList.toggle('off', n===3);
+}
+function nxt()  { if (s<3) go(s+1); }
+function prev() { if (s>1) go(s-1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='3'&&s<3) nxt();
+  if (e.key==='ArrowLeft'||e.key==='1'&&s>1)  prev();
+  if (e.key==='1') go(1);
+  if (e.key==='2') go(2);
+  if (e.key==='3') go(3);
+});
+</script>
+</body>
+</html>
