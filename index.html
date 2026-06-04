@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Cloud — The Illumination</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0a0a0f;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Stage title bar ── */
+  .stage-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    z-index: 10;
+  }
+  .stage-pill {
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .3s;
+    opacity: .4;
+  }
+  .stage-pill.active { opacity: 1; }
+  .stage-pill.s1 { background: #2a2a2a; border-color: #555; color: #aaa; }
+  .stage-pill.s1.active { background: #3a3a3a; border-color: #999; color: #eee; }
+  .stage-pill.s2 { background: #0b3d91; border-color: #1a6fd6; color: #7bb8ff; }
+  .stage-pill.s2.active { background: #1a6fd6; border-color: #4da3ff; color: #fff; }
+  .stage-pill.s3 { background: #1a0033; border-color: #9333ea; color: #d97bff; }
+  .stage-pill.s3.active {
+    background: linear-gradient(135deg,#7c3aed,#db2777,#ea580c);
+    border-color: #f472b6; color: #fff;
+    box-shadow: 0 0 20px #a855f7aa;
+  }
+
+  /* ── Main console frame ── */
+  .console-wrapper {
+    position: relative;
+    width: 1100px;
+    max-width: 96vw;
+  }
+
+  .console {
+    width: 100%;
+    background: #1c1c1e;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #333;
+    box-shadow: 0 24px 80px #0008;
+    transition: filter .5s ease, border-color .5s ease, box-shadow .5s ease;
+  }
+
+  /* ── Stage 1 filter: greyscale + cold ── */
+  .stage-1 .console {
+    filter: grayscale(1) brightness(.85) contrast(1.05);
+    border-color: #444;
+  }
+  /* ── Stage 2: full vivid color ── */
+  .stage-2 .console {
+    filter: none;
+    border-color: #1a6fd6;
+    box-shadow: 0 24px 80px #0048ff33, 0 0 0 1px #1a6fd655;
+  }
+  /* ── Stage 3: color + neon glow ── */
+  .stage-3 .console {
+    filter: none;
+    border-color: #a855f7;
+    box-shadow:
+      0 24px 80px #7c3aed55,
+      0 0 0 2px #a855f766,
+      0 0 60px #db277744;
+  }
+
+  /* ══════════════════════════════════════
+     SALESFORCE CONSOLE MOCKUP
+  ══════════════════════════════════════ */
+
+  /* Top nav */
+  .sf-nav {
+    height: 48px;
+    background: #032d60;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    border-bottom: 1px solid #0b4a97;
+  }
+  .sf-logo { font-size: 22px; }
+  .sf-app-name { color: #fff; font-weight: 700; font-size: 14px; letter-spacing: .02em; }
+  .sf-nav-tabs { display: flex; gap: 4px; margin-left: 8px; }
+  .sf-nav-tab {
+    padding: 4px 14px;
+    border-radius: 6px 6px 0 0;
+    font-size: 12px;
+    color: #9ac0e8;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+  }
+  .sf-nav-tab.active { background: #0b3d91; color: #fff; border-color: #1a6fd655; }
+  .sf-nav-icons { margin-left: auto; display: flex; gap: 10px; font-size: 18px; opacity: .7; }
+
+  /* Main layout: sidebar + content */
+  .sf-body { display: flex; height: 520px; }
+
+  /* Left sidebar: case list */
+  .sf-sidebar {
+    width: 220px;
+    background: #16213e;
+    border-right: 1px solid #1e3a5f;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    overflow: hidden;
+  }
+  .sf-sidebar-head {
+    padding: 10px 12px 6px;
+    color: #7bb8ff;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    border-bottom: 1px solid #1e3a5f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .omni-badge {
+    background: #16a34a;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .sf-case-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1e3a5f22;
+    cursor: pointer;
+    transition: background .15s;
+    position: relative;
+  }
+  .sf-case-item:hover { background: #1a2f50; }
+  .sf-case-item.active { background: #0b3d91; }
+  .case-num { color: #7bb8ff; font-weight: 600; font-size: 11px; }
+  .case-sub { color: #94a3b8; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .case-pri {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700;
+  }
+  .pri-high { background: #7f1d1d; color: #fca5a5; }
+  .pri-med  { background: #78350f; color: #fcd34d; }
+  .pri-low  { background: #14532d; color: #86efac; }
+
+  /* Omni indicator strip */
+  .omni-strip {
+    margin-top: auto;
+    border-top: 1px solid #1e3a5f;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .omni-label { color: #7bb8ff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .omni-row { display: flex; justify-content: space-between; color: #94a3b8; font-size: 11px; }
+  .omni-val { color: #fff; font-weight: 600; }
+  .omni-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: #16a34a; margin-right: 5px;
+    box-shadow: 0 0 6px #16a34a;
+  }
+
+  /* Main content area */
+  .sf-main {
+    flex: 1;
+    background: #0f172a;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Record header */
+  .sf-record-header {
+    padding: 14px 20px 10px;
+    background: #131f35;
+    border-bottom: 1px solid #1e3a5f;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .case-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg,#0b3d91,#1a6fd6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .case-title { font-size: 16px; font-weight: 700; color: #fff; }
+  .case-meta { display: flex; gap: 12px; margin-top: 4px; }
+  .case-meta-item { font-size: 12px; color: #94a3b8; }
+  .case-meta-item span { color: #7bb8ff; font-weight: 600; }
+  .sf-actions { margin-left: auto; display: flex; gap: 8px; }
+  .sf-btn {
+    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent;
+  }
+  .sf-btn-primary { background: #1a6fd6; color: #fff; border-color: #2a7de6; }
+  .sf-btn-secondary { background: #1e3a5f; color: #7bb8ff; border-color: #2a4a70; }
+
+  /* Tab row inside record */
+  .sf-record-tabs {
+    display: flex; gap: 0;
+    background: #131f35;
+    border-bottom: 1px solid #1e3a5f;
+    padding: 0 20px;
+  }
+  .sf-record-tab {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #94a3b8;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+  }
+  .sf-record-tab.active { color: #4da3ff; border-bottom-color: #4da3ff; }
+
+  /* Fields grid */
+  .sf-fields {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .sf-field { display: flex; flex-direction: column; gap: 3px; }
+  .sf-field-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+    color: #64748b; font-weight: 600;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .lock-icon { font-size: 10px; opacity: .8; }
+  .sf-field-value { font-size: 13px; color: #e2e8f0; font-weight: 500; }
+  .sf-field-value.link { color: #4da3ff; text-decoration: underline; cursor: pointer; }
+  .sf-field-value.status-open { color: #fbbf24; }
+  .sf-field-value.status-closed { color: #4ade80; }
+  .sf-field-value.status-esc { color: #f87171; }
+
+  /* Activity feed (right panel) */
+  .sf-right {
+    width: 280px;
+    background: #0d1b2e;
+    border-left: 1px solid #1e3a5f;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sf-right-head {
+    padding: 12px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #7bb8ff;
+    border-bottom: 1px solid #1e3a5f;
+    background: #131f35;
+  }
+  .activity-list { overflow-y: auto; flex: 1; padding: 8px 0; }
+  .activity-item {
+    padding: 8px 14px;
+    border-bottom: 1px solid #1e3a5f22;
+    display: flex; gap: 8px;
+  }
+  .activity-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .av-blue { background: #1a6fd6; }
+  .av-green { background: #16a34a; }
+  .av-orange { background: #ea580c; }
+  .av-purple { background: #7c3aed; }
+  .activity-content {}
+  .activity-title { font-size: 12px; color: #e2e8f0; font-weight: 600; }
+  .activity-body { font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.4; }
+  .activity-time { font-size: 10px; color: #475569; margin-top: 3px; }
+
+  /* Agentforce compose box */
+  .agent-compose {
+    border-top: 1px solid #1e3a5f;
+    padding: 10px 14px;
+    background: #131f35;
+  }
+  .agent-compose-label {
+    font-size: 10px; color: #7bb8ff; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .agent-compose-box {
+    background: #0f172a; border: 1px solid #1e3a5f;
+    border-radius: 8px; padding: 8px 10px;
+    font-size: 12px; color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  /* ════════════════════════════════════
+     STAGE OVERLAY ELEMENTS
+  ════════════════════════════════════ */
+
+  /* FLS Lock overlay (stage 1 only) */
+  .fls-overlay {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0; transition: opacity .5s;
+    z-index: 5;
+  }
+  .stage-1 .fls-overlay { opacity: 1; }
+
+  .fls-banner {
+    position: absolute;
+    top: 54px; left: 50%; transform: translateX(-50%);
+    background: #1a1a1a;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: #aaa;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Omni queue glow (stage 2 only) */
+  .omni-glow {
+    position: absolute;
+    top: 48px; bottom: 0; left: 0; width: 220px;
+    pointer-events: none;
+    opacity: 0; transition: opacity .5s;
+    z-index: 4;
+    background: linear-gradient(90deg, #1a6fd622 0%, transparent 100%);
+    border-right: 2px solid #4da3ff55;
+  }
+  .stage-2 .omni-glow { opacity: 1; }
+
+  /* Omni flow arrows (stage 2) */
+  .flow-arrows {
+    position: absolute;
+    top: 48px; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    opacity: 0; transition: opacity .6s;
+    z-index: 4;
+  }
+  .stage-2 .flow-arrows { opacity: 1; }
+
+  .flow-arrow {
+    position: absolute;
+    color: #4da3ff;
+    font-size: 22px;
+    animation: pulse-arrow 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-arrow {
+    0%,100% { opacity: .3; transform: translateX(0); }
+    50% { opacity: 1; transform: translateX(4px); }
+  }
+
+  /* Agentforce neon stars layer (stage 3 only) */
+  .ai-stars-layer {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0; transition: opacity .6s;
+    z-index: 6;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  .stage-3 .ai-stars-layer { opacity: 1; }
+
+  /* Individual neon star bursts */
+  .ai-star {
+    position: absolute;
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px currentColor);
+    animation: star-float 3s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes star-float {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); }
+    33%  { transform: translateY(-8px) rotate(15deg) scale(1.15); }
+    66%  { transform: translateY(4px) rotate(-10deg) scale(.95); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
+  }
+
+  /* Agentforce overlay badge */
+  .agent-badge {
+    position: absolute;
+    top: 60px; right: 20px;
+    background: linear-gradient(135deg, #7c3aed, #db2777);
+    border: 2px solid #f472b6;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: .04em;
+    box-shadow: 0 0 30px #a855f799, 0 0 60px #db277744;
+    opacity: 0; transition: opacity .6s .2s;
+    display: flex; align-items: center; gap: 10px;
+    z-index: 7;
+    text-shadow: 0 0 12px #f9a8d4;
+  }
+  .stage-3 .agent-badge { opacity: 1; }
+
+  .agent-badge-icon { font-size: 24px; }
+  .agent-badge-text { display: flex; flex-direction: column; }
+  .agent-badge-title { font-size: 15px; }
+  .agent-badge-sub { font-size: 10px; color: #f9a8d4; font-weight: 500; margin-top: 1px; }
+
+  /* AI suggested reply panel (stage 3) */
+  .ai-suggest {
+    position: absolute;
+    bottom: 20px; right: 20px;
+    width: 260px;
+    background: linear-gradient(135deg, #1a0033ee, #0d001aee);
+    border: 1.5px solid #a855f7;
+    border-radius: 10px;
+    padding: 12px 14px;
+    opacity: 0; transition: opacity .6s .3s;
+    z-index: 7;
+    box-shadow: 0 0 24px #7c3aed55, 0 0 0 1px #a855f744;
+    font-size: 12px;
+  }
+  .stage-3 .ai-suggest { opacity: 1; }
+  .ai-suggest-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    color: #c084fc; letter-spacing: .08em; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .ai-suggest-text { color: #e9d5ff; line-height: 1.45; }
+  .ai-suggest-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .ai-btn {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
+    cursor: pointer; border: 1px solid transparent;
+  }
+  .ai-btn-accept { background: #7c3aed; color: #fff; border-color: #a855f7; box-shadow: 0 0 10px #7c3aed88; }
+  .ai-btn-edit   { background: #1a0033; color: #c084fc; border-color: #7c3aed55; }
+
+  /* Confidence bars (stage 3) */
+  .ai-confidence {
+    position: absolute;
+    top: 130px; left: 240px;
+    width: 200px;
+    background: #0d001aee;
+    border: 1.5px solid #7c3aed;
+    border-radius: 10px;
+    padding: 10px 14px;
+    opacity: 0; transition: opacity .6s .4s;
+    z-index: 7;
+    box-shadow: 0 0 20px #7c3aed44;
+  }
+  .stage-3 .ai-confidence { opacity: 1; }
+  .ai-conf-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    color: #c084fc; letter-spacing: .06em; margin-bottom: 8px;
+  }
+  .ai-conf-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 5px; }
+  .ai-conf-name { font-size: 11px; color: #e9d5ff; display: flex; justify-content: space-between; }
+  .ai-conf-bar-bg { height: 5px; background: #2d1050; border-radius: 3px; overflow: hidden; }
+  .ai-conf-bar {
+    height: 100%; border-radius: 3px;
+    box-shadow: 0 0 8px currentColor;
+    transition: width 1s ease;
+  }
+
+  /* ── Nav / instruction ── */
+  .nav-hint {
+    margin-top: 16px;
+    font-size: 12px;
+    color: #475569;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-arrow {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #1e293b; border: 1px solid #334155;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; transition: all .2s;
+  }
+  .nav-arrow:hover { background: #334155; color: #fff; }
+  .nav-arrow.disabled { opacity: .25; pointer-events: none; }
+
+  /* stage label caption */
+  .stage-caption {
+    font-size: 15px; font-weight: 700;
+    color: #fff; text-align: center;
+    height: 24px;
+    margin-bottom: 4px;
+  }
+  .stage-sub {
+    font-size: 12px; color: #64748b; text-align: center;
+    height: 18px; margin-bottom: 10px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Stage pills -->
+<div class="stage-bar">
+  <div class="stage-pill s1 active" onclick="goStage(1)">① Secure Foundation</div>
+  <div class="stage-pill s2" onclick="goStage(2)">② Live Workflow</div>
+  <div class="stage-pill s3" onclick="goStage(3)">③ Agentforce ✦</div>
+</div>
+
+<!-- Caption -->
+<div class="stage-caption" id="caption">Your data. Locked down. Visible only to those who need it.</div>
+<div class="stage-sub" id="subcap">Field-Level Security enforced across every record</div>
+
+<!-- Console wrapper + overlay layers -->
+<div class="console-wrapper stage-1" id="wrapper">
+
+  <!-- ── Main Console UI ── -->
+  <div class="console" id="console">
+
+    <!-- Salesforce top nav -->
+    <div class="sf-nav">
+      <div class="sf-logo">☁️</div>
+      <div class="sf-app-name">Service Console</div>
+      <div class="sf-nav-tabs">
+        <div class="sf-nav-tab active">Cases</div>
+        <div class="sf-nav-tab">Accounts</div>
+        <div class="sf-nav-tab">Knowledge</div>
+      </div>
+      <div class="sf-nav-icons">🔔 👤 ⚙️</div>
+    </div>
+
+    <!-- Body row: sidebar + main + right -->
+    <div class="sf-body">
+
+      <!-- Left: Case Queue -->
+      <div class="sf-sidebar">
+        <div class="sf-sidebar-head">
+          Omni-Channel Queue
+          <span class="omni-badge">● Live</span>
+        </div>
+
+        <div class="sf-case-item active">
+          <div class="case-num">00423816</div>
+          <div class="case-sub">Hydraulic seal failure — Unit 7</div>
+          <span class="case-pri pri-high">HIGH</span>
+        </div>
+        <div class="sf-case-item">
+          <div class="case-num">00423791</div>
+          <div class="case-sub">Preventive maint overdue</div>
+          <span class="case-pri pri-med">MED</span>
+        </div>
+        <div class="sf-case-item">
+          <div class="case-num">00423755</div>
+          <div class="case-sub">Parts order status inquiry</div>
+          <span class="case-pri pri-low">LOW</span>
+        </div>
+        <div class="sf-case-item">
+          <div class="case-num">00423742</div>
+          <div class="case-sub">Warranty claim — compressor</div>
+          <span class="case-pri pri-med">MED</span>
+        </div>
+        <div class="sf-case-item">
+          <div class="case-num">00423718</div>
+          <div class="case-sub">Site visit request - Denver</div>
+          <span class="case-pri pri-low">LOW</span>
+        </div>
+
+        <div class="omni-strip">
+          <div class="omni-label"><span class="omni-dot"></span>Agent Status</div>
+          <div class="omni-row"><span>Queue Depth</span><span class="omni-val">12</span></div>
+          <div class="omni-row"><span>Avg Wait</span><span class="omni-val">3m 42s</span></div>
+          <div class="omni-row"><span>SLA At-Risk</span><span class="omni-val" style="color:#fbbf24">3</span></div>
+        </div>
+      </div>
+
+      <!-- Center: Record Detail -->
+      <div class="sf-main">
+        <div class="sf-record-header">
+          <div class="case-icon">🔧</div>
+          <div>
+            <div class="case-title">Hydraulic seal failure — Excavator Unit 7</div>
+            <div class="case-meta">
+              <span class="case-meta-item">Case <span>#00423816</span></span>
+              <span class="case-meta-item">Account: <span>Meridian Construction</span></span>
+              <span class="case-meta-item">Status: <span class="status-esc">Escalated</span></span>
+            </div>
+          </div>
+          <div class="sf-actions">
+            <button class="sf-btn sf-btn-secondary">Log Call</button>
+            <button class="sf-btn sf-btn-primary">Dispatch Tech</button>
+          </div>
+        </div>
+
+        <div class="sf-record-tabs">
+          <div class="sf-record-tab active">Details</div>
+          <div class="sf-record-tab">Related</div>
+          <div class="sf-record-tab">Activity</div>
+          <div class="sf-record-tab">Knowledge</div>
+        </div>
+
+        <div class="sf-fields">
+
+          <div class="sf-field">
+            <div class="sf-field-label">Case Owner <span class="lock-icon">🔒</span></div>
+            <div class="sf-field-value">Sarah Kim</div>
+          </div>
+          <div class="sf-field">
+            <div class="sf-field-label">Priority <span class="lock-icon">🔒</span></div>
+            <div class="sf-field-value status-esc">High</div>
+          </div>
+          <div class="sf-field">
+            <div class="sf-field-label">Date Opened</div>
+            <div class="sf-field-value">Jun 3, 2026</div>
+          </div>
+
+          <div class="sf-field">
+            <div class="sf-field-label">Equipment ID <span class="lock-icon">🔒</span></div>
+            <div class="sf-field-value link">EXC-7-MRD-2024</div>
+          </div>
+          <div class="sf-field">
+            <div class="sf-field-label">Site Location</div>
+            <div class="sf-field-value">Denver, CO — Lot 4</div>
+          </div>
+          <div class="sf-field">
+            <div class="sf-field-label">Contract SLA <span class="lock-icon">🔒</span></div>
+            <div class="sf-field-value status-esc">4h Response — BREACH RISK</div>
+          </div>
+
+          <div class="sf-field">
+            <div class="sf-field-label">Assigned Tech <span class="lock-icon">🔒</span></div>
+            <div class="sf-field-value">Unassigned</div>
+          </div>
+          <div class="sf-field">
+            <div class="sf-field-label">Last Contact</div>
+            <div class="sf-field-value">Jun 3, 2026 — 9:14 AM</div>
+          </div>
+          <div class="sf-field">
+            <div class="sf-field-label">Parts Needed <span class="lock-icon">🔒</span></div>
+            <div class="sf-field-value">Pending assessment</div>
+          </div>
+
+          <div class="sf-field" style="grid-column: 1/-1;">
+            <div class="sf-field-label">Description</div>
+            <div class="sf-field-value" style="color:#94a3b8; line-height:1.5">
+              Unit 7 hydraulic arm is losing pressure. Customer reports visible fluid leak from main seal housing. Machine offline, blocking site work. Customer extremely urgent — contractor penalties apply.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right: Activity feed -->
+      <div class="sf-right">
+        <div class="sf-right-head">Activity & Feed</div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-avatar av-orange">SK</div>
+            <div class="activity-content">
+              <div class="activity-title">Case Escalated</div>
+              <div class="activity-body">Moved to High priority — SLA breach risk at 1:30 PM</div>
+              <div class="activity-time">9:41 AM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar av-blue">📧</div>
+            <div class="activity-content">
+              <div class="activity-title">Email Received</div>
+              <div class="activity-body">Customer: "We need someone on-site today or we're calling corporate"</div>
+              <div class="activity-time">9:14 AM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar av-green">SK</div>
+            <div class="activity-content">
+              <div class="activity-title">Case Created</div>
+              <div class="activity-body">Inbound call — hydraulic failure reported, equipment offline</div>
+              <div class="activity-time">9:02 AM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar av-orange">📋</div>
+            <div class="activity-content">
+              <div class="activity-title">Service History</div>
+              <div class="activity-body">Unit 7 last serviced Jan 2026 — seal replacement recommended but deferred</div>
+              <div class="activity-time">Pulled automatically</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="agent-compose">
+          <div class="agent-compose-label">💬 Compose Reply</div>
+          <div class="agent-compose-box">Click to write a response to Meridian Construction...</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /console -->
+
+  <!-- ══ Overlay: Stage 1 — FLS banner ══ -->
+  <div class="fls-overlay">
+    <div class="fls-banner">
+      🔒 Field-Level Security active — 6 fields restricted by role profile
+    </div>
+  </div>
+
+  <!-- ══ Overlay: Stage 2 — Omni glow + flow ══ -->
+  <div class="omni-glow"></div>
+  <div class="flow-arrows" id="flowArrows">
+    <div class="flow-arrow" style="top: 160px; left: 216px;">→</div>
+    <div class="flow-arrow" style="top: 220px; left: 216px; animation-delay:.4s">→</div>
+    <div class="flow-arrow" style="top: 280px; left: 216px; animation-delay:.8s">→</div>
+  </div>
+
+  <!-- ══ Overlay: Stage 3 — Neon AI stars ══ -->
+  <div class="ai-stars-layer" id="starsLayer">
+    <!-- Stars placed by JS -->
+  </div>
+
+  <div class="agent-badge">
+    <div class="agent-badge-icon">✦</div>
+    <div class="agent-badge-text">
+      <div class="agent-badge-title">Agentforce Active</div>
+      <div class="agent-badge-sub">3 autonomous actions completed</div>
+    </div>
+  </div>
+
+  <div class="ai-suggest">
+    <div class="ai-suggest-label">✦ AI Draft Response</div>
+    <div class="ai-suggest-text">
+      "Hi Meridian team — I've flagged Unit 7 as a priority dispatch. Tech Marcus P. is en route, ETA 11:45 AM. Tracking your SLA — you're protected. Seal kit pulled from Denver stock."
+    </div>
+    <div class="ai-suggest-actions">
+      <button class="ai-btn ai-btn-accept">✓ Send</button>
+      <button class="ai-btn ai-btn-edit">Edit</button>
+    </div>
+  </div>
+
+  <div class="ai-confidence">
+    <div class="ai-conf-label">✦ Agent Confidence</div>
+    <div class="ai-conf-row">
+      <div class="ai-conf-name"><span>Correct Tech Match</span><span style="color:#a855f7">97%</span></div>
+      <div class="ai-conf-bar-bg">
+        <div class="ai-conf-bar" style="width:97%; background: linear-gradient(90deg,#7c3aed,#a855f7); color:#a855f7"></div>
+      </div>
+    </div>
+    <div class="ai-conf-row">
+      <div class="ai-conf-name"><span>SLA Will Be Met</span><span style="color:#4ade80">91%</span></div>
+      <div class="ai-conf-bar-bg">
+        <div class="ai-conf-bar" style="width:91%; background: linear-gradient(90deg,#16a34a,#4ade80); color:#4ade80"></div>
+      </div>
+    </div>
+    <div class="ai-conf-row">
+      <div class="ai-conf-name"><span>Parts In Stock</span><span style="color:#38bdf8">88%</span></div>
+      <div class="ai-conf-bar-bg">
+        <div class="ai-conf-bar" style="width:88%; background: linear-gradient(90deg,#0284c7,#38bdf8); color:#38bdf8"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /console-wrapper -->
+
+<!-- Nav -->
+<div class="nav-hint">
+  <div class="nav-arrow disabled" id="prevBtn" onclick="prevStage()">←</div>
+  <span id="navLabel">Stage 1 of 3</span>
+  <div class="nav-arrow" id="nextBtn" onclick="nextStage()">→</div>
+</div>
+
+<script>
+  let stage = 1;
+
+  const captions = {
+    1: ["Your data. Locked down. Visible only to those who need it.", "Field-Level Security enforced across every record"],
+    2: ["Your team. In flow. Every case routed to the right person, right now.", "Omni-Channel queue + Service Console in action"],
+    3: ["Your AI. Already working. Before the agent even picks up the phone.", "Agentforce — drafting, dispatching, and predicting in real time ✦"]
+  };
+
+  const stars = [
+    { top: '8%',  left: '12%', delay: '0s',   size: '32px', char: '✦', color: '#a855f7' },
+    { top: '15%', left: '55%', delay: '.4s',  size: '28px', char: '★', color: '#f472b6' },
+    { top: '6%',  left: '78%', delay: '.7s',  size: '38px', char: '✦', color: '#38bdf8' },
+    { top: '55%', left: '8%',  delay: '.3s',  size: '26px', char: '✸', color: '#fb923c' },
+    { top: '70%', left: '45%', delay: '1s',   size: '22px', char: '✦', color: '#4ade80' },
+    { top: '80%', left: '22%', delay: '.6s',  size: '34px', char: '★', color: '#a855f7' },
+    { top: '35%', left: '92%', delay: '.2s',  size: '30px', char: '✦', color: '#f472b6' },
+    { top: '88%', left: '80%', delay: '.9s',  size: '24px', char: '✸', color: '#fbbf24' },
+    { top: '48%', left: '62%', delay: '.5s',  size: '20px', char: '✦', color: '#c084fc' },
+    { top: '22%', left: '38%', delay: '1.2s', size: '16px', char: '★', color: '#f9a8d4' },
+    { top: '92%', left: '55%', delay: '.15s', size: '28px', char: '✦', color: '#818cf8' },
+  ];
+
+  // Populate stars
+  const layer = document.getElementById('starsLayer');
+  stars.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'ai-star';
+    el.textContent = s.char;
+    el.style.top = s.top;
+    el.style.left = s.left;
+    el.style.fontSize = s.size;
+    el.style.color = s.color;
+    el.style.animationDelay = s.delay;
+    el.style.textShadow = `0 0 12px ${s.color}, 0 0 24px ${s.color}88`;
+    layer.appendChild(el);
+  });
+
+  function goStage(n) {
+    stage = n;
+    const wrapper = document.getElementById('wrapper');
+    wrapper.className = 'console-wrapper stage-' + n;
+
+    // Pills
+    document.querySelectorAll('.stage-pill').forEach((p,i) => {
+      p.classList.toggle('active', i+1 === n);
+    });
+
+    // Caption
+    document.getElementById('caption').textContent = captions[n][0];
+    document.getElementById('subcap').textContent  = captions[n][1];
+
+    // Nav
+    document.getElementById('navLabel').textContent = `Stage ${n} of 3`;
+    document.getElementById('prevBtn').classList.toggle('disabled', n === 1);
+    document.getElementById('nextBtn').classList.toggle('disabled', n === 3);
+  }
+
+  function nextStage() { if (stage < 3) goStage(stage + 1); }
+  function prevStage() { if (stage > 1) goStage(stage - 1); }
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextStage();
+    if (e.key === 'ArrowLeft')  prevStage();
+    if (e.key === '1') goStage(1);
+    if (e.key === '2') goStage(2);
+    if (e.key === '3') goStage(3);
+  });
+</script>
+</body>
+</html>
