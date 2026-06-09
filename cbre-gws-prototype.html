@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBRE GWS — Portfolio Intelligence</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cbre-dark: #003F2D;
+  --cbre-green: #006747;
+  --cbre-mint: #17E88F;
+  --bg: #F2F5F3;
+  --card: #FFFFFF;
+  --border: #E0E5E2;
+  --text: #1A1A1A;
+  --text-light: #6B7280;
+  --ok: #16A34A;
+  --warn: #D97706;
+  --risk: #DC2626;
+  --af: #5B21B6;
+  --af-light: #7C3AED;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+
+/* ===== NAV ===== */
+.nav { background: var(--cbre-dark); height: 46px; display: flex; align-items: center; padding: 0 16px; gap: 4px; position: sticky; top: 0; z-index: 100; }
+.nav-logo { color: white; font-size: 17px; font-weight: 800; letter-spacing: 1px; margin-right: 12px; }
+.nav-logo em { color: var(--cbre-mint); font-style: normal; font-weight: 400; font-size: 12px; margin-left: 6px; letter-spacing: 0; }
+.nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 8px; }
+.nav-item { color: rgba(255,255,255,0.65); font-size: 12px; cursor: pointer; padding: 5px 10px; border-radius: 4px; transition: all 0.15s; white-space: nowrap; }
+.nav-item:hover { color: white; background: rgba(255,255,255,0.1); }
+.nav-item.active { color: white; background: rgba(255,255,255,0.15); }
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.nav-badge { background: var(--risk); color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--cbre-mint); display: flex; align-items: center; justify-content: center; color: var(--cbre-dark); font-size: 11px; font-weight: 800; cursor: pointer; }
+
+/* ===== SCREENS ===== */
+.screen { display: none; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ===== PORTFOLIO SCREEN ===== */
+.port-layout { display: flex; height: calc(100vh - 46px); overflow: hidden; }
+.port-main { flex: 1; overflow-y: auto; padding: 18px; }
+.port-sidebar { width: 270px; background: white; border-left: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; }
+
+.page-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.page-sub { font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+.stat-value { font-size: 24px; font-weight: 800; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-light); margin-top: 3px; }
+.stat-delta { font-size: 11px; margin-top: 5px; font-weight: 500; }
+.up { color: var(--ok); }
+.down { color: var(--risk); }
+.neutral { color: var(--warn); }
+
+.card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
+.card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 13px; font-weight: 600; }
+.card-body { padding: 0; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.4px; background: #FAFAFA; border-bottom: 1px solid var(--border); }
+td { padding: 11px 14px; font-size: 12px; border-bottom: 1px solid #F0F0F0; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr.clickable:hover td { background: #F5FAF7; cursor: pointer; }
+
+.health-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; flex-shrink: 0; }
+.hd-green { background: var(--ok); }
+.hd-yellow { background: var(--warn); }
+.hd-red { background: var(--risk); }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; line-height: 1.4; }
+.b-green { background: #DCFCE7; color: #15803D; }
+.b-yellow { background: #FEF3C7; color: #92400E; }
+.b-red { background: #FEE2E2; color: #991B1B; }
+.b-blue { background: #DBEAFE; color: #1E40AF; }
+.b-purple { background: #EDE9FE; color: #5B21B6; }
+.b-gray { background: #F3F4F6; color: #4B5563; }
+.b-teal { background: #CCFBF1; color: #0F766E; }
+
+.btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: var(--cbre-green); color: white; }
+.btn-primary:hover { background: var(--cbre-dark); }
+.btn-outline { background: white; color: var(--cbre-green); border: 1px solid var(--cbre-green); }
+.btn-outline:hover { background: #F0FDF4; }
+.btn-af { background: var(--af-light); color: white; }
+.btn-af:hover { background: var(--af); }
+.btn-lg { padding: 10px 20px; font-size: 13px; border-radius: 6px; }
+
+/* ===== AGENTFORCE SIDEBAR ===== */
+.af-header { padding: 12px 14px; background: linear-gradient(135deg, var(--cbre-dark) 0%, #005A3C 100%); color: white; display: flex; align-items: center; justify-content: space-between; }
+.af-title { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.af-title .af-dot { width: 7px; height: 7px; background: var(--cbre-mint); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.af-powered { font-size: 9px; color: rgba(255,255,255,0.6); }
+.af-section { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.af-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-bottom: 8px; }
+.af-alert { padding: 8px 10px; border-radius: 5px; margin-bottom: 7px; font-size: 11px; line-height: 1.5; }
+.af-alert.risk { background: #FEF3C7; border-left: 3px solid var(--warn); }
+.af-alert.critical { background: #FEE2E2; border-left: 3px solid var(--risk); }
+.af-alert.good { background: #DCFCE7; border-left: 3px solid var(--ok); }
+.af-alert.info { background: #EDE9FE; border-left: 3px solid var(--af-light); }
+.af-alert-title { font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.af-alert-time { font-size: 10px; color: var(--text-light); margin-top: 3px; }
+.af-cta { margin: 6px 0 2px; }
+
+/* ===== CLIENT 360 ===== */
+.c360-layout { display: flex; height: calc(100vh - 46px); overflow: hidden; }
+.c360-left { width: 220px; background: white; border-right: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; }
+.c360-main { flex: 1; overflow-y: auto; background: var(--bg); }
+.c360-right { width: 260px; background: white; border-left: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; }
+
+.client-header { padding: 14px; background: var(--cbre-dark); color: white; }
+.client-name { font-size: 15px; font-weight: 800; }
+.client-location { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+.client-since { font-size: 10px; color: var(--cbre-mint); margin-top: 4px; font-weight: 600; }
+
+.score-section { padding: 14px 12px; border-bottom: 1px solid var(--border); text-align: center; }
+.score-ring { position: relative; width: 84px; height: 84px; margin: 0 auto 6px; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-number { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 24px; font-weight: 800; color: var(--cbre-green); }
+.score-sublabel { font-size: 10px; color: var(--text-light); }
+.score-badges { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+
+.kpi-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #F5F5F5; }
+.kpi-label { font-size: 11px; color: var(--text-light); }
+.kpi-value { font-size: 12px; font-weight: 700; }
+.kpi-value.green { color: var(--ok); }
+.kpi-value.warn { color: var(--warn); }
+.kpi-value.red { color: var(--risk); }
+
+.sidebar-section-header { padding: 8px 12px; background: #F9FAF9; border-bottom: 1px solid var(--border); border-top: 1px solid var(--border); }
+.sidebar-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); }
+
+.c360-breadcrumb { padding: 10px 16px; font-size: 11px; color: var(--text-light); display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--border); background: white; }
+.breadcrumb-link { color: var(--cbre-green); cursor: pointer; font-weight: 500; }
+.breadcrumb-link:hover { text-decoration: underline; }
+.c360-header-bar { padding: 14px 16px 0; background: white; border-bottom: 1px solid var(--border); }
+.c360-account-name { font-size: 18px; font-weight: 800; }
+.c360-account-type { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+.c360-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.c360-header-actions { display: flex; gap: 8px; align-items: center; }
+.powered-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; background: #EDE9FE; color: var(--af); border-radius: 20px; font-size: 10px; font-weight: 700; border: 1px solid #C4B5FD; cursor: pointer; }
+.powered-badge .af-dot { width: 6px; height: 6px; background: var(--af-light); border-radius: 50%; animation: pulse 2s infinite; }
+
+/* TABS */
+.tabs { display: flex; padding: 0 16px; gap: 0; }
+.tab { padding: 9px 14px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--text-light); border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--cbre-green); border-bottom-color: var(--cbre-green); font-weight: 700; }
+
+.tab-content { display: none; padding: 16px; }
+.tab-content.active { display: block; }
+
+/* AI BRIEFING */
+.ai-brief-box { background: linear-gradient(135deg, #F0FDF7 0%, #ECFDF5 100%); border: 1px solid #6EE7B7; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.ai-brief-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.ai-brief-label { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--cbre-dark); }
+.ai-star { font-size: 16px; }
+.ai-refresh-info { font-size: 10px; color: var(--text-light); text-align: right; line-height: 1.5; }
+.ai-narrative { font-size: 12px; line-height: 1.75; color: #1C1C1C; }
+.ai-narrative strong { color: var(--cbre-dark); font-weight: 700; }
+.narrative-block { margin-top: 10px; padding: 10px 12px; background: white; border-radius: 6px; border: 1px solid #D1FAE5; }
+.narrative-block-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+.narrative-block-title.warn-title { color: var(--warn); }
+.narrative-block-title.risk-title { color: var(--risk); }
+.narrative-block-title.ok-title { color: var(--ok); }
+.narrative-block-text { font-size: 11px; line-height: 1.65; color: #374151; }
+
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.metric-tile { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.metric-value { font-size: 22px; font-weight: 800; }
+.metric-label { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+.metric-sub { font-size: 11px; margin-top: 4px; font-weight: 600; }
+
+/* PROGRESS */
+.prog-bar { height: 6px; background: #E5E7EB; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.prog-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.pf-green { background: var(--ok); }
+.pf-yellow { background: var(--warn); }
+.pf-red { background: var(--risk); }
+.pf-cbre { background: var(--cbre-green); }
+.pf-mint { background: var(--cbre-mint); }
+
+/* SERVICE LINE BARS */
+.service-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.service-bar-label { width: 90px; font-size: 11px; color: var(--text-light); flex-shrink: 0; }
+.service-bar-track { flex: 1; height: 8px; background: #E5E7EB; border-radius: 4px; overflow: hidden; }
+.service-bar-fill { height: 100%; border-radius: 4px; }
+.service-bar-value { width: 45px; font-size: 11px; font-weight: 700; text-align: right; flex-shrink: 0; }
+
+/* PROJECT CARDS */
+.project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.proj-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.proj-card:hover { border-color: var(--cbre-green); }
+.proj-name { font-size: 13px; font-weight: 700; }
+.proj-meta { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+.proj-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+.proj-stat { }
+.proj-stat-label { font-size: 10px; color: var(--text-light); }
+.proj-stat-value { font-size: 13px; font-weight: 700; margin-top: 1px; }
+.proj-stat-value.green { color: var(--ok); }
+.proj-stat-value.warn { color: var(--warn); }
+.proj-risk { margin-top: 10px; padding: 6px 9px; background: #FEF3C7; border-radius: 4px; font-size: 11px; color: #92400E; }
+.proj-complete { margin-top: 10px; }
+.proj-complete-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+
+/* LEASE TABLE */
+.lease-flag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+
+/* SITES GRID */
+.sites-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.site-card { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 11px 12px; }
+.site-name { font-size: 12px; font-weight: 600; }
+.site-meta { font-size: 10px; color: var(--text-light); margin-top: 2px; }
+.site-kpis { display: flex; gap: 12px; margin-top: 8px; }
+.site-kpi { }
+.site-kpi-val { font-size: 13px; font-weight: 700; }
+.site-kpi-label { font-size: 10px; color: var(--text-light); }
+
+/* QBR GENERATOR */
+.qbr-phase { display: none; }
+.qbr-phase.active { display: block; }
+.sources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.source-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px 12px; text-align: center; transition: all 0.3s; }
+.source-card.ready { border-color: var(--ok); background: #F0FDF4; }
+.source-card.loading { border-color: var(--af-light); background: #F5F3FF; animation: cardpulse 1.5s infinite; }
+.source-icon { font-size: 24px; margin-bottom: 6px; }
+.source-name { font-size: 12px; font-weight: 700; }
+.source-detail { font-size: 10px; color: var(--text-light); margin-top: 2px; }
+.source-check { font-size: 14px; margin-top: 6px; }
+@keyframes cardpulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+
+.gen-cta { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 24px; text-align: center; }
+.gen-cta-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.gen-cta-sub { font-size: 12px; color: var(--text-light); margin-bottom: 18px; line-height: 1.6; }
+
+.gen-loading { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 40px; text-align: center; }
+.spinner { width: 44px; height: 44px; border: 3px solid #E5E7EB; border-top-color: var(--cbre-green); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-loading-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.gen-steps { text-align: left; max-width: 340px; margin: 16px auto 0; }
+.gen-step { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 12px; }
+.gen-step-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.step-done { background: var(--ok); color: white; }
+.step-active { background: var(--af-light); color: white; animation: pulse 1.5s infinite; }
+.step-pending { background: #E5E7EB; color: var(--text-light); }
+
+/* QBR OUTPUT DOCUMENT */
+.qbr-output { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.qbr-doc-header { background: var(--cbre-dark); padding: 22px 26px; color: white; }
+.qbr-doc-logo { font-size: 18px; font-weight: 800; letter-spacing: 1px; margin-bottom: 8px; }
+.qbr-doc-logo em { color: var(--cbre-mint); font-style: normal; font-weight: 400; font-size: 12px; }
+.qbr-doc-title { font-size: 20px; font-weight: 700; }
+.qbr-doc-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+.qbr-doc-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.15); }
+.qbr-kpi { }
+.qbr-kpi-value { font-size: 22px; font-weight: 800; color: var(--cbre-mint); }
+.qbr-kpi-label { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.qbr-body { padding: 22px 26px; }
+.qbr-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--cbre-green); border-bottom: 2px solid var(--border); padding-bottom: 6px; margin-bottom: 12px; }
+.qbr-narrative { font-size: 12px; line-height: 1.85; color: #374151; }
+.qbr-callout { padding: 10px 13px; border-radius: 0 5px 5px 0; margin: 10px 0; font-size: 12px; line-height: 1.6; }
+.qbr-callout.warn { background: #FFFBEB; border-left: 3px solid var(--warn); }
+.qbr-callout.success { background: #F0FDF4; border-left: 3px solid var(--ok); }
+.qbr-callout.risk { background: #FEF2F2; border-left: 3px solid var(--risk); }
+.qbr-callout strong { font-weight: 700; }
+.qbr-actions-bar { display: flex; gap: 10px; padding: 16px 26px; background: #F9FAF9; border-top: 1px solid var(--border); }
+.qbr-ai-sig { font-size: 10px; color: var(--text-light); display: flex; align-items: center; gap: 5px; margin-left: auto; }
+.qbr-section { margin-bottom: 22px; }
+
+.af-mini-card { background: #F5F3FF; border: 1px solid #DDD6FE; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+.af-mini-title { font-size: 11px; font-weight: 700; color: var(--af); margin-bottom: 3px; }
+.af-mini-text { font-size: 11px; color: #374151; line-height: 1.5; }
+.af-mini-cta { margin-top: 7px; display: flex; gap: 6px; }
+.btn-xs { padding: 4px 9px; font-size: 10px; font-weight: 600; border-radius: 4px; cursor: pointer; border: none; }
+.btn-xs-green { background: var(--cbre-green); color: white; }
+.btn-xs-outline { background: white; color: var(--cbre-green); border: 1px solid var(--cbre-green); }
+
+/* Divider */
+hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+/* Contact cards */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.contact-card { background: white; border: 1px solid var(--border); border-radius: 7px; padding: 12px; }
+.contact-card:hover { border-color: var(--cbre-green); }
+.contact-name { font-size: 13px; font-weight: 700; }
+.contact-title { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+.contact-strength { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.strength-bar { flex: 1; height: 5px; background: #E5E7EB; border-radius: 3px; overflow: hidden; }
+.strength-fill { height: 100%; background: var(--cbre-green); border-radius: 3px; }
+.contact-tag { font-size: 10px; color: var(--text-light); }
+.contact-insight { margin-top: 8px; font-size: 11px; color: #374151; background: #F9FAF9; padding: 6px 8px; border-radius: 4px; line-height: 1.5; }
+
+/* ESG SECTION */
+.esg-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+.esg-card { background: white; border: 1px solid var(--border); border-radius: 7px; padding: 12px 14px; }
+.esg-val { font-size: 22px; font-weight: 800; color: var(--cbre-green); }
+.esg-label { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+.esg-target { font-size: 11px; margin-top: 4px; }
+
+/* Toggle for QBR showing/hiding contacts section */
+.toggle-section { }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">CBRE <em>GWS Portfolio Intelligence</em></div>
+  <div class="nav-divider"></div>
+  <span class="nav-item" onclick="showScreen('portfolio')">My Portfolio</span>
+  <span class="nav-item active" id="nav-client360" onclick="showScreen('client360')">Client 360</span>
+  <span class="nav-item">Pursuits</span>
+  <span class="nav-item">Transactions</span>
+  <span class="nav-item">Reports</span>
+  <div class="nav-right">
+    <span class="nav-badge">3 Alerts</span>
+    <div class="avatar">RS</div>
+  </div>
+</nav>
+
+
+<!-- ======================================================== -->
+<!-- SCREEN 1: PORTFOLIO MANAGER                               -->
+<!-- ======================================================== -->
+<div class="screen" id="portfolio-screen">
+  <div class="port-layout">
+    <div class="port-main">
+      <div class="page-title">GWS Enterprise Portfolio</div>
+      <div class="page-sub">Last refreshed: Today 9:41 AM · Powered by Salesforce Data Cloud</div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">$428M</div>
+          <div class="stat-label">Portfolio Revenue (ARR)</div>
+          <div class="stat-delta up">↑ 11% vs last year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">47</div>
+          <div class="stat-label">Enterprise Accounts</div>
+          <div class="stat-delta up">+3 new this year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">83</div>
+          <div class="stat-label">Avg Client Health Score</div>
+          <div class="stat-delta up">↑ 4pts vs Q1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">$2.1B</div>
+          <div class="stat-label">Client Portfolio Under Mgmt (SF)</div>
+          <div class="stat-delta neutral">Stable QoQ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Enterprise Account Portfolio</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="badge b-purple" style="padding:4px 10px;">Agentforce Active</span>
+            <button class="btn btn-outline">Export</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Account</th>
+                <th>Industry</th>
+                <th>Annual Revenue</th>
+                <th>Sites</th>
+                <th>Health</th>
+                <th>Last QBR</th>
+                <th>Next QBR</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="clickable" onclick="showScreen('client360')">
+                <td><strong style="color:var(--cbre-green);cursor:pointer;">Vertex Technologies</strong></td>
+                <td>Technology</td>
+                <td>$58.4M</td>
+                <td>47</td>
+                <td><span class="health-dot hd-green"></span><strong>84</strong>/100</td>
+                <td>Mar 12, 2026</td>
+                <td><strong>Jun 18, 2026</strong></td>
+                <td><button class="btn btn-primary" style="padding:4px 10px;font-size:10px;">Generate QBR Brief</button></td>
+              </tr>
+              <tr class="clickable">
+                <td><strong style="color:var(--cbre-green);cursor:pointer;">Meridian Financial</strong></td>
+                <td>Financial Services</td>
+                <td>$44.1M</td>
+                <td>62</td>
+                <td><span class="health-dot hd-yellow"></span><strong>71</strong>/100</td>
+                <td>Feb 28, 2026</td>
+                <td>Jun 25, 2026</td>
+                <td><button class="btn btn-primary" style="padding:4px 10px;font-size:10px;">Generate QBR Brief</button></td>
+              </tr>
+              <tr class="clickable">
+                <td><strong style="color:var(--cbre-green);cursor:pointer;">NovaCare Health</strong></td>
+                <td>Healthcare</td>
+                <td>$38.7M</td>
+                <td>34</td>
+                <td><span class="health-dot hd-green"></span><strong>91</strong>/100</td>
+                <td>Apr 5, 2026</td>
+                <td>Jul 10, 2026</td>
+                <td><button class="btn btn-primary" style="padding:4px 10px;font-size:10px;">Generate QBR Brief</button></td>
+              </tr>
+              <tr class="clickable">
+                <td><strong style="color:var(--cbre-green);cursor:pointer;">Apex Global Logistics</strong></td>
+                <td>Supply Chain</td>
+                <td>$31.2M</td>
+                <td>88</td>
+                <td><span class="health-dot hd-red"></span><strong>58</strong>/100</td>
+                <td>Jan 20, 2026</td>
+                <td>Jun 12, 2026 ⚠</td>
+                <td><button class="btn btn-primary" style="padding:4px 10px;font-size:10px;background:var(--risk)">Urgent: Generate Brief</button></td>
+              </tr>
+              <tr class="clickable">
+                <td><strong style="color:var(--cbre-green);cursor:pointer;">Celestia Energy</strong></td>
+                <td>Energy</td>
+                <td>$27.8M</td>
+                <td>21</td>
+                <td><span class="health-dot hd-green"></span><strong>88</strong>/100</td>
+                <td>Apr 15, 2026</td>
+                <td>Jul 22, 2026</td>
+                <td><button class="btn btn-primary" style="padding:4px 10px;font-size:10px;">Generate QBR Brief</button></td>
+              </tr>
+              <tr class="clickable">
+                <td><strong style="color:var(--cbre-green);cursor:pointer;">Horizon Pharma</strong></td>
+                <td>Life Sciences</td>
+                <td>$22.4M</td>
+                <td>18</td>
+                <td><span class="health-dot hd-yellow"></span><strong>76</strong>/100</td>
+                <td>Mar 30, 2026</td>
+                <td>Jun 30, 2026</td>
+                <td><button class="btn btn-primary" style="padding:4px 10px;font-size:10px;">Generate QBR Brief</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Sidebar -->
+    <div class="port-sidebar">
+      <div class="af-header">
+        <div>
+          <div class="af-title"><div class="af-dot"></div> Agentforce Portfolio Monitor</div>
+          <div class="af-powered">Live · Updated 9:41 AM</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Urgent Actions</div>
+        <div class="af-alert critical">
+          <div class="af-alert-title">Apex Global — QBR Overdue</div>
+          <div>No QBR held in 141 days. Contract renewal in 90 days. Health score dropped 12pts since last engagement.</div>
+          <div class="af-alert-time">At-risk: $31.2M ARR</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Generate Brief Now</button></div>
+        </div>
+        <div class="af-alert risk">
+          <div class="af-alert-title">Meridian — Lease Cluster Risk</div>
+          <div>4 leases totaling 410K sqft expire in Q3 2026. No renewal strategy on file.</div>
+          <div class="af-alert-time">Decision deadline: Jul 1, 2026</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Expansion Signals</div>
+        <div class="af-alert good">
+          <div class="af-alert-title">Vertex — New HQ Announcement</div>
+          <div>Vertex Technologies announced a 400K sqft expansion in Austin. Strong opportunity to expand PM scope.</div>
+          <div class="af-alert-time">Detected from earnings call · 2 days ago</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Create Opportunity</button></div>
+        </div>
+        <div class="af-alert good">
+          <div class="af-alert-title">NovaCare — ESG Initiative Funded</div>
+          <div>NovaCare board approved $8M sustainability fund. CBRE ESG services not yet in scope.</div>
+          <div class="af-alert-time">Source: Earnings release · Today</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Create Opportunity</button></div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Upcoming QBRs (Next 30 Days)</div>
+        <div style="font-size:12px;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F3F3F3;">
+            <span style="color:var(--cbre-green);font-weight:600;cursor:pointer;" onclick="showScreen('client360')">Vertex Technologies</span>
+            <span style="color:var(--text-light);">Jun 18</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F3F3F3;">
+            <span style="font-weight:500;">Apex Global Logistics</span>
+            <span style="color:var(--risk);font-weight:600;">Jun 12 ⚠</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F3F3F3;">
+            <span style="font-weight:500;">Meridian Financial</span>
+            <span style="color:var(--text-light);">Jun 25</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="font-weight:500;">Horizon Pharma</span>
+            <span style="color:var(--text-light);">Jun 30</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ======================================================== -->
+<!-- SCREEN 2: CLIENT 360 — VERTEX TECHNOLOGIES               -->
+<!-- ======================================================== -->
+<div class="screen active" id="client360-screen">
+  <div class="c360-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="c360-left">
+      <div class="client-header">
+        <div class="client-name">Vertex Technologies</div>
+        <div class="client-location">San Jose, CA · Global</div>
+        <div class="client-since">✦ Client since 2019 · Enterprise GWS</div>
+      </div>
+
+      <!-- Health Score Ring -->
+      <div class="score-section">
+        <div class="score-ring">
+          <svg width="84" height="84" viewBox="0 0 84 84">
+            <circle cx="42" cy="42" r="36" fill="none" stroke="#E5E7EB" stroke-width="7"/>
+            <circle cx="42" cy="42" r="36" fill="none" stroke="#006747" stroke-width="7"
+              stroke-dasharray="226" stroke-dashoffset="36" stroke-linecap="round"/>
+          </svg>
+          <div class="score-number">84</div>
+        </div>
+        <div class="score-sublabel">Client Health Score</div>
+        <div class="score-badges">
+          <span class="badge b-green">High Retention</span>
+          <span class="badge b-blue">Champion Active</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section-header">
+        <div class="sidebar-section-title">Portfolio KPIs</div>
+      </div>
+      <div class="kpi-row"><div class="kpi-label">Annual CBRE Revenue</div><div class="kpi-value green">$58.4M</div></div>
+      <div class="kpi-row"><div class="kpi-label">Sites Under Mgmt</div><div class="kpi-value">47 sites</div></div>
+      <div class="kpi-row"><div class="kpi-label">Total SF</div><div class="kpi-value">3.2M sqft</div></div>
+      <div class="kpi-row"><div class="kpi-label">Countries</div><div class="kpi-value">12</div></div>
+      <div class="kpi-row"><div class="kpi-label">Active Projects</div><div class="kpi-value">23</div></div>
+      <div class="kpi-row"><div class="kpi-label">Open Leases</div><div class="kpi-value">67</div></div>
+      <div class="kpi-row"><div class="kpi-label">FM SLA Compliance</div><div class="kpi-value green">94%</div></div>
+      <div class="kpi-row"><div class="kpi-label">CSAT Score</div><div class="kpi-value green">4.6 / 5</div></div>
+      <div class="kpi-row"><div class="kpi-label">Avg Days-to-Pay</div><div class="kpi-value">28 Days</div></div>
+      <div class="kpi-row"><div class="kpi-label">ESG Progress</div><div class="kpi-value warn">24% ↑</div></div>
+      <div class="kpi-row"><div class="kpi-label">Carbon Goal (2030)</div><div class="kpi-value warn">30% — On Track</div></div>
+
+      <div class="sidebar-section-header" style="margin-top:4px;">
+        <div class="sidebar-section-title">AI Strategic Insights</div>
+      </div>
+      <div style="padding:10px 12px;">
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:11px;color:var(--text-light);">Retention Risk</span>
+            <span style="font-size:12px;font-weight:700;color:var(--ok);">Low</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill pf-green" style="width:18%"></div></div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:11px;color:var(--text-light);">Expansion Potential</span>
+            <span style="font-size:12px;font-weight:700;color:var(--cbre-green);">High</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill pf-cbre" style="width:82%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:11px;color:var(--text-light);">Strategic Account Fit</span>
+            <span class="badge b-green">HIGH FIT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="c360-main">
+      <!-- Breadcrumb -->
+      <div class="c360-breadcrumb">
+        <span class="breadcrumb-link" onclick="showScreen('portfolio')">My Portfolio</span>
+        <span>›</span>
+        <span class="breadcrumb-link">Vertex Technologies</span>
+        <span>›</span>
+        <span>Account 360</span>
+      </div>
+
+      <!-- Header Bar -->
+      <div class="c360-header-bar">
+        <div class="c360-header-row">
+          <div>
+            <div class="c360-account-name">Vertex Technologies — Account 360</div>
+            <div class="c360-account-type">GWS Enterprise · Technology · San Jose, CA · Active</div>
+          </div>
+          <div class="c360-header-actions">
+            <button class="btn btn-outline">Log Activity</button>
+            <button class="btn btn-primary">New Opportunity</button>
+            <div class="powered-badge"><div class="af-dot"></div> Powered by Agentforce</div>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('briefing')">✦ Briefing</div>
+          <div class="tab" onclick="showTab('portfolio')">Portfolio</div>
+          <div class="tab" onclick="showTab('contacts')">Key Contacts</div>
+          <div class="tab" onclick="showTab('projects')">Projects</div>
+          <div class="tab" onclick="showTab('leases')">Leases</div>
+          <div class="tab" onclick="showTab('qbr')">⚡ QBR Generator</div>
+        </div>
+      </div>
+
+      <!-- TAB: BRIEFING -->
+      <div class="tab-content active" id="tab-briefing">
+
+        <!-- AI Brief Box -->
+        <div class="ai-brief-box">
+          <div class="ai-brief-top">
+            <div class="ai-brief-label">
+              <span class="ai-star">✦</span>
+              AI Account Brief — Vertex Technologies
+            </div>
+            <div class="ai-refresh-info">
+              Last refreshed: Today 9:41 AM<br>
+              <span style="color:var(--cbre-green);font-weight:600;cursor:pointer;">↻ Regenerate</span>
+            </div>
+          </div>
+          <div class="ai-narrative">
+            Vertex Technologies' global portfolio is <strong>performing strongly</strong> across most service lines. FM SLA compliance sits at 94% — above contract — and capital projects are tracking <strong>$2.1M under budget overall</strong>. CBRE has delivered <strong>$4.2M in cost savings YTD</strong> through vendor consolidation, exceeding the $3.8M annual target by 11%. Client satisfaction is at 4.6/5, the highest score since Q2 2022.
+          </div>
+          <div class="narrative-block">
+            <div class="narrative-block-title warn-title">⚠ Lease Risk — Requires Q3 Decision</div>
+            <div class="narrative-block-text">8 leases totaling 680K sqft expire within the next 18 months. The <strong>Austin HQ (228K sqft, $12.4M/yr)</strong> requires a renewal decision by Q4 2026. Austin market conditions are softening — 14% availability rate creates favorable renegotiation leverage. Recommend proactive outreach to Sarah Chen before the Q3 QBR.</div>
+          </div>
+          <div class="narrative-block">
+            <div class="narrative-block-title warn-title">⚠ Budget Overrun — Seattle Campus Automation</div>
+            <div class="narrative-block-text">The Seattle Campus Automation Upgrade is tracking <strong>22% over budget ($1.9M variance)</strong>. Root cause: HVAC scope change approved in April. Recommend executive escalation to Marcus Webb before month-end. A cost recovery plan is available for review.</div>
+          </div>
+          <div class="narrative-block">
+            <div class="narrative-block-title warn-title">⚠ ESG Gap — APAC Acceleration Needed</div>
+            <div class="narrative-block-text">Carbon emissions are tracking at <strong>24% reduction vs. Vertex's 30% 2030 commitment</strong>. APAC facilities (Singapore, Tokyo, Sydney) are the primary gap. A fast-tracked LED retrofit program at these three campuses represents a <strong>$1.2M investment for an estimated +8% additional reduction</strong> — bridging the gap and preserving Vertex's ESG commitments to their board.</div>
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-tile">
+            <div class="metric-value" style="color:var(--ok);">$4.2M</div>
+            <div class="metric-label">Cost Savings YTD</div>
+            <div class="metric-sub up">↑ 11% above target</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-value">94%</div>
+            <div class="metric-label">FM SLA Compliance</div>
+            <div class="metric-sub up">↑ vs 90% target</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-value" style="color:var(--warn);">$1.9M</div>
+            <div class="metric-label">Active Budget Variance</div>
+            <div class="metric-sub down">↑ Seattle overrun</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-value" style="color:var(--ok);">4.6/5</div>
+            <div class="metric-label">CSAT Score</div>
+            <div class="metric-sub up">↑ Highest since 2022</div>
+          </div>
+        </div>
+
+        <!-- Service Line Revenue -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Revenue by Service Line — FY2026 YTD</span>
+            <span class="badge b-gray">$58.4M Total</span>
+          </div>
+          <div class="card-body" style="padding:14px 16px;">
+            <div class="service-bar-row">
+              <div class="service-bar-label">Facilities Mgmt</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:73%;background:var(--cbre-green);height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$42.6M</div>
+            </div>
+            <div class="service-bar-row">
+              <div class="service-bar-label">Project Mgmt</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:17%;background:#17B89B;height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$9.8M</div>
+            </div>
+            <div class="service-bar-row">
+              <div class="service-bar-label">Transaction Mgmt</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:7%;background:var(--cbre-mint);height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$4.1M</div>
+            </div>
+            <div class="service-bar-row">
+              <div class="service-bar-label">ESG Services</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:3%;background:#6EE7B7;height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$1.9M</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB: PORTFOLIO -->
+      <div class="tab-content" id="tab-portfolio">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:14px;font-weight:700;">47 Sites · 12 Countries · 3.2M sqft Under Management</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">All facilities data via CBRE FM Connect + Data Cloud</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <span class="badge b-green">38 On Track</span>
+            <span class="badge b-yellow">7 Attention</span>
+            <span class="badge b-red">2 At Risk</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;">Americas</div>
+        <div class="sites-grid">
+          <div class="site-card" style="border-top:3px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">Austin HQ Campus</div><span class="badge b-green">On Track</span></div>
+            <div class="site-meta">Texas, USA · 228K sqft · Owned</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">97%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">4.8</div><div class="site-kpi-label">CSAT</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--warn);">EXPIRING</div><div class="site-kpi-label">Lease '28</div></div>
+            </div>
+          </div>
+          <div class="site-card" style="border-top:3px solid var(--warn);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">Seattle Campus 1 &amp; 2</div><span class="badge b-yellow">Attention</span></div>
+            <div class="site-meta">Washington, USA · 145K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">91%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">4.2</div><div class="site-kpi-label">CSAT</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--risk);">+22%</div><div class="site-kpi-label">Proj Budget</div></div>
+            </div>
+          </div>
+          <div class="site-card" style="border-top:3px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">NYC Midtown HQ</div><span class="badge b-green">On Track</span></div>
+            <div class="site-meta">New York, USA · 112K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">96%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">4.7</div><div class="site-kpi-label">CSAT</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--ok);">On Track</div><div class="site-kpi-label">Renovation</div></div>
+            </div>
+          </div>
+          <div class="site-card" style="border-top:3px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">Chicago Loop Office</div><span class="badge b-green">On Track</span></div>
+            <div class="site-meta">Illinois, USA · 45K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">93%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">4.4</div><div class="site-kpi-label">CSAT</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--warn);">Q2 2027</div><div class="site-kpi-label">Lease Exp</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin:16px 0 10px;font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;">EMEA</div>
+        <div class="sites-grid">
+          <div class="site-card" style="border-top:3px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">London Canary Wharf</div><span class="badge b-green">On Track</span></div>
+            <div class="site-meta">UK · 88K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">95%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">4.5</div><div class="site-kpi-label">CSAT</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--ok);">Ongoing</div><div class="site-kpi-label">Renovation</div></div>
+            </div>
+          </div>
+          <div class="site-card" style="border-top:3px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">Dublin EMEA Hub</div><span class="badge b-green">On Track</span></div>
+            <div class="site-meta">Ireland · 38K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">98%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">4.9</div><div class="site-kpi-label">CSAT</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--warn);">Q4 2027</div><div class="site-kpi-label">Lease Exp</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin:16px 0 10px;font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;">APAC — ESG Gap Region</div>
+        <div class="sites-grid">
+          <div class="site-card" style="border-top:3px solid var(--warn);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">Singapore Regional HQ</div><span class="badge b-yellow">ESG Attention</span></div>
+            <div class="site-meta">Singapore · 62K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">90%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--warn);">-12%</div><div class="site-kpi-label">Carbon vs Goal</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">LED Retrofit</div><div class="site-kpi-label">Recommended</div></div>
+            </div>
+          </div>
+          <div class="site-card" style="border-top:3px solid var(--warn);">
+            <div style="display:flex;justify-content:space-between;"><div class="site-name">Tokyo Office</div><span class="badge b-yellow">ESG Attention</span></div>
+            <div class="site-meta">Japan · 28K sqft · Leased</div>
+            <div class="site-kpis">
+              <div class="site-kpi"><div class="site-kpi-val">92%</div><div class="site-kpi-label">SLA</div></div>
+              <div class="site-kpi"><div class="site-kpi-val" style="color:var(--warn);">-8%</div><div class="site-kpi-label">Carbon vs Goal</div></div>
+              <div class="site-kpi"><div class="site-kpi-val">LED Retrofit</div><div class="site-kpi-label">Recommended</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CONTACTS -->
+      <div class="tab-content" id="tab-contacts">
+        <div style="margin-bottom:14px;">
+          <div style="font-size:14px;font-weight:700;">Key Contacts at Vertex Technologies</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Relationship intelligence powered by Agentforce</div>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="contact-name">Sarah Chen</div>
+                <div class="contact-title">VP, Global Real Estate</div>
+              </div>
+              <span class="badge b-green">Champion</span>
+            </div>
+            <div class="contact-strength">
+              <div style="font-size:10px;color:var(--text-light);width:90px;">Relationship</div>
+              <div class="strength-bar"><div class="strength-fill" style="width:88%"></div></div>
+              <div class="contact-tag">Strong</div>
+            </div>
+            <div class="contact-insight">Primary champion. Highly engaged. Advocates for CBRE internally. Key decision-maker for FM scope and renewals.</div>
+          </div>
+          <div class="contact-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="contact-name">David Park</div>
+                <div class="contact-title">Chief Financial Officer</div>
+              </div>
+              <span class="badge b-yellow">Economic Buyer</span>
+            </div>
+            <div class="contact-strength">
+              <div style="font-size:10px;color:var(--text-light);width:90px;">Relationship</div>
+              <div class="strength-bar"><div class="strength-fill" style="width:52%"></div></div>
+              <div class="contact-tag">Developing</div>
+            </div>
+            <div class="contact-insight">Increasing scrutiny on FM costs. Prepare cost benchmarking analysis showing CBRE value vs. market. Engage before QBR.</div>
+          </div>
+          <div class="contact-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="contact-name">Marcus Webb</div>
+                <div class="contact-title">Head of Facilities</div>
+              </div>
+              <span class="badge b-blue">Day-to-Day</span>
+            </div>
+            <div class="contact-strength">
+              <div style="font-size:10px;color:var(--text-light);width:90px;">Relationship</div>
+              <div class="strength-bar"><div class="strength-fill" style="width:79%"></div></div>
+              <div class="contact-tag">Strong</div>
+            </div>
+            <div class="contact-insight">Manages day-to-day operations. Escalate Seattle budget overrun to Marcus before month-end with a recovery plan.</div>
+          </div>
+          <div class="contact-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="contact-name">Jennifer Liu</div>
+                <div class="contact-title">SVP, Sustainability</div>
+              </div>
+              <span class="badge b-teal">ESG Champion</span>
+            </div>
+            <div class="contact-strength">
+              <div style="font-size:10px;color:var(--text-light);width:90px;">Relationship</div>
+              <div class="strength-bar"><div class="strength-fill" style="width:65%"></div></div>
+              <div class="contact-tag">Active</div>
+            </div>
+            <div class="contact-insight">Responsible for Vertex 2030 carbon commitments. APAC LED retrofit program directly addresses her board-level pressure. High value conversation.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PROJECTS -->
+      <div class="tab-content" id="tab-projects">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:14px;font-weight:700;">23 Active Capital Projects · $180M Total Spend</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Data via CBRE Project Management + GPM</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <span class="badge b-green">18 On Budget</span>
+            <span class="badge b-yellow">3 Watch</span>
+            <span class="badge b-red">2 At Risk</span>
+          </div>
+        </div>
+        <div class="project-grid">
+          <div class="proj-card" style="border-left:4px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="proj-name">Austin HQ — Phase 2 Expansion</div>
+                <div class="proj-meta">Texas, USA · Construction · Due: Sep 2026</div>
+              </div>
+              <span class="badge b-green">On Track</span>
+            </div>
+            <div class="proj-complete">
+              <div class="proj-complete-row"><span>Progress</span><span style="font-weight:700;">65% Complete</span></div>
+              <div class="prog-bar"><div class="prog-fill pf-cbre" style="width:65%"></div></div>
+            </div>
+            <div class="proj-stats">
+              <div class="proj-stat"><div class="proj-stat-label">Budget</div><div class="proj-stat-value">$45M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Budget Var</div><div class="proj-stat-value green">On Budget</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Timeline</div><div class="proj-stat-value green">On Schedule</div></div>
+            </div>
+          </div>
+          <div class="proj-card" style="border-left:4px solid var(--risk);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="proj-name">Seattle Campus Automation</div>
+                <div class="proj-meta">Washington, USA · HVAC/BMS · Due: Aug 2026</div>
+              </div>
+              <span class="badge b-red">At Risk</span>
+            </div>
+            <div class="proj-complete">
+              <div class="proj-complete-row"><span>Progress</span><span style="font-weight:700;">40% Complete</span></div>
+              <div class="prog-bar"><div class="prog-fill pf-red" style="width:40%"></div></div>
+            </div>
+            <div class="proj-stats">
+              <div class="proj-stat"><div class="proj-stat-label">Budget</div><div class="proj-stat-value">$8.5M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Budget Var</div><div class="proj-stat-value warn">+$1.9M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Timeline</div><div class="proj-stat-value green">On Schedule</div></div>
+            </div>
+            <div class="proj-risk">⚠ Root cause: HVAC scope change. Exec escalation to Marcus Webb required.</div>
+          </div>
+          <div class="proj-card" style="border-left:4px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="proj-name">Singapore Office Retrofit</div>
+                <div class="proj-meta">Singapore · LED/ESG · Due: Jul 2026</div>
+              </div>
+              <span class="badge b-blue">Ahead of Schedule</span>
+            </div>
+            <div class="proj-complete">
+              <div class="proj-complete-row"><span>Progress</span><span style="font-weight:700;">80% Complete</span></div>
+              <div class="prog-bar"><div class="prog-fill pf-green" style="width:80%"></div></div>
+            </div>
+            <div class="proj-stats">
+              <div class="proj-stat"><div class="proj-stat-label">Budget</div><div class="proj-stat-value">$12M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Budget Var</div><div class="proj-stat-value green">On Budget</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Timeline</div><div class="proj-stat-value green">-2 Weeks Early</div></div>
+            </div>
+          </div>
+          <div class="proj-card" style="border-left:4px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="proj-name">London Canary Wharf Renovation</div>
+                <div class="proj-meta">UK · Interior Fit-Out · Due: Mar 2027</div>
+              </div>
+              <span class="badge b-green">On Track</span>
+            </div>
+            <div class="proj-complete">
+              <div class="proj-complete-row"><span>Progress</span><span style="font-weight:700;">15% Complete</span></div>
+              <div class="prog-bar"><div class="prog-fill pf-cbre" style="width:15%"></div></div>
+            </div>
+            <div class="proj-stats">
+              <div class="proj-stat"><div class="proj-stat-label">Budget</div><div class="proj-stat-value">$22M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Budget Var</div><div class="proj-stat-value green">On Budget</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Timeline</div><div class="proj-stat-value green">On Schedule</div></div>
+            </div>
+          </div>
+          <div class="proj-card" style="border-left:4px solid var(--ok);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="proj-name">NYC Office Consolidation</div>
+                <div class="proj-meta">New York, USA · Space Planning · Due: Jun 2026</div>
+              </div>
+              <span class="badge b-blue">95% — Completing</span>
+            </div>
+            <div class="proj-complete">
+              <div class="proj-complete-row"><span>Progress</span><span style="font-weight:700;">95% Complete</span></div>
+              <div class="prog-bar"><div class="prog-fill pf-mint" style="width:95%"></div></div>
+            </div>
+            <div class="proj-stats">
+              <div class="proj-stat"><div class="proj-stat-label">Budget</div><div class="proj-stat-value">$18M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Budget Var</div><div class="proj-stat-value green">Delivered On Budget</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Timeline</div><div class="proj-stat-value green">On Time</div></div>
+            </div>
+          </div>
+          <div class="proj-card" style="border-left:4px solid var(--warn);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="proj-name">Tokyo Office Modernization</div>
+                <div class="proj-meta">Japan · Interior + LED · Due: Dec 2026</div>
+              </div>
+              <span class="badge b-yellow">Watch</span>
+            </div>
+            <div class="proj-complete">
+              <div class="proj-complete-row"><span>Progress</span><span style="font-weight:700;">30% Complete</span></div>
+              <div class="prog-bar"><div class="prog-fill pf-yellow" style="width:30%"></div></div>
+            </div>
+            <div class="proj-stats">
+              <div class="proj-stat"><div class="proj-stat-label">Budget</div><div class="proj-stat-value">$9M</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Budget Var</div><div class="proj-stat-value warn">+$340K</div></div>
+              <div class="proj-stat"><div class="proj-stat-label">Timeline</div><div class="proj-stat-value warn">+2 Weeks</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: LEASES -->
+      <div class="tab-content" id="tab-leases">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:14px;font-weight:700;">67 Active Leases · 8 Expiring in 18 Months</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Data via CBRE Lease Administration System · 680K sqft at risk</div>
+          </div>
+          <span class="badge b-red" style="padding:5px 12px;font-size:11px;">8 Require Immediate Action</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Leases Expiring Within 18 Months</span></div>
+          <div class="card-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Location</th>
+                  <th>SF</th>
+                  <th>Annual Rent</th>
+                  <th>Expiry</th>
+                  <th>Months Left</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Austin HQ Campus</strong></td>
+                  <td>Austin, TX</td>
+                  <td>228,400</td>
+                  <td><strong>$12.4M</strong></td>
+                  <td>Mar 31, 2028</td>
+                  <td><span class="badge b-red">18 mo</span></td>
+                  <td><button class="btn btn-primary" style="padding:3px 9px;font-size:10px;">Start Renewal</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Seattle Campus 2</strong></td>
+                  <td>Seattle, WA</td>
+                  <td>95,200</td>
+                  <td>$4.2M</td>
+                  <td>Sep 30, 2027</td>
+                  <td><span class="badge b-red">15 mo</span></td>
+                  <td><button class="btn btn-outline" style="padding:3px 9px;font-size:10px;">Review Options</button></td>
+                </tr>
+                <tr>
+                  <td>Chicago Loop Office</td>
+                  <td>Chicago, IL</td>
+                  <td>45,000</td>
+                  <td>$2.8M</td>
+                  <td>Jun 30, 2027</td>
+                  <td><span class="badge b-yellow">12 mo</span></td>
+                  <td><button class="btn btn-outline" style="padding:3px 9px;font-size:10px;">Review Options</button></td>
+                </tr>
+                <tr>
+                  <td>Dublin EMEA Hub</td>
+                  <td>Dublin, Ireland</td>
+                  <td>38,100</td>
+                  <td>$2.1M</td>
+                  <td>Dec 31, 2027</td>
+                  <td><span class="badge b-yellow">18 mo</span></td>
+                  <td><button class="btn btn-outline" style="padding:3px 9px;font-size:10px;">Review Options</button></td>
+                </tr>
+                <tr>
+                  <td>Denver Tech Hub</td>
+                  <td>Denver, CO</td>
+                  <td>32,400</td>
+                  <td>$1.6M</td>
+                  <td>Nov 30, 2027</td>
+                  <td><span class="badge b-yellow">17 mo</span></td>
+                  <td><button class="btn btn-outline" style="padding:3px 9px;font-size:10px;">Review Options</button></td>
+                </tr>
+                <tr>
+                  <td>Toronto Office</td>
+                  <td>Toronto, Canada</td>
+                  <td>28,000</td>
+                  <td>$1.4M</td>
+                  <td>Aug 31, 2027</td>
+                  <td><span class="badge b-yellow">14 mo</span></td>
+                  <td><button class="btn btn-outline" style="padding:3px 9px;font-size:10px;">Review Options</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: QBR GENERATOR -->
+      <div class="tab-content" id="tab-qbr">
+
+        <!-- PHASE 1: Ready State -->
+        <div class="qbr-phase active" id="qbr-ready">
+          <div style="margin-bottom:16px;">
+            <div style="font-size:14px;font-weight:700;">⚡ QBR Intelligence Generator</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Agentforce reads all 6 data sources and generates a client-ready narrative in seconds.</div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-light);margin-bottom:10px;">Data Sources Connected</div>
+          <div class="sources-grid">
+            <div class="source-card ready">
+              <div class="source-icon">🏢</div>
+              <div class="source-name">FM Connect</div>
+              <div class="source-detail">94 SLA metrics · 187 work orders</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">🏗</div>
+              <div class="source-name">Project Mgmt (GPM)</div>
+              <div class="source-detail">23 active projects · $180M</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">📄</div>
+              <div class="source-name">Lease Administration</div>
+              <div class="source-detail">67 leases · 8 expiring</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">🌿</div>
+              <div class="source-name">ESG Dashboard</div>
+              <div class="source-detail">Carbon, energy, waste data</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">⭐</div>
+              <div class="source-name">CSAT &amp; Surveys</div>
+              <div class="source-detail">4.6/5 · 48 responses</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">💰</div>
+              <div class="source-name">Finance &amp; Billing</div>
+              <div class="source-detail">YTD savings · spend analysis</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+          </div>
+
+          <div class="gen-cta">
+            <div class="gen-cta-title">6 data sources · 47 sites · 12 countries · Ready to generate</div>
+            <div class="gen-cta-sub">Agentforce will synthesize your FM performance, project delivery, lease pipeline, ESG progress, and financial data into a single client-ready narrative — in seconds, not hours.</div>
+            <button class="btn btn-af btn-lg" onclick="startGeneration()">
+              ✦ Generate Vertex Technologies QBR Brief
+            </button>
+          </div>
+        </div>
+
+        <!-- PHASE 2: Loading State -->
+        <div class="qbr-phase" id="qbr-loading">
+          <div class="gen-loading">
+            <div class="spinner"></div>
+            <div class="gen-loading-title">Agentforce is building your QBR brief...</div>
+            <div style="font-size:12px;color:var(--text-light);">Reading 6 data sources across 47 sites in 12 countries</div>
+            <div class="gen-steps" id="gen-steps">
+              <div class="gen-step">
+                <div class="gen-step-icon step-done">✓</div>
+                <span>FM performance data loaded (94 metrics)</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-done">✓</div>
+                <span>Project delivery status analyzed (23 projects)</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-active" id="step-3-icon">...</div>
+                <span id="step-3-text">Analyzing lease expiry pipeline...</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-pending" id="step-4-icon">4</div>
+                <span style="color:var(--text-light);" id="step-4-text">ESG carbon progress vs. 2030 commitment</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-pending" id="step-5-icon">5</div>
+                <span style="color:var(--text-light);" id="step-5-text">Financial savings &amp; cost variance summary</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-pending" id="step-6-icon">6</div>
+                <span style="color:var(--text-light);" id="step-6-text">Composing client narrative...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHASE 3: Output State -->
+        <div class="qbr-phase" id="qbr-output">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div>
+              <div style="font-size:14px;font-weight:700;">✦ QBR Brief Generated — Ready to Share</div>
+              <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Generated in 4.2 seconds · Sourced from 6 connected systems · Jun 9, 2026</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline" onclick="resetQBR()">↻ Regenerate</button>
+              <button class="btn btn-primary">Export PDF</button>
+              <button class="btn btn-af">✉ Send to Client</button>
+            </div>
+          </div>
+
+          <div class="qbr-output">
+            <div class="qbr-doc-header">
+              <div class="qbr-doc-logo">CBRE <em>| Global Workplace Solutions</em></div>
+              <div class="qbr-doc-title">Vertex Technologies — Q2 2026 Portfolio Review</div>
+              <div class="qbr-doc-subtitle">Prepared by: Rachel Smith, GWS Account Director · June 9, 2026 · Confidential</div>
+              <div class="qbr-doc-kpis">
+                <div class="qbr-kpi">
+                  <div class="qbr-kpi-value">$4.2M</div>
+                  <div class="qbr-kpi-label">Cost Savings YTD</div>
+                </div>
+                <div class="qbr-kpi">
+                  <div class="qbr-kpi-value">94%</div>
+                  <div class="qbr-kpi-label">FM SLA Compliance</div>
+                </div>
+                <div class="qbr-kpi">
+                  <div class="qbr-kpi-value">4.6/5</div>
+                  <div class="qbr-kpi-label">Client Satisfaction</div>
+                </div>
+                <div class="qbr-kpi">
+                  <div class="qbr-kpi-value">84/100</div>
+                  <div class="qbr-kpi-label">Portfolio Health Score</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qbr-body">
+              <div class="qbr-section">
+                <div class="qbr-section-title">Executive Summary</div>
+                <div class="qbr-narrative">
+                  Vertex Technologies' global real estate portfolio is performing strongly across most dimensions in Q2 2026. CBRE's GWS team manages 47 sites across 12 countries totaling 3.2 million square feet — delivering Facilities Management, Project Management, Transaction Management, and ESG advisory services against a $58.4M annual scope.
+                </div>
+                <div class="qbr-callout success">
+                  <strong>Headline Result:</strong> CBRE has delivered $4.2M in cost savings year-to-date — exceeding the $3.8M annual target by 11% — primarily through vendor consolidation and preventive maintenance optimization across your Americas portfolio. FM SLA compliance sits at 94%, above the 90% contractual threshold.
+                </div>
+                <div class="qbr-narrative" style="margin-top:8px;">
+                  Three items require your leadership team's attention heading into Q3: a lease cluster expiration requiring renewal decisions, a budget overrun on the Seattle Campus Automation project, and an ESG acceleration opportunity in APAC to stay on track for your 2030 carbon commitment.
+                </div>
+              </div>
+
+              <div class="qbr-section">
+                <div class="qbr-section-title">Facilities Management Performance</div>
+                <div class="qbr-narrative">
+                  SLA compliance across all 47 sites averaged 94% in Q2 — 4 points above contract minimum. Average work order resolution time improved to 2.3 days (from 3.1 days in Q1), driven by the preventive maintenance schedule CBRE implemented at your top 12 sites by volume. Open work orders stand at 187, within normal operating range. Vendor performance scores averaged 88/100 across your approved supplier network.
+                </div>
+                <div class="qbr-callout success">
+                  <strong>Cost Savings Breakdown:</strong> Vendor consolidation ($1.8M) · Preventive maintenance program ($1.4M) · Energy procurement renegotiation ($0.6M) · Waste &amp; consumables reduction ($0.4M). Total: $4.2M YTD vs. $3.8M full-year target.
+                </div>
+              </div>
+
+              <div class="qbr-section">
+                <div class="qbr-section-title">Capital Projects Update</div>
+                <div class="qbr-narrative">
+                  Of 23 active capital projects totaling $180M, 18 are on budget and on schedule. The <strong>Austin HQ Phase 2 Expansion</strong> ($45M) is 65% complete and tracking well for a September 2026 delivery. The <strong>NYC Office Consolidation</strong> ($18M) is 95% complete and will close on time and on budget.
+                </div>
+                <div class="qbr-callout warn">
+                  <strong>Action Required — Seattle Campus Automation:</strong> The Seattle Campus BMS/HVAC Automation Upgrade ($8.5M) is tracking a $1.9M overrun (22%), driven by a scope change on HVAC integration approved in April. CBRE has prepared a cost recovery plan and recommends an executive meeting with Marcus Webb before month-end to align on next steps and revised budget authority.
+                </div>
+              </div>
+
+              <div class="qbr-section">
+                <div class="qbr-section-title">Lease Portfolio &amp; Transaction Activity</div>
+                <div class="qbr-narrative">
+                  Vertex holds 67 active leases across 35 cities. CBRE's Transaction Management team completed 4 new leases and 3 renewals in Q2. Eight leases totaling 680,000 square feet expire within the next 18 months — requiring strategic decisions before Q4 2026.
+                </div>
+                <div class="qbr-callout warn">
+                  <strong>Critical: Austin HQ Lease (228K sqft · $12.4M/yr)</strong> expires March 2028 — 18 months away. The Austin office market is softening (14.2% availability, highest since 2020), creating favorable renegotiation leverage for Vertex. CBRE recommends initiating the renewal process in Q3 to secure a long-term rate below current market. A delay risks losing this leverage as demand recovers.
+                </div>
+              </div>
+
+              <div class="qbr-section">
+                <div class="qbr-section-title">ESG &amp; Sustainability Progress</div>
+                <div class="qbr-narrative">
+                  Vertex's portfolio has achieved a 24% reduction in carbon emissions against a 2019 baseline — progress toward the board-committed 30% target by 2030. The Americas and EMEA regions are on trajectory. The APAC region (Singapore, Tokyo, Sydney) is the primary gap, currently trailing the required reduction rate by 6 percentage points.
+                </div>
+                <div class="qbr-callout warn">
+                  <strong>Recommended Action — APAC LED Retrofit Program:</strong> CBRE has scoped an accelerated LED retrofit and building controls upgrade across the three APAC campuses. Estimated investment: $1.2M. Projected additional carbon reduction: 8%. This would bring Vertex's total portfolio to 32% — ahead of the 2030 commitment — and generate an estimated $380K in annual energy savings. CBRE recommends Jennifer Liu's team review this proposal before the Q3 close.
+                </div>
+              </div>
+
+              <div class="qbr-section">
+                <div class="qbr-section-title">Client Satisfaction &amp; Relationship Health</div>
+                <div class="qbr-narrative">
+                  Q2 CSAT averaged 4.6 out of 5.0 across 48 survey respondents — the highest score since Q2 2022. Top drivers of satisfaction: responsiveness of on-site teams (4.8), project delivery quality (4.7), and sustainability reporting (4.5). The primary area for improvement flagged by respondents was response time on escalations above $50K (3.9).
+                </div>
+                <div class="qbr-callout success">
+                  Sarah Chen (VP Global Real Estate) shared that Vertex's internal leadership team specifically cited CBRE's proactive cost savings reporting as a differentiator vs. prior FM providers. Recommend sharing this QBR narrative with Sarah in advance of the June 18 meeting to reinforce the value story.
+                </div>
+              </div>
+            </div>
+
+            <div class="qbr-actions-bar">
+              <button class="btn btn-primary">Export as PDF</button>
+              <button class="btn btn-outline">Schedule Client Meeting</button>
+              <button class="btn btn-af">✉ Email to Sarah Chen</button>
+              <div class="qbr-ai-sig">
+                <div class="af-dot" style="width:6px;height:6px;background:var(--af-light);border-radius:50%;"></div>
+                Generated by Agentforce · Sourced from 6 CBRE systems · Jun 9, 2026
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: AGENTFORCE PANEL -->
+    <div class="c360-right">
+      <div class="af-header">
+        <div>
+          <div class="af-title"><div class="af-dot"></div> Agentforce Client Intelligence</div>
+          <div class="af-powered">Live · Vertex Technologies · 9:41 AM</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Active Alerts</div>
+        <div class="af-alert critical">
+          <div class="af-alert-title">Lease Decision Deadline Approaching</div>
+          <div>Austin HQ renewal window closes Q4 2026. Austin market softening — favorable leverage window. Initiate renewal now.</div>
+          <div class="af-alert-time">$12.4M/yr at risk · 18 months remaining</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Start Renewal Process</button></div>
+        </div>
+        <div class="af-alert risk">
+          <div class="af-alert-title">Seattle Budget Overrun — Escalation Due</div>
+          <div>$1.9M variance on Seattle Automation. No exec escalation logged. Recommend meeting with Marcus Webb before Jun 13.</div>
+          <div class="af-alert-time">Created: Jun 7, 2026</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Schedule Meeting</button></div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Expansion Opportunities</div>
+        <div class="af-mini-card">
+          <div class="af-mini-title">⚡ APAC LED Retrofit — New Scope</div>
+          <div class="af-mini-text">$1.2M ESG project across 3 APAC campuses. 8% additional carbon reduction. Closes Vertex's 2030 gap. Jennifer Liu is the right entry point.</div>
+          <div class="af-mini-cta">
+            <button class="btn btn-xs btn-xs-green">Create Opportunity</button>
+            <button class="btn btn-xs btn-xs-outline">Draft Proposal</button>
+          </div>
+        </div>
+        <div class="af-mini-card">
+          <div class="af-mini-title">⚡ Austin HQ Phase 3 Announced</div>
+          <div class="af-mini-text">Vertex announced a 400K sqft expansion in Austin (earnings call, Jun 7). Strong PM/TM upsell opportunity. Estimated $8–12M additional scope.</div>
+          <div class="af-mini-cta">
+            <button class="btn btn-xs btn-xs-green">Create Opportunity</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Live Market Signals</div>
+        <div class="af-alert info">
+          <div class="af-alert-title">Vertex Q1 Earnings Call</div>
+          <div>CEO announced accelerated global footprint expansion — 15% headcount growth planned. Real estate implications for 6 markets.</div>
+          <div class="af-alert-time">Source: Earnings transcript · Jun 7</div>
+        </div>
+        <div class="af-alert good">
+          <div class="af-alert-title">Austin Office Market Softening</div>
+          <div>14.2% market availability — 5-year high. Favorable conditions for Vertex HQ renewal negotiation. Act before Q4.</div>
+          <div class="af-alert-time">Source: CBRE Market Intel · Jun 8</div>
+        </div>
+        <div class="af-alert info">
+          <div class="af-alert-title">Singapore Green Building Incentives</div>
+          <div>Singapore BCA released new Green Mark incentives covering up to 30% of retrofit costs — directly applicable to Vertex Singapore LED scope.</div>
+          <div class="af-alert-time">Source: BCA Bulletin · Jun 5</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Competitive Intelligence</div>
+        <div class="af-alert risk">
+          <div class="af-alert-title">JLL Outreach Detected</div>
+          <div>2 Vertex FM contacts have met with JLL reps in the past 30 days. Monitor relationship health and accelerate QBR delivery to reinforce CBRE value.</div>
+          <div class="af-alert-time">Source: LinkedIn signals · Jun 6</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name + '-screen').classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (name === 'portfolio') {
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
+  } else if (name === 'client360') {
+    document.querySelector('#nav-client360').classList.add('active');
+  }
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function startGeneration() {
+  document.getElementById('qbr-ready').classList.remove('active');
+  document.getElementById('qbr-loading').classList.add('active');
+
+  const steps = [
+    { iconId: 'step-3-icon', textId: 'step-3-text', delay: 600, text: 'Lease pipeline analyzed — 8 critical expirations flagged' },
+    { iconId: 'step-4-icon', textId: 'step-4-text', delay: 1300, text: 'ESG carbon data processed — APAC gap identified' },
+    { iconId: 'step-5-icon', textId: 'step-5-text', delay: 2000, text: 'Financial savings calculated — $4.2M YTD confirmed' },
+    { iconId: 'step-6-icon', textId: 'step-6-text', delay: 2800, text: 'Client narrative composed...' },
+  ];
+
+  steps.forEach((step, i) => {
+    setTimeout(() => {
+      if (i > 0) {
+        const prev = steps[i - 1];
+        document.getElementById(prev.iconId).className = 'gen-step-icon step-done';
+        document.getElementById(prev.iconId).textContent = '✓';
+        document.getElementById(prev.textId).style.color = '';
+      }
+      document.getElementById(step.iconId).className = 'gen-step-icon step-active';
+      document.getElementById(step.iconId).textContent = '...';
+      document.getElementById(step.textId).textContent = step.text;
+      document.getElementById(step.textId).style.color = '';
+    }, step.delay);
+  });
+
+  setTimeout(() => {
+    const last = steps[steps.length - 1];
+    document.getElementById(last.iconId).className = 'gen-step-icon step-done';
+    document.getElementById(last.iconId).textContent = '✓';
+    document.getElementById(last.textId).textContent = 'Client narrative ready.';
+  }, 3400);
+
+  setTimeout(() => {
+    document.getElementById('qbr-loading').classList.remove('active');
+    document.getElementById('qbr-output').classList.add('active');
+  }, 3800);
+}
+
+function resetQBR() {
+  document.getElementById('qbr-output').classList.remove('active');
+  document.getElementById('qbr-ready').classList.add('active');
+  // Reset step indicators
+  document.getElementById('step-3-icon').className = 'gen-step-icon step-active';
+  document.getElementById('step-3-icon').textContent = '...';
+  document.getElementById('step-3-text').textContent = 'Analyzing lease expiry pipeline...';
+  ['4','5','6'].forEach(n => {
+    document.getElementById('step-'+n+'-icon').className = 'gen-step-icon step-pending';
+    document.getElementById('step-'+n+'-icon').textContent = n;
+  });
+}
+</script>
+</body>
+</html>
