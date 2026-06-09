@@ -305,6 +305,95 @@ hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 
 /* Toggle for QBR showing/hiding contacts section */
 .toggle-section { }
 
+/* ===== PURSUIT SCREEN ===== */
+.pursuit-layout { display: flex; height: calc(100vh - 46px); overflow: hidden; }
+.pursuit-left { width: 220px; background: white; border-right: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; }
+.pursuit-main { flex: 1; overflow-y: auto; background: var(--bg); }
+.pursuit-right { width: 270px; background: white; border-left: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; }
+
+.pursuit-header { padding: 14px; background: var(--cbre-dark); color: white; }
+.pursuit-client { font-size: 15px; font-weight: 800; }
+.pursuit-scope { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; line-height: 1.5; }
+.pursuit-value { font-size: 13px; font-weight: 700; color: var(--cbre-mint); margin-top: 6px; }
+
+.countdown-section { padding: 12px; border-bottom: 1px solid var(--border); }
+.countdown-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; margin-bottom: 8px; }
+.countdown-box { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 6px; padding: 10px; text-align: center; }
+.countdown-days { font-size: 28px; font-weight: 800; color: var(--warn); line-height: 1; }
+.countdown-sub { font-size: 10px; color: var(--warn); font-weight: 600; margin-top: 2px; }
+.countdown-date { font-size: 11px; color: var(--text-light); margin-top: 6px; }
+
+.pursuit-stage-section { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.stage-track { display: flex; align-items: center; gap: 0; margin-top: 8px; }
+.stage-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.stage-dot.done { background: var(--cbre-green); color: white; }
+.stage-dot.active { background: var(--warn); color: white; animation: pulse 2s infinite; }
+.stage-dot.future { background: #E5E7EB; color: var(--text-light); }
+.stage-line { flex: 1; height: 2px; background: #E5E7EB; }
+.stage-line.done { background: var(--cbre-green); }
+.stage-labels { display: flex; justify-content: space-between; margin-top: 5px; }
+.stage-label-text { font-size: 9px; color: var(--text-light); width: 20px; text-align: center; }
+.stage-label-text.active-label { color: var(--warn); font-weight: 700; }
+
+.team-member { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid #F5F5F5; }
+.team-avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.team-name { font-size: 11px; font-weight: 600; }
+.team-role { font-size: 10px; color: var(--text-light); }
+
+/* RFP Intelligence */
+.rfp-phase { display: none; }
+.rfp-phase.active { display: block; }
+
+.rfp-result-top { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.rfp-score-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+.rfp-score-value { font-size: 32px; font-weight: 800; line-height: 1; }
+.rfp-score-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+.rfp-score-delta { font-size: 10px; font-weight: 600; margin-top: 4px; }
+
+.eval-section { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.eval-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.eval-row:last-child { margin-bottom: 0; }
+.eval-name { width: 130px; font-size: 11px; color: var(--text-light); flex-shrink: 0; }
+.eval-track { flex: 1; height: 10px; background: #E5E7EB; border-radius: 5px; overflow: visible; position: relative; }
+.eval-fill { height: 100%; border-radius: 5px; position: relative; }
+.eval-weight { width: 35px; font-size: 11px; font-weight: 700; text-align: right; flex-shrink: 0; }
+.eval-match { width: 55px; flex-shrink: 0; }
+.eval-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+.diff-card { background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+.diff-title { font-size: 12px; font-weight: 700; color: var(--cbre-dark); display: flex; align-items: center; gap: 6px; }
+.diff-text { font-size: 11px; color: #374151; margin-top: 4px; line-height: 1.5; }
+.diff-impact { display: inline-block; padding: 1px 7px; background: var(--cbre-green); color: white; border-radius: 10px; font-size: 9px; font-weight: 700; margin-left: 4px; }
+
+.risk-card { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+.risk-card.high { background: #FEF2F2; border-color: #FECACA; }
+.risk-title { font-size: 12px; font-weight: 700; color: #92400E; display: flex; align-items: center; gap: 6px; }
+.risk-card.high .risk-title { color: #991B1B; }
+.risk-text { font-size: 11px; color: #374151; margin-top: 4px; line-height: 1.5; }
+
+.capacity-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.capacity-role { width: 140px; font-size: 11px; color: var(--text-light); flex-shrink: 0; }
+.capacity-track { flex: 1; height: 8px; background: #E5E7EB; border-radius: 4px; overflow: hidden; }
+.capacity-fill { height: 100%; border-radius: 4px; }
+.capacity-status { width: 70px; font-size: 10px; font-weight: 600; text-align: right; flex-shrink: 0; }
+
+/* Context tab */
+.context-source { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; }
+.context-source-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.context-source-name { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.context-item { padding: 7px 0; border-bottom: 1px solid #F5F5F5; font-size: 11px; line-height: 1.5; }
+.context-item:last-child { border-bottom: none; padding-bottom: 0; }
+.context-item-title { font-weight: 600; color: var(--text); }
+.context-item-meta { color: var(--text-light); font-size: 10px; margin-top: 1px; }
+.context-item-insight { color: var(--af); font-size: 10px; margin-top: 3px; display: flex; align-items: flex-start; gap: 3px; }
+
+/* Win Strategy */
+.win-brief { background: linear-gradient(135deg, #F0FDF7, #ECFDF5); border: 1px solid #6EE7B7; border-radius: 8px; padding: 18px; margin-bottom: 16px; }
+.win-brief-header { font-size: 14px; font-weight: 800; color: var(--cbre-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.win-section { margin-bottom: 14px; }
+.win-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cbre-green); margin-bottom: 6px; }
+.win-text { font-size: 12px; line-height: 1.8; color: #374151; }
+.win-highlight { background: white; border-left: 3px solid var(--cbre-green); padding: 8px 12px; border-radius: 0 5px 5px 0; margin: 8px 0; font-size: 12px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -315,7 +404,7 @@ hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 
   <div class="nav-divider"></div>
   <span class="nav-item" onclick="showScreen('portfolio')">My Portfolio</span>
   <span class="nav-item active" id="nav-client360" onclick="showScreen('client360')">Client 360</span>
-  <span class="nav-item">Pursuits</span>
+  <span class="nav-item" id="nav-pursuit" onclick="showScreen('pursuit')">Pursuits</span>
   <span class="nav-item">Transactions</span>
   <span class="nav-item">Reports</span>
   <div class="nav-right">
@@ -1376,6 +1465,818 @@ hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 
   </div>
 </div>
 
+
+
+<!-- ======================================================== -->
+<!-- SCREEN 3: PURSUIT COMMAND CENTER — HARTWELL GROUP        -->
+<!-- ======================================================== -->
+<div class="screen" id="pursuit-screen">
+  <div class="pursuit-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="pursuit-left">
+      <div class="pursuit-header">
+        <div class="pursuit-client">Hartwell Group</div>
+        <div class="pursuit-scope">Financial Services · Global<br>38 sites · 2.8M sqft · 15 countries</div>
+        <div class="pursuit-value">Est. $32M/yr · 5-year contract</div>
+      </div>
+
+      <!-- Win Probability -->
+      <div class="score-section">
+        <div class="score-ring">
+          <svg width="84" height="84" viewBox="0 0 84 84">
+            <circle cx="42" cy="42" r="36" fill="none" stroke="#E5E7EB" stroke-width="7"/>
+            <circle cx="42" cy="42" r="36" fill="none" stroke="#D97706" stroke-width="7"
+              stroke-dasharray="226" stroke-dashoffset="65" stroke-linecap="round"/>
+          </svg>
+          <div class="score-number" style="color:var(--warn);">71%</div>
+        </div>
+        <div class="score-sublabel">Win Probability</div>
+        <div class="score-badges">
+          <span class="badge b-yellow">Competitive</span>
+          <span class="badge b-purple">AI Scored</span>
+        </div>
+      </div>
+
+      <!-- Countdown -->
+      <div class="countdown-section">
+        <div class="countdown-label">RFP Submission Deadline</div>
+        <div class="countdown-box">
+          <div class="countdown-days">36</div>
+          <div class="countdown-sub">DAYS REMAINING</div>
+          <div class="countdown-date">Due: Jul 15, 2026</div>
+        </div>
+        <div style="margin-top:8px;">
+          <div class="kpi-row" style="padding:5px 0;"><div class="kpi-label">Decision Date</div><div class="kpi-value">Sep 30, 2026</div></div>
+          <div class="kpi-row" style="padding:5px 0;"><div class="kpi-label">Contract Start</div><div class="kpi-value">Jan 1, 2027</div></div>
+          <div class="kpi-row" style="padding:5px 0;"><div class="kpi-label">Incumbent</div><div class="kpi-value" style="color:var(--risk);">JLL (7 yrs)</div></div>
+        </div>
+      </div>
+
+      <!-- Pursuit Stage -->
+      <div class="pursuit-stage-section">
+        <div class="sidebar-section-title">Pursuit Stage</div>
+        <div class="stage-track" style="margin-top:12px;">
+          <div class="stage-dot done">✓</div>
+          <div class="stage-line done"></div>
+          <div class="stage-dot done">✓</div>
+          <div class="stage-line done"></div>
+          <div class="stage-dot active">→</div>
+          <div class="stage-line"></div>
+          <div class="stage-dot future">4</div>
+          <div class="stage-line"></div>
+          <div class="stage-dot future">5</div>
+        </div>
+        <div class="stage-labels">
+          <div class="stage-label-text">Qual</div>
+          <div class="stage-label-text"></div>
+          <div class="stage-label-text">Disc</div>
+          <div class="stage-label-text"></div>
+          <div class="stage-label-text active-label">RFP</div>
+          <div class="stage-label-text"></div>
+          <div class="stage-label-text">Oral</div>
+          <div class="stage-label-text"></div>
+          <div class="stage-label-text">Win</div>
+        </div>
+      </div>
+
+      <!-- Pursuit KPIs -->
+      <div class="sidebar-section-header">
+        <div class="sidebar-section-title">Pursuit KPIs</div>
+      </div>
+      <div class="kpi-row"><div class="kpi-label">Capability Match</div><div class="kpi-value green">91%</div></div>
+      <div class="kpi-row"><div class="kpi-label">Requirements Met</div><div class="kpi-value green">94%</div></div>
+      <div class="kpi-row"><div class="kpi-label">Est. Margin</div><div class="kpi-value">19%</div></div>
+      <div class="kpi-row"><div class="kpi-label">Lifetime Value (5yr)</div><div class="kpi-value green">$198M</div></div>
+      <div class="kpi-row"><div class="kpi-label">Risks Flagged</div><div class="kpi-value warn">3</div></div>
+      <div class="kpi-row"><div class="kpi-label">Data Sources Read</div><div class="kpi-value">6</div></div>
+
+      <!-- Pursuit Team -->
+      <div class="sidebar-section-header" style="margin-top:4px;">
+        <div class="sidebar-section-title">Pursuit Team</div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar" style="background:#003F2D;color:white;">RS</div>
+        <div><div class="team-name">Rachel Smith</div><div class="team-role">Pursuit Lead</div></div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar" style="background:#1D4ED8;color:white;">MK</div>
+        <div><div class="team-name">Marcus Kim</div><div class="team-role">Solutions Architect</div></div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar" style="background:#7C3AED;color:white;">JP</div>
+        <div><div class="team-name">Jess Patel</div><div class="team-role">Pricing Lead</div></div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar" style="background:#0F766E;color:white;">AL</div>
+        <div><div class="team-name">Amy Luo</div><div class="team-role">ESG Advisory</div></div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar" style="background:#B45309;color:white;">TW</div>
+        <div><div class="team-name">Tom Walsh</div><div class="team-role">APAC Operations</div></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="pursuit-main">
+      <!-- Breadcrumb -->
+      <div class="c360-breadcrumb">
+        <span class="breadcrumb-link" onclick="showScreen('portfolio')">Home</span>
+        <span>›</span>
+        <span class="breadcrumb-link" onclick="showScreen('pursuit')">All Pursuits</span>
+        <span>›</span>
+        <span>Hartwell Group</span>
+      </div>
+
+      <!-- Header -->
+      <div class="c360-header-bar">
+        <div class="c360-header-row">
+          <div>
+            <div class="c360-account-name">Hartwell Group — Pursuit Command Center</div>
+            <div class="c360-account-type">RFP Response In Progress · Due Jul 15, 2026 · GWS FM+PM+ESG · $32M/yr</div>
+          </div>
+          <div class="c360-header-actions">
+            <button class="btn btn-outline">Team Workspace</button>
+            <button class="btn btn-primary">Update Pursuit</button>
+            <div class="powered-badge"><div class="af-dot"></div> Agentforce Active</div>
+          </div>
+        </div>
+        <div class="tabs" id="pursuit-tabs">
+          <div class="tab active" onclick="showPursuitTab('overview', this)">Overview</div>
+          <div class="tab" onclick="showPursuitTab('rfp', this)">✦ RFP Intelligence</div>
+          <div class="tab" onclick="showPursuitTab('context', this)">Pursuit Context</div>
+          <div class="tab" onclick="showPursuitTab('strategy', this)">Win Strategy</div>
+          <div class="tab" onclick="showPursuitTab('pricing', this)">Pricing & Staffing</div>
+        </div>
+      </div>
+
+      <!-- TAB: OVERVIEW -->
+      <div class="tab-content active" id="ptab-overview" style="padding:16px;">
+        <div class="metrics-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="metric-tile">
+            <div class="metric-value" style="color:var(--warn);">71%</div>
+            <div class="metric-label">Win Probability</div>
+            <div class="metric-sub up">↑ 12pts after RFP analysis</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-value">$198M</div>
+            <div class="metric-label">Lifetime Value (5yr)</div>
+            <div class="metric-sub" style="color:var(--text-light);">Base scope only</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-value" style="color:var(--ok);">94%</div>
+            <div class="metric-label">Requirements Addressed</div>
+            <div class="metric-sub up">3 differentiators confirmed</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-value" style="color:var(--risk);">36</div>
+            <div class="metric-label">Days to Submission</div>
+            <div class="metric-sub down">Jul 15, 2026 deadline</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Recent Pursuit Activity</span></div>
+            <div class="card-body" style="padding:0;">
+              <div style="padding:10px 14px;border-bottom:1px solid #F5F5F5;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:12px;font-weight:600;">RFP Intelligence analysis completed</span>
+                  <span class="badge b-purple">AI</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-light);margin-top:2px;">Agentforce read 142-page RFP + 6 sources · Win probability updated to 71%</div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:2px;">Today, 9:41 AM</div>
+              </div>
+              <div style="padding:10px 14px;border-bottom:1px solid #F5F5F5;">
+                <div style="font-size:12px;font-weight:600;">Discovery call — CFO David Park</div>
+                <div style="font-size:11px;color:var(--text-light);margin-top:2px;">45 min. Confirmed 15% cost reduction target. ESG board mandate confirmed. Transition timeline concern raised.</div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:2px;">Jun 5, 2026</div>
+              </div>
+              <div style="padding:10px 14px;border-bottom:1px solid #F5F5F5;">
+                <div style="font-size:12px;font-weight:600;">RFP received — 142 pages</div>
+                <div style="font-size:11px;color:var(--text-light);margin-top:2px;">Hartwell Group issued RFP for Global FM + PM services. CBRE invited to respond.</div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:2px;">Jun 2, 2026</div>
+              </div>
+              <div style="padding:10px 14px;border-bottom:1px solid #F5F5F5;">
+                <div style="font-size:12px;font-weight:600;">Site tour — Hartwell NYC HQ</div>
+                <div style="font-size:11px;color:var(--text-light);margin-top:2px;">Toured 3 floors with Marcus Webb (FM Director). Key pain: JLL response times on escalations avg 4.2 days.</div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:2px;">May 22, 2026</div>
+              </div>
+              <div style="padding:10px 14px;">
+                <div style="font-size:12px;font-weight:600;">First contact — Linda Torres (VP Real Estate)</div>
+                <div style="font-size:11px;color:var(--text-light);margin-top:2px;">Intro meeting. Hartwell dissatisfied with JLL innovation roadmap. Exploring market alternatives.</div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:2px;">Apr 8, 2026</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Milestones -->
+          <div>
+            <div class="card" style="margin-bottom:12px;">
+              <div class="card-header"><span class="card-title">Upcoming Milestones</span></div>
+              <div class="card-body" style="padding:10px 14px;">
+                <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #F5F5F5;">
+                  <div style="background:var(--risk);color:white;border-radius:4px;padding:3px 7px;font-size:10px;font-weight:700;flex-shrink:0;">Jun 18</div>
+                  <div><div style="font-size:12px;font-weight:600;">Clarification questions due to Hartwell</div><div style="font-size:11px;color:var(--text-light);">9 days away — 3 open questions flagged by Agentforce</div></div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #F5F5F5;">
+                  <div style="background:var(--warn);color:white;border-radius:4px;padding:3px 7px;font-size:10px;font-weight:700;flex-shrink:0;">Jun 25</div>
+                  <div><div style="font-size:12px;font-weight:600;">Internal pricing review</div><div style="font-size:11px;color:var(--text-light);">Jess Patel to present BOE model to pursuit leadership</div></div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #F5F5F5;">
+                  <div style="background:#6B7280;color:white;border-radius:4px;padding:3px 7px;font-size:10px;font-weight:700;flex-shrink:0;">Jul 1</div>
+                  <div><div style="font-size:12px;font-weight:600;">Draft response review</div><div style="font-size:11px;color:var(--text-light);">Full team review of executive summary + key sections</div></div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;">
+                  <div style="background:var(--cbre-green);color:white;border-radius:4px;padding:3px 7px;font-size:10px;font-weight:700;flex-shrink:0;">Jul 15</div>
+                  <div><div style="font-size:12px;font-weight:600;">RFP Response Due</div><div style="font-size:11px;color:var(--text-light);">Hard deadline · Submit by 5PM EST</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><span class="card-title">Competitors In Room</span></div>
+              <div class="card-body" style="padding:10px 14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F5F5F5;">
+                  <div><div style="font-size:12px;font-weight:700;color:var(--risk);">JLL</div><div style="font-size:10px;color:var(--text-light);">Incumbent · 7-year relationship</div></div>
+                  <span class="badge b-red">High Threat</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F5F5F5;">
+                  <div><div style="font-size:12px;font-weight:600;">Cushman & Wakefield</div><div style="font-size:10px;color:var(--text-light);">Strong APAC presence</div></div>
+                  <span class="badge b-yellow">Medium</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+                  <div><div style="font-size:12px;font-weight:600;">ISS Global</div><div style="font-size:10px;color:var(--text-light);">Price aggressive, weak on tech</div></div>
+                  <span class="badge b-gray">Lower</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: RFP INTELLIGENCE -->
+      <div class="tab-content" id="ptab-rfp" style="padding:16px;">
+
+        <!-- STATE 1: READY -->
+        <div class="rfp-phase active" id="rfp-ready">
+          <div style="margin-bottom:16px;">
+            <div style="font-size:14px;font-weight:700;">✦ Agentforce RFP Intelligence</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Agentforce reads the RFP alongside every email, meeting, and CRM record — then tells you exactly where you stand.</div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-light);margin-bottom:10px;">Data Sources Connected</div>
+          <div class="sources-grid">
+            <div class="source-card ready">
+              <div class="source-icon">📋</div>
+              <div class="source-name">RFP Document</div>
+              <div class="source-detail">142 pages · Uploaded Jun 3</div>
+              <div class="source-check" style="color:var(--ok);">✓ Parsed</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">✉️</div>
+              <div class="source-name">Email History</div>
+              <div class="source-detail">847 emails · 3 year history</div>
+              <div class="source-check" style="color:var(--ok);">✓ Indexed</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">📅</div>
+              <div class="source-name">Meeting Notes</div>
+              <div class="source-detail">23 meetings · Call recordings</div>
+              <div class="source-check" style="color:var(--ok);">✓ Synced</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">🏢</div>
+              <div class="source-name">CRM + Opportunity</div>
+              <div class="source-detail">Account history · Contacts</div>
+              <div class="source-check" style="color:var(--ok);">✓ Ready</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">🏆</div>
+              <div class="source-name">CBRE References</div>
+              <div class="source-detail">127 FS sector projects</div>
+              <div class="source-check" style="color:var(--ok);">✓ Matched</div>
+            </div>
+            <div class="source-card ready">
+              <div class="source-icon">📊</div>
+              <div class="source-name">Hartwell Annual Report</div>
+              <div class="source-detail">2025 10-K + ESG commitments</div>
+              <div class="source-check" style="color:var(--ok);">✓ Read</div>
+            </div>
+          </div>
+
+          <div class="gen-cta">
+            <div class="gen-cta-title">6 sources · 847 emails · 142-page RFP · Ready to analyze</div>
+            <div class="gen-cta-sub">Agentforce will read every line of the RFP, cross-reference everything CBRE knows about Hartwell, map your capabilities to their evaluation criteria, and surface exactly where you win — and where you're exposed.</div>
+            <button class="btn btn-af btn-lg" onclick="startRFPAnalysis()">
+              ✦ Run RFP Intelligence on Hartwell Group
+            </button>
+          </div>
+        </div>
+
+        <!-- STATE 2: ANALYZING -->
+        <div class="rfp-phase" id="rfp-loading">
+          <div class="gen-loading">
+            <div class="spinner"></div>
+            <div class="gen-loading-title">Agentforce is analyzing the Hartwell pursuit...</div>
+            <div style="font-size:12px;color:var(--text-light);">Reading 142-page RFP · Scanning 847 emails · Cross-referencing 127 reference projects</div>
+            <div class="gen-steps" id="rfp-steps">
+              <div class="gen-step">
+                <div class="gen-step-icon step-done">✓</div>
+                <span>RFP parsed — evaluation criteria extracted (5 categories)</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-done">✓</div>
+                <span>Email &amp; meeting history analyzed — 14 key signals found</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-active" id="rs3">...</div>
+                <span id="rst3">Mapping CBRE capabilities to 67 RFP requirements...</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-pending" id="rs4">4</div>
+                <span style="color:var(--text-light);" id="rst4">Scoring win probability vs. JLL and Cushman</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-pending" id="rs5">5</div>
+                <span style="color:var(--text-light);" id="rst5">Flagging risks and identifying differentiators</span>
+              </div>
+              <div class="gen-step">
+                <div class="gen-step-icon step-pending" id="rs6">6</div>
+                <span style="color:var(--text-light);" id="rst6">Composing pursuit brief and win strategy...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE 3: RESULTS -->
+        <div class="rfp-phase" id="rfp-results">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div>
+              <div style="font-size:14px;font-weight:700;">✦ RFP Intelligence — Hartwell Group</div>
+              <div style="font-size:12px;color:var(--text-light);">Analyzed in 5.1 seconds · 6 sources · 142-page RFP · Jun 9, 2026 9:41 AM</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline" onclick="resetRFP()">↻ Re-run</button>
+              <button class="btn btn-af" onclick="showPursuitTab('strategy', document.querySelector('#pursuit-tabs .tab:nth-child(4)'))">→ Build Win Strategy</button>
+            </div>
+          </div>
+
+          <!-- Top Score Cards -->
+          <div class="rfp-result-top">
+            <div class="rfp-score-card" style="border-top:4px solid var(--warn);">
+              <div class="rfp-score-value" style="color:var(--warn);">71%</div>
+              <div class="rfp-score-label">Win Probability</div>
+              <div class="rfp-score-delta up">↑ 32% above portfolio avg</div>
+            </div>
+            <div class="rfp-score-card" style="border-top:4px solid var(--ok);">
+              <div class="rfp-score-value" style="color:var(--ok);">91%</div>
+              <div class="rfp-score-label">Capability Match</div>
+              <div class="rfp-score-delta up">vs JLL est. 74%</div>
+            </div>
+            <div class="rfp-score-card" style="border-top:4px solid var(--cbre-green);">
+              <div class="rfp-score-value" style="color:var(--cbre-green);">94%</div>
+              <div class="rfp-score-label">Requirements Addressed</div>
+              <div class="rfp-score-delta" style="color:var(--text-light);">4 gaps to close</div>
+            </div>
+            <div class="rfp-score-card" style="border-top:4px solid var(--cbre-mint);">
+              <div class="rfp-score-value" style="color:var(--text);">19%</div>
+              <div class="rfp-score-label">Est. Margin</div>
+              <div class="rfp-score-delta up">↑ 4% vs avg</div>
+            </div>
+          </div>
+
+          <!-- AI Summary -->
+          <div class="ai-brief-box" style="margin-bottom:14px;">
+            <div class="ai-brief-top">
+              <div class="ai-brief-label"><span class="ai-star">✦</span> AI Pursuit Summary</div>
+              <div class="ai-refresh-info">Sourced from 6 data systems · Jun 9, 2026</div>
+            </div>
+            <div class="ai-narrative">
+              Based on deep analysis of the 142-page Hartwell RFP, <strong>CBRE is strongly positioned to displace JLL as Hartwell's GWS partner</strong>. Hartwell's evaluation framework heavily weights ESG capabilities (28% of scoring) and technology platform (22%) — both areas where CBRE holds a decisive and demonstrable advantage over the incumbent. Agentforce identified 14 signals across email and meeting history confirming Hartwell's core dissatisfactions with JLL: slow escalation response times (avg 4.2 days, per site tour notes Jun 5), a stagnant innovation roadmap, and no credible ESG delivery capability.
+            </div>
+            <div class="narrative-block">
+              <div class="narrative-block-title warn-title">⚠ Three risks require immediate team action</div>
+              <div class="narrative-block-text">APAC staffing (Singapore + Bangkok dedicated managers unavailable), price pressure from CFO's 15% cost reduction mandate, and a 90-day transition requirement vs CBRE's standard 120-day model. Each is addressable but must be resolved before submission.</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <!-- Evaluation Criteria -->
+            <div>
+              <div class="eval-section">
+                <div style="font-size:13px;font-weight:700;margin-bottom:12px;">Evaluation Criteria vs CBRE Position</div>
+                <div class="eval-header">
+                  <div class="eval-name" style="font-size:10px;font-weight:700;color:var(--text-light);">CRITERION</div>
+                  <div class="eval-track" style="font-size:10px;font-weight:700;color:var(--text-light);background:transparent;height:auto;">WEIGHT</div>
+                  <div class="eval-match" style="font-size:10px;font-weight:700;color:var(--text-light);">CBRE FIT</div>
+                </div>
+                <div class="eval-row">
+                  <div class="eval-name">ESG Capabilities</div>
+                  <div class="eval-track"><div class="eval-fill" style="width:28%;background:var(--cbre-green);"></div></div>
+                  <div class="eval-weight">28%</div>
+                  <div class="eval-match"><span class="badge b-green">Strong ↑</span></div>
+                </div>
+                <div class="eval-row">
+                  <div class="eval-name">Technology Platform</div>
+                  <div class="eval-track"><div class="eval-fill" style="width:22%;background:var(--cbre-green);"></div></div>
+                  <div class="eval-weight">22%</div>
+                  <div class="eval-match"><span class="badge b-green">Strong ↑</span></div>
+                </div>
+                <div class="eval-row">
+                  <div class="eval-name">Proposed Team</div>
+                  <div class="eval-track"><div class="eval-fill" style="width:20%;background:var(--cbre-mint);"></div></div>
+                  <div class="eval-weight">20%</div>
+                  <div class="eval-match"><span class="badge b-yellow">Verify ⚠</span></div>
+                </div>
+                <div class="eval-row">
+                  <div class="eval-name">Price / Savings</div>
+                  <div class="eval-track"><div class="eval-fill" style="width:18%;background:var(--warn);"></div></div>
+                  <div class="eval-weight">18%</div>
+                  <div class="eval-match"><span class="badge b-yellow">Pressure</span></div>
+                </div>
+                <div class="eval-row">
+                  <div class="eval-name">Transition Plan</div>
+                  <div class="eval-track"><div class="eval-fill" style="width:12%;background:var(--risk);"></div></div>
+                  <div class="eval-weight">12%</div>
+                  <div class="eval-match"><span class="badge b-red">Gap ⚠</span></div>
+                </div>
+              </div>
+
+              <!-- Staffing Capacity -->
+              <div class="eval-section" style="margin-top:0;">
+                <div style="font-size:13px;font-weight:700;margin-bottom:12px;">Delivery Capacity Check</div>
+                <div class="capacity-row">
+                  <div class="capacity-role">FM Operations Lead</div>
+                  <div class="capacity-track"><div class="capacity-fill pf-green" style="width:100%"></div></div>
+                  <div class="capacity-status" style="color:var(--ok);">✓ Available</div>
+                </div>
+                <div class="capacity-row">
+                  <div class="capacity-role">APAC Site Mgr (SIN)</div>
+                  <div class="capacity-track"><div class="capacity-fill pf-red" style="width:40%"></div></div>
+                  <div class="capacity-status" style="color:var(--risk);">⚠ At Capacity</div>
+                </div>
+                <div class="capacity-row">
+                  <div class="capacity-role">APAC Site Mgr (BKK)</div>
+                  <div class="capacity-track"><div class="capacity-fill pf-red" style="width:20%"></div></div>
+                  <div class="capacity-status" style="color:var(--risk);">⚠ Not Staffed</div>
+                </div>
+                <div class="capacity-row">
+                  <div class="capacity-role">ESG Advisory Lead</div>
+                  <div class="capacity-track"><div class="capacity-fill pf-green" style="width:100%"></div></div>
+                  <div class="capacity-status" style="color:var(--ok);">✓ Available</div>
+                </div>
+                <div class="capacity-row">
+                  <div class="capacity-role">Tech Implementation</div>
+                  <div class="capacity-track"><div class="capacity-fill pf-green" style="width:100%"></div></div>
+                  <div class="capacity-status" style="color:var(--ok);">✓ Available</div>
+                </div>
+                <div class="capacity-row">
+                  <div class="capacity-role">Transition Manager</div>
+                  <div class="capacity-track"><div class="capacity-fill pf-yellow" style="width:65%"></div></div>
+                  <div class="capacity-status" style="color:var(--warn);">⚠ Partial</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Differentiators + Risks -->
+            <div>
+              <div style="font-size:13px;font-weight:700;margin-bottom:10px;">CBRE Differentiators</div>
+              <div class="diff-card">
+                <div class="diff-title">🌿 ESG Advisory Practice <span class="diff-impact">28% EVAL WEIGHT</span></div>
+                <div class="diff-text">Hartwell committed to Net Zero by 2040 in 2025 Annual Report. JLL has no dedicated ESG advisory capability in their EMEA team. CBRE's ESG practice + Amy Luo's FS sector track record is the clearest win lever.</div>
+              </div>
+              <div class="diff-card">
+                <div class="diff-title">📱 CBRE 360 Platform <span class="diff-impact">22% EVAL WEIGHT</span></div>
+                <div class="diff-text">Hartwell's current JLL tech stack scored 2.8/5 in their internal FM audit (obtained from site tour notes). CBRE 360 provides real-time portfolio visibility Hartwell explicitly requested in RFP Section 4.2.</div>
+              </div>
+              <div class="diff-card">
+                <div class="diff-title">📁 Vertex Technologies Reference</div>
+                <div class="diff-text">Direct FS-adjacent comparator: same size, same global footprint. CBRE delivered $4.2M savings in Year 1, 94% SLA compliance. Hartwell's CFO David Park has met the Vertex RE team at industry events.</div>
+              </div>
+
+              <div style="font-size:13px;font-weight:700;margin:14px 0 10px;">Risk Flags</div>
+              <div class="risk-card high">
+                <div class="risk-title">🚨 APAC Staffing Gap</div>
+                <div class="risk-text">RFP requires dedicated in-country managers in Singapore and Bangkok by Day 1 of contract. Current bench has no available candidates. Tom Walsh to identify external hire or subcontract options by Jun 20.</div>
+              </div>
+              <div class="risk-card">
+                <div class="risk-title">⚠ CFO Price Mandate (15% Reduction)</div>
+                <div class="risk-text">David Park publicly committed to a 15% FM cost reduction. Build innovation-led savings roadmap into pricing narrative — don't just cut margin, show a pathway to savings through tech and vendor optimization.</div>
+              </div>
+              <div class="risk-card">
+                <div class="risk-title">⚠ Transition Timeline Gap</div>
+                <div class="risk-text">Hartwell requires 90-day transition. CBRE standard is 120 days. An accelerated transition plan needs to be scoped and costed before submission. Jess Patel to assess feasibility.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PURSUIT CONTEXT -->
+      <div class="tab-content" id="ptab-context" style="padding:16px;">
+        <div style="margin-bottom:14px;">
+          <div style="font-size:14px;font-weight:700;">Pursuit Context — Everything Agentforce Knows About Hartwell</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px;">847 emails · 23 meetings · CRM history · Annual reports · LinkedIn signals — synthesized into what matters</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div>
+            <div class="context-source">
+              <div class="context-source-header">
+                <div class="context-source-name">✉️ Email Intelligence <span class="badge b-purple" style="font-size:9px;">AI Summarized</span></div>
+                <span style="font-size:11px;color:var(--text-light);">847 emails</span>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">JLL dissatisfaction — escalation delays</div>
+                <div class="context-item-meta">Linda Torres → Marcus Webb · May 14 — "JLL took 4 days to respond to the Singapore escalation. This is unacceptable."</div>
+                <div class="context-item-insight">✦ Signal: Escalation speed is a live pain point. Emphasize CBRE's 2-hour response SLA in the response.</div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">CFO budget pressure confirmed</div>
+                <div class="context-item-meta">David Park all-hands email · Apr 22 — Referenced "15% operational cost reduction mandate across all facility spend"</div>
+                <div class="context-item-insight">✦ Signal: Price sensitivity is board-driven, not just negotiation tactic. Lead with savings roadmap.</div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">ESG board mandate — Net Zero 2040</div>
+                <div class="context-item-meta">Jennifer Liu (Chief Sustainability) → Linda Torres · Mar 8 — "The board wants visible progress on emissions before the AGM."</div>
+                <div class="context-item-insight">✦ Signal: ESG is not a nice-to-have — it's a governance requirement. Amy Luo should be front-and-center in the presentation.</div>
+              </div>
+            </div>
+
+            <div class="context-source" style="margin-top:0;">
+              <div class="context-source-header">
+                <div class="context-source-name">📅 Meeting Intelligence <span class="badge b-purple" style="font-size:9px;">AI Summarized</span></div>
+                <span style="font-size:11px;color:var(--text-light);">23 meetings</span>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">Site tour — NYC HQ (Jun 5)</div>
+                <div class="context-item-meta">Rachel Smith + Marcus Kim with Marcus Webb (FM Director) · 2.5 hrs</div>
+                <div class="context-item-insight">✦ Key insight: JLL's on-site team morale is low. Marcus Webb mentioned "they feel like a vendor, not a partner." Position CBRE as an embedded team.</div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">Discovery call — CFO David Park (Jun 5)</div>
+                <div class="context-item-meta">Rachel Smith + Jess Patel · 45 min · Video call</div>
+                <div class="context-item-insight">✦ Key insight: David specifically asked "what savings can you guarantee in Year 1?" — needs a specific, committed number, not ranges.</div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">Intro — Linda Torres VP Real Estate (Apr 8)</div>
+                <div class="context-item-meta">Rachel Smith · 30 min · Introduced via Salesforce event</div>
+                <div class="context-item-insight">✦ Key insight: Linda is the internal champion. She's frustrated JLL isn't bringing new ideas. She wants to look good to the CFO.</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="context-source">
+              <div class="context-source-header">
+                <div class="context-source-name">📊 Annual Report Intelligence <span class="badge b-blue" style="font-size:9px;">2025 10-K</span></div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">Real estate footprint expanding — 3 new markets</div>
+                <div class="context-item-meta">Hartwell announced new offices in Dubai, Warsaw, and Toronto (Q1 2026)</div>
+                <div class="context-item-insight">✦ Opportunity: Position CBRE's global delivery network as ready for Day 1 in all 3 new markets.</div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">FM spend: $48M (2025) — target $41M (2026)</div>
+                <div class="context-item-meta">CFO stated target in operational efficiency section. ~15% reduction = $7M.</div>
+                <div class="context-item-insight">✦ Build a $7M savings roadmap: vendor consolidation ($3M), tech automation ($2.5M), energy ($1.5M) = exactly hits target.</div>
+              </div>
+              <div class="context-item">
+                <div class="context-item-title">ESG: Scope 1+2 emissions up 8% YoY</div>
+                <div class="context-item-meta">Board set Net Zero 2040 target but emissions increased last year — board credibility at risk.</div>
+                <div class="context-item-insight">✦ ESG is a governance crisis, not just a goal. CBRE's immediate carbon roadmap deliverable is high-urgency.</div>
+              </div>
+            </div>
+
+            <div class="contact-grid" style="margin-top:0;">
+              <div class="contact-card">
+                <div style="display:flex;justify-content:space-between;">
+                  <div><div class="contact-name">Linda Torres</div><div class="contact-title">VP, Real Estate</div></div>
+                  <span class="badge b-green">Champion</span>
+                </div>
+                <div class="contact-strength">
+                  <div class="strength-bar"><div class="strength-fill" style="width:82%"></div></div>
+                  <div class="contact-tag">Strong</div>
+                </div>
+                <div class="contact-insight">Internal champion. Wants to look innovative to CFO. She invited us to bid — protect this relationship.</div>
+              </div>
+              <div class="contact-card">
+                <div style="display:flex;justify-content:space-between;">
+                  <div><div class="contact-name">David Park</div><div class="contact-title">CFO</div></div>
+                  <span class="badge b-yellow">Economic Buyer</span>
+                </div>
+                <div class="contact-strength">
+                  <div class="strength-bar"><div class="strength-fill" style="width:38%"></div></div>
+                  <div class="contact-tag">Early</div>
+                </div>
+                <div class="contact-insight">Needs a guaranteed Year 1 savings number. Skeptical. One meeting so far. Request a follow-up before submission.</div>
+              </div>
+              <div class="contact-card">
+                <div style="display:flex;justify-content:space-between;">
+                  <div><div class="contact-name">Jennifer Liu</div><div class="contact-title">Chief Sustainability</div></div>
+                  <span class="badge b-teal">ESG Key</span>
+                </div>
+                <div class="contact-strength">
+                  <div class="strength-bar"><div class="strength-fill" style="width:25%"></div></div>
+                  <div class="contact-tag">Not Met</div>
+                </div>
+                <div class="contact-insight">Has 28% of eval score influence. Not yet engaged. Amy Luo should request a direct intro call this week.</div>
+              </div>
+              <div class="contact-card">
+                <div style="display:flex;justify-content:space-between;">
+                  <div><div class="contact-name">Marcus Webb</div><div class="contact-title">FM Director</div></div>
+                  <span class="badge b-blue">Operational</span>
+                </div>
+                <div class="contact-strength">
+                  <div class="strength-bar"><div class="strength-fill" style="width:71%"></div></div>
+                  <div class="contact-tag">Warm</div>
+                </div>
+                <div class="contact-insight">Unhappy with JLL. Wants a partner mentality, not a vendor. Strong reference for CBRE internally if we engage him well.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: WIN STRATEGY -->
+      <div class="tab-content" id="ptab-strategy" style="padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:14px;font-weight:700;">✦ AI Win Strategy — Hartwell Group</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px;">Generated from RFP analysis + 3 years of pursuit history · Jun 9, 2026</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline">Edit</button>
+            <button class="btn btn-primary">Export to Pursuit Deck</button>
+            <button class="btn btn-af">Draft Response Section</button>
+          </div>
+        </div>
+
+        <div class="win-brief">
+          <div class="win-brief-header">✦ CBRE Win Strategy — Hartwell Group</div>
+
+          <div class="win-section">
+            <div class="win-section-title">The Situation</div>
+            <div class="win-text">Hartwell Group is exiting a 7-year JLL relationship driven by three compounding failures: slow escalation response (4.2-day avg), a frozen innovation roadmap, and no credible ESG delivery capability despite a board-level Net Zero 2040 commitment. Their CFO has publicly committed to a 15% FM cost reduction. This is a motivated buyer with a clear set of unmet needs — CBRE addresses all of them.</div>
+          </div>
+
+          <div class="win-section">
+            <div class="win-section-title">The Win Thesis</div>
+            <div class="win-highlight"><strong>CBRE wins Hartwell by doing three things JLL cannot:</strong> delivering a credible and committed ESG roadmap that protects Jennifer Liu's board position, providing a guaranteed Year 1 savings number that gives David Park the headline he needs for the CFO report, and positioning our on-site team as embedded partners — not a call center vendor — to address Marcus Webb's core complaint about JLL.</div>
+          </div>
+
+          <div class="win-section">
+            <div class="win-section-title">The Opening Line</div>
+            <div class="win-highlight" style="font-style:italic;font-size:13px;">"Hartwell's real estate portfolio can do more than reduce costs — it can become the most visible proof point of your Net Zero commitment. CBRE will make that happen."</div>
+          </div>
+
+          <div class="win-section">
+            <div class="win-section-title">Must-Win Moments in the Response</div>
+            <div class="win-text">
+              <strong>1. Executive Summary (CFO-facing):</strong> Lead with a committed $7M Year 1 savings figure broken into specific levers (vendor consolidation $3M, automation $2.5M, energy $1.5M). David Park wants a number, not a range.<br><br>
+              <strong>2. ESG Section (Board-facing):</strong> Amy Luo to write a 12-month carbon roadmap for Hartwell's top 10 emitting sites — specific buildings, specific interventions, specific reduction targets. This must feel like a plan they can present at the AGM, not a brochure.<br><br>
+              <strong>3. Team Section (Linda Torres-facing):</strong> Name every individual. Show org chart with photos. Include a "Day 1 Commitment" statement — who walks in the door on January 1, what they'll do in Week 1. This addresses the incumbent-switching anxiety directly.<br><br>
+              <strong>4. Transition Plan (Risk-facing):</strong> Commit to 90-day transition. Show a 12-week milestone plan. Acknowledge the risk and demonstrate we've done it before (cite reference).
+            </div>
+          </div>
+
+          <div class="win-section">
+            <div class="win-section-title">Actions Before Submission</div>
+            <div class="win-text">
+              🔴 <strong>Critical:</strong> Resolve APAC staffing (Singapore + Bangkok) before Jun 20 or disclose risk with mitigation plan.<br>
+              🟡 <strong>Important:</strong> Amy Luo to request a direct meeting with Jennifer Liu this week — ESG is 28% of eval and Jennifer hasn't met the team.<br>
+              🟡 <strong>Important:</strong> Rachel Smith to schedule a second call with David Park — he needs to trust CBRE before scoring price section.<br>
+              ⚪ <strong>Nice to have:</strong> Obtain a reference from Vertex Technologies' CFO for David Park — a peer-to-peer reference from a similar company would be powerful.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PRICING -->
+      <div class="tab-content" id="ptab-pricing" style="padding:16px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Pricing & Staffing Model</div>
+        <div style="font-size:12px;color:var(--text-light);margin-bottom:16px;">AI-generated scope model based on RFP requirements · Jess Patel (Pricing Lead) reviewing</div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Scope & Pricing Summary — Year 1</span><span class="badge b-yellow">Draft</span></div>
+          <div class="card-body">
+            <table>
+              <thead><tr><th>Service Line</th><th>Scope</th><th>Estimated Y1 Cost</th><th>CBRE Fee</th><th>Margin</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Facilities Management</strong></td><td>38 sites · FM ops</td><td>$26.4M</td><td>$21.8M</td><td>21%</td><td><span class="badge b-green">Modeled</span></td></tr>
+                <tr><td><strong>Project Management</strong></td><td>Capital projects</td><td>$6.2M</td><td>$5.1M</td><td>18%</td><td><span class="badge b-green">Modeled</span></td></tr>
+                <tr><td><strong>ESG Advisory</strong></td><td>Net Zero roadmap</td><td>$2.8M</td><td>$2.4M</td><td>17%</td><td><span class="badge b-yellow">Estimating</span></td></tr>
+                <tr><td><strong>Technology (CBRE 360)</strong></td><td>Platform + integration</td><td>$1.8M</td><td>$1.5M</td><td>17%</td><td><span class="badge b-yellow">Estimating</span></td></tr>
+                <tr style="background:#F9FAF9;font-weight:700;"><td>Total Year 1</td><td></td><td>$37.2M</td><td><strong>$30.8M</strong></td><td>19%</td><td><span class="badge b-blue">In Review</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card" style="margin-top:0;">
+          <div class="card-header"><span class="card-title">Savings Roadmap — Addressing CFO's 15% Reduction Target</span></div>
+          <div class="card-body" style="padding:14px 16px;">
+            <div class="service-bar-row">
+              <div class="service-bar-label">Vendor Consolidation</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:43%;background:var(--cbre-green);height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$3.0M</div>
+            </div>
+            <div class="service-bar-row">
+              <div class="service-bar-label">FM Automation</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:36%;background:#17B89B;height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$2.5M</div>
+            </div>
+            <div class="service-bar-row">
+              <div class="service-bar-label">Energy Procurement</div>
+              <div class="service-bar-track"><div class="service-bar-fill" style="width:21%;background:var(--cbre-mint);height:100%;border-radius:4px;"></div></div>
+              <div class="service-bar-value">$1.5M</div>
+            </div>
+            <div style="margin-top:8px;padding:10px;background:#F0FDF4;border-radius:6px;border:1px solid #86EFAC;font-size:12px;"><strong>Total Year 1 Savings: $7.0M</strong> — exactly matching CFO's 15% cost reduction target on $48M baseline spend. This number should be on Page 1 of the response.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: AGENTFORCE PANEL -->
+    <div class="pursuit-right">
+      <div class="af-header">
+        <div>
+          <div class="af-title"><div class="af-dot"></div> Agentforce Pursuit Intel</div>
+          <div class="af-powered">Live · Hartwell Group · Jun 9, 2026</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">🔴 Action Required</div>
+        <div class="af-alert critical">
+          <div class="af-alert-title">Jennifer Liu — Not Yet Engaged</div>
+          <div>ESG carries 28% of evaluation score. Jennifer Liu hasn't met the CBRE team. Amy Luo should request a call this week — 36 days to submission.</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Draft Intro Email</button></div>
+        </div>
+        <div class="af-alert critical">
+          <div class="af-alert-title">APAC Staffing Unresolved</div>
+          <div>Singapore + Bangkok dedicated managers required Day 1. No candidates confirmed. Blocks submission if unresolved. Escalate to Tom Walsh today.</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Assign to Tom Walsh</button></div>
+        </div>
+        <div class="af-alert risk">
+          <div class="af-alert-title">Clarification Questions Due Jun 18</div>
+          <div>Agentforce flagged 3 open ambiguities in RFP Section 6.4 (APAC governance) and Section 9.1 (transition milestones). Submit questions to protect your bid.</div>
+          <div class="af-cta"><button class="btn btn-xs btn-xs-green">Review Questions</button></div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Live Hartwell Signals</div>
+        <div class="af-alert info">
+          <div class="af-alert-title">Hartwell Q1 Earnings — FM cost callout</div>
+          <div>CFO David Park cited "facilities spend above benchmark" on the Q1 earnings call. Analyst follow-up question specifically on JLL contract value.</div>
+          <div class="af-alert-time">Source: Earnings transcript · May 8</div>
+        </div>
+        <div class="af-alert good">
+          <div class="af-alert-title">Jennifer Liu promoted to C-Suite</div>
+          <div>Hartwell elevated Chief Sustainability to C-suite role effective Jun 1 — ESG now has board-level authority. Direct implication for eval criteria weighting.</div>
+          <div class="af-alert-time">Source: Hartwell press release · Jun 1</div>
+        </div>
+        <div class="af-alert info">
+          <div class="af-alert-title">Hartwell expanding to Dubai + Warsaw</div>
+          <div>New market entries announced Q1 2026. Both require FM coverage from Day 1 of the new contract — position as Day 1 readiness differentiator.</div>
+          <div class="af-alert-time">Source: Annual Report · Mar 2026</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Competitive Intel</div>
+        <div class="af-alert critical">
+          <div class="af-alert-title">JLL Retention Play Detected</div>
+          <div>LinkedIn signals show JLL added 3 Hartwell stakeholders as connections in the past 2 weeks. They know the contract is at risk. Expect aggressive pricing and concessions.</div>
+          <div class="af-alert-time">Source: LinkedIn signals · Jun 7</div>
+        </div>
+        <div class="af-alert risk">
+          <div class="af-alert-title">Cushman APAC Bench Strong</div>
+          <div>C&W recently won a 12-site APAC contract in Singapore — strong staffed bench. Our APAC gap is a real differentiator risk vs. them specifically.</div>
+          <div class="af-alert-time">Source: Industry news · May 2026</div>
+        </div>
+      </div>
+
+      <div class="af-section">
+        <div class="af-section-label">Pursuit Completion</div>
+        <div style="padding:4px 0;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>RFP Intelligence</span><span style="color:var(--ok);font-weight:700;">✓ Done</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>Win Strategy</span><span style="color:var(--ok);font-weight:700;">✓ Done</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>Pricing Model</span><span style="color:var(--warn);font-weight:700;">In Progress</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>APAC Staffing</span><span style="color:var(--risk);font-weight:700;">Unresolved</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>Jennifer Liu Meeting</span><span style="color:var(--risk);font-weight:700;">Not Scheduled</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px;"><span>Response Draft</span><span style="color:var(--text-light);">Not Started</span></div>
+          <div class="prog-bar"><div class="prog-fill pf-yellow" style="width:38%"></div></div>
+          <div style="font-size:10px;color:var(--text-light);margin-top:4px;text-align:center;">38% complete · 36 days remaining</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 <script>
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1386,6 +2287,8 @@ function showScreen(name) {
     document.querySelectorAll('.nav-item')[0].classList.add('active');
   } else if (name === 'client360') {
     document.querySelector('#nav-client360').classList.add('active');
+  } else if (name === 'pursuit') {
+    document.querySelector('#nav-pursuit').classList.add('active');
   }
 }
 
@@ -1434,6 +2337,60 @@ function startGeneration() {
     document.getElementById('qbr-loading').classList.remove('active');
     document.getElementById('qbr-output').classList.add('active');
   }, 3800);
+}
+
+function showPursuitTab(name, el) {
+  document.querySelectorAll('#pursuit-screen .tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#pursuit-tabs .tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ptab-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function startRFPAnalysis() {
+  document.getElementById('rfp-ready').classList.remove('active');
+  document.getElementById('rfp-loading').classList.add('active');
+
+  const steps = [
+    { iconId: 'rs3', textId: 'rst3', delay: 700,  text: '67 requirements mapped — 63 addressed by CBRE capabilities' },
+    { iconId: 'rs4', textId: 'rst4', delay: 1500, text: 'Win probability scored: 71% vs JLL (est. 58%), Cushman (est. 62%)' },
+    { iconId: 'rs5', textId: 'rst5', delay: 2400, text: '3 differentiators confirmed · 3 risks flagged · APAC gap identified' },
+    { iconId: 'rs6', textId: 'rst6', delay: 3200, text: 'Pursuit brief and win strategy ready...' },
+  ];
+
+  steps.forEach((step, i) => {
+    setTimeout(() => {
+      if (i > 0) {
+        const p = steps[i-1];
+        document.getElementById(p.iconId).className = 'gen-step-icon step-done';
+        document.getElementById(p.iconId).textContent = '✓';
+      }
+      document.getElementById(step.iconId).className = 'gen-step-icon step-active';
+      document.getElementById(step.iconId).textContent = '...';
+      document.getElementById(step.textId).textContent = step.text;
+      document.getElementById(step.textId).style.color = '';
+    }, step.delay);
+  });
+
+  setTimeout(() => {
+    const last = steps[steps.length - 1];
+    document.getElementById(last.iconId).className = 'gen-step-icon step-done';
+    document.getElementById(last.iconId).textContent = '✓';
+    document.getElementById(last.textId).textContent = 'Analysis complete — 71% win probability.';
+  }, 3900);
+
+  setTimeout(() => {
+    document.getElementById('rfp-loading').classList.remove('active');
+    document.getElementById('rfp-results').classList.add('active');
+  }, 4400);
+}
+
+function resetRFP() {
+  document.getElementById('rfp-results').classList.remove('active');
+  document.getElementById('rfp-ready').classList.add('active');
+  ['rs3','rs4','rs5','rs6'].forEach((id, i) => {
+    document.getElementById(id).className = i === 0 ? 'gen-step-icon step-active' : 'gen-step-icon step-pending';
+    document.getElementById(id).textContent = i === 0 ? '...' : String(i+3);
+  });
 }
 
 function resetQBR() {
