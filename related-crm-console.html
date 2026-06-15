@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Chen — Lead Record · Salesforce CRM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,'Inter','Segoe UI',Arial,sans-serif;background:#F3F2F2;height:100vh;overflow:hidden;display:flex;flex-direction:column;font-size:13px;color:#181818;}
+
+/* ── SF APP BAR ── */
+.sf-app-bar{background:#032D60;height:44px;display:flex;align-items:center;padding:0 16px;gap:0;flex-shrink:0;}
+.sf-logo{display:flex;align-items:center;gap:8px;margin-right:20px;}
+.sf-logo-txt{color:white;font-size:12px;font-weight:300;letter-spacing:.12em;text-transform:uppercase;opacity:.85;}
+.sf-logo-txt b{font-weight:800;}
+.sf-nav{display:flex;height:100%;}
+.sf-nav-item{color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:0 13px;display:flex;align-items:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.sf-nav-item:hover{color:white;background:rgba(255,255,255,.07);}
+.sf-nav-item.active{color:white;border-bottom-color:white;}
+.sf-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.sf-search-wrap{position:relative;}
+.sf-search{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:5px 10px 5px 28px;color:white;font-size:11px;width:190px;outline:none;}
+.sf-search::placeholder{color:rgba(255,255,255,.45);}
+.sf-search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.45);font-size:12px;}
+.sf-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#8B6914);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;cursor:pointer;}
+.sf-icons{display:flex;gap:12px;align-items:center;color:rgba(255,255,255,.55);font-size:15px;}
+
+/* ── DEMO VIEW SWITCHER ── */
+.view-switcher{background:#0D1B2A;border-bottom:1px solid #1C2E42;padding:0 18px;display:flex;align-items:center;gap:8px;height:34px;flex-shrink:0;}
+.vs-label{color:rgba(255,255,255,.35);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-right:6px;}
+.vs-tab{color:rgba(255,255,255,.5);font-size:10.5px;font-weight:600;padding:0 12px;height:34px;display:flex;align-items:center;cursor:pointer;border-bottom:2px solid transparent;text-decoration:none;transition:all .2s;}
+.vs-tab:hover{color:rgba(255,255,255,.85);}
+.vs-tab.active{color:white;border-bottom-color:#C9A84C;}
+.vs-sep{color:rgba(255,255,255,.2);font-size:11px;}
+.vs-af-badge{margin-left:auto;background:linear-gradient(135deg,#7B5EA7,#5035A0);color:white;padding:2px 9px;border-radius:8px;font-size:9.5px;font-weight:700;letter-spacing:.06em;}
+
+/* ── TAB BAR ── */
+.sf-tabs{background:#F3F2F2;border-bottom:1px solid #DDDBDA;display:flex;padding:0 16px;flex-shrink:0;height:34px;align-items:flex-end;gap:2px;}
+.sf-tab{background:white;border:1px solid #DDDBDA;border-bottom:none;border-radius:4px 4px 0 0;padding:0 14px;height:28px;display:flex;align-items:center;gap:7px;font-size:11.5px;color:#080707;font-weight:500;cursor:pointer;box-shadow:inset 0 2px 0 0 #0070D2;}
+.sf-tab-x{color:#706E6B;font-size:11px;margin-left:6px;opacity:.5;}
+.sf-tab-bg{padding:0 14px;height:28px;display:flex;align-items:center;font-size:11.5px;color:#706E6B;cursor:pointer;background:transparent;}
+
+/* ── RECORD HEADER ── */
+.record-header{background:white;border-bottom:1px solid #DDDBDA;padding:11px 20px 10px;flex-shrink:0;}
+.record-breadcrumb{font-size:10px;color:#706E6B;margin-bottom:7px;display:flex;align-items:center;gap:4px;}
+.record-breadcrumb a{color:#0070D2;text-decoration:none;}
+.record-breadcrumb a:hover{text-decoration:underline;}
+.record-top{display:flex;align-items:flex-start;gap:14px;}
+.lead-avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#7D5700);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:white;flex-shrink:0;}
+.record-meta{flex:1;min-width:0;}
+.record-name-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:3px;}
+.record-name{font-size:19px;font-weight:700;color:#080707;}
+.hot-badge{background:#EA001E;color:white;font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.06em;}
+.warm-badge{background:#CA8501;color:white;font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:.06em;}
+.confirmed-pill{background:#EEFAF3;color:#2E844A;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;border:1px solid #9FDBB5;}
+.urgent-pill{background:#FFEBEE;color:#C62828;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;border:1px solid #FFCDD2;display:none;}
+.record-sub{font-size:11.5px;color:#555;margin-bottom:7px;}
+.record-highlights{display:flex;gap:18px;flex-wrap:wrap;}
+.rh-item{display:flex;flex-direction:column;}
+.rh-label{font-size:9px;color:#706E6B;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:1px;}
+.rh-val{font-size:12px;color:#080707;font-weight:600;}
+.rh-val.hot{color:#EA001E;font-weight:800;}
+.record-actions{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+.ra-btn{padding:5px 14px;border-radius:4px;font-size:11.5px;font-weight:600;cursor:pointer;border:1px solid #DDDBDA;background:white;color:#0070D2;transition:all .2s;}
+.ra-btn:hover{background:#F3F2F2;}
+.ra-btn.primary{background:#0070D2;color:white;border-color:#0070D2;}
+.ra-btn.primary:hover{background:#005BB5;}
+.ra-btn.danger{background:#EA001E;color:white;border-color:#EA001E;display:none;}
+
+/* ── MAIN 3-COLUMN BODY ── */
+.record-body{flex:1;display:grid;grid-template-columns:248px 1fr 284px;gap:10px;padding:10px 14px;overflow:hidden;min-height:0;}
+
+/* ── SHARED CARD ── */
+.sf-card{background:white;border:1px solid #DDDBDA;border-radius:4px;overflow:hidden;margin-bottom:9px;}
+.sf-card:last-child{margin-bottom:0;}
+.sf-card-head{padding:7px 12px;background:#FAFAF9;border-bottom:1px solid #F3F2F2;font-size:10px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;justify-content:space-between;}
+.sf-card-head .edit-lnk{background:none;border:none;color:#0070D2;font-size:10px;cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;}
+.sf-card-body{padding:10px 12px;}
+
+/* ── LEFT COLUMN ── */
+.left-col{overflow-y:auto;}
+.detail-row{display:grid;grid-template-columns:88px 1fr;gap:2px;margin-bottom:6px;align-items:start;}
+.det-lbl{font-size:9.5px;color:#706E6B;font-weight:600;padding-top:1px;}
+.det-val{font-size:11.5px;color:#181818;font-weight:500;word-break:break-word;}
+.det-val.link{color:#0070D2;cursor:pointer;}
+.det-val.link:hover{text-decoration:underline;}
+.det-val.hot{color:#EA001E;font-weight:700;}
+.det-val.ai{color:#7B5EA7;font-size:10.5px;}
+.det-val.green{color:#2E844A;font-weight:700;}
+.score-bar-sf{height:5px;background:#F3F2F2;border-radius:3px;overflow:hidden;margin:8px 0 4px;}
+.score-fill-sf{height:100%;border-radius:3px;background:linear-gradient(90deg,#FF6B35,#F5A623 60%,#2E844A);}
+.score-num{font-size:20px;font-weight:800;color:#EA001E;margin-bottom:4px;}
+.score-breakdown{display:flex;flex-direction:column;gap:3px;}
+.sb-row{display:flex;align-items:center;font-size:10px;gap:4px;}
+.sb-lbl{flex:1;color:#444;}
+.sb-ck{color:#2E844A;font-size:10px;}
+.sb-pts{font-weight:700;color:#2E844A;min-width:24px;text-align:right;}
+.sb-total{border-top:1px solid #EEEEEE;padding-top:5px;margin-top:2px;font-weight:700;display:flex;justify-content:space-between;font-size:10.5px;color:#181818;}
+.sb-total .sb-hot{color:#EA001E;}
+
+/* ── CENTER COLUMN ── */
+.center-col{overflow-y:auto;display:flex;flex-direction:column;}
+.act-header-row{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:#FAFAF9;border-bottom:1px solid #F3F2F2;}
+.act-filters{display:flex;gap:0;}
+.act-filter{padding:4px 11px;font-size:11px;font-weight:600;color:#706E6B;cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;transition:all .2s;}
+.act-filter.active{color:#0070D2;border-bottom-color:#0070D2;}
+.act-compose{background:#0070D2;color:white;border:none;padding:4px 12px;border-radius:4px;font-size:10.5px;font-weight:700;cursor:pointer;}
+
+/* ── TIMELINE ── */
+.tl-wrap{padding:14px;}
+.tl-item{display:flex;gap:10px;position:relative;margin-bottom:0;}
+.tl-item::before{content:'';position:absolute;left:17px;top:38px;bottom:-6px;width:2px;background:#E8E8E8;z-index:0;}
+.tl-item:last-child::before{display:none;}
+.tl-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;position:relative;z-index:1;margin-top:2px;}
+.tl-icon.chat{background:#F3ECF9;border:2px solid #9C6FDE;}
+.tl-icon.abandoned{background:#FFF8EE;border:2px solid #CA8501;}
+.tl-icon.email-out{background:#EEF4FF;border:2px solid #0070D2;}
+.tl-icon.email-in{background:#EEFAF3;border:2px solid #2E844A;}
+.tl-icon.tour{background:#EEFAF3;border:2px solid #2E844A;}
+.tl-icon.queue{background:#1a3050;border:2px solid #4A7DB5;}
+.tl-right{flex:1;padding-bottom:14px;}
+.tl-meta{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.tl-time{font-size:10px;color:#706E6B;}
+.tb{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;}
+.tb.ai{background:#F3ECF9;color:#7B5EA7;}
+.tb.reply{background:#EEFAF3;color:#2E844A;}
+.tb.sys{background:#F3F2F2;color:#706E6B;}
+.tb.confirmed{background:#EEFAF3;color:#2E844A;}
+.tb.urgent{background:#FFF0EE;color:#EA001E;}
+.tl-card{background:white;border:1px solid #DDDBDA;border-radius:4px;overflow:hidden;}
+.tl-card-head{padding:7px 12px;background:#FAFAF9;border-bottom:1px solid #F3F2F2;display:flex;align-items:flex-start;justify-content:space-between;cursor:pointer;user-select:none;}
+.tl-card-head:hover{background:#F0F0EF;}
+.tl-subject{font-size:11.5px;font-weight:700;color:#080707;}
+.tl-preview{font-size:10px;color:#706E6B;margin-top:1px;}
+.tl-toggle{color:#706E6B;font-size:11px;flex-shrink:0;margin-top:1px;}
+.tl-card-body{padding:11px 12px;font-size:11.5px;color:#3E3E3C;line-height:1.65;border-top:1px solid #F3F2F2;}
+.tl-card-body p{margin-bottom:7px;}
+.tl-card-body p:last-child{margin-bottom:0;}
+.tl-card-body strong{color:#080707;}
+.prop-pill{background:#EEF4FF;border:1px solid #BDD6F7;border-radius:4px;padding:7px 10px;margin:5px 0;}
+.prop-pill .pp-name{font-weight:700;font-size:11.5px;color:#0070D2;}
+.prop-pill .pp-detail{font-size:10.5px;color:#444;margin-top:2px;}
+.attach{display:inline-flex;align-items:center;gap:4px;background:#F3F2F2;border:1px solid #DDDBDA;border-radius:3px;padding:3px 7px;font-size:9.5px;color:#444;margin:4px 4px 0 0;}
+.email-sig{margin-top:9px;padding-top:9px;border-top:1px solid #F3F2F2;font-size:10px;color:#706E6B;}
+.tl-updates{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.tl-tag{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:3px;}
+.tl-tag.green{background:#EEFAF3;color:#2E844A;}
+.tl-tag.blue{background:#EEF4FF;color:#0070D2;}
+.tl-tag.hot{background:#FFF0EE;color:#EA001E;}
+.tl-simple{padding:3px 0 0;}
+.tl-simple-lbl{font-size:11.5px;color:#3E3E3C;font-weight:500;}
+.tl-simple-lbl.highlight{color:#0070D2;font-weight:700;}
+.tl-simple-sub{font-size:10px;color:#706E6B;margin-top:2px;}
+
+/* ── RIGHT COLUMN ── */
+.right-col{overflow-y:auto;}
+.af-status-row{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.af-status-dot{width:7px;height:7px;border-radius:50%;background:#2E844A;}
+.af-status-lbl{font-size:11.5px;font-weight:700;color:#080707;flex:1;}
+.af-mode-tag{font-size:9px;font-weight:700;background:#EEFAF3;color:#2E844A;padding:2px 6px;border-radius:3px;}
+.af-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.af-stat{background:#F3F2F2;border-radius:4px;padding:7px;text-align:center;}
+.af-stat-n{font-size:18px;font-weight:800;color:#0070D2;line-height:1;}
+.af-stat-lbl{font-size:9px;color:#706E6B;text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+.af-insight{background:#F3F2F2;border-radius:4px;padding:7px 9px;font-size:10px;color:#555;line-height:1.5;}
+.af-insight strong{color:#0070D2;}
+
+/* Morning Queue */
+.mq-outer{background:linear-gradient(135deg,#0D1B2A,#1C3452);border-radius:4px;overflow:hidden;}
+.mq-hd2{padding:8px 12px;display:flex;align-items:center;justify-content:space-between;}
+.mq-ttl2{font-size:9.5px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.1em;text-transform:uppercase;}
+.mq-when2{font-size:9px;color:rgba(255,255,255,.38);}
+.mq-body2{background:white;padding:10px 12px;}
+.mq-pos2{font-size:8.5px;color:#0070D2;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.mq-nm2{font-size:13.5px;font-weight:800;color:#111;display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.mq-checks{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.mq-chk{font-size:10.5px;color:#333;display:flex;align-items:flex-start;gap:5px;line-height:1.4;}
+.mq-chk .ck{color:#2E844A;flex-shrink:0;margin-top:1px;}
+.mq-insight-box{background:#FFFBF0;border:1px solid #F5E09A;border-radius:3px;padding:6px 8px;font-size:10px;color:#7A5200;font-style:italic;line-height:1.45;}
+.mq-ft2{padding:7px 12px;background:rgba(0,0,0,.03);border-top:1px solid #EAECEE;display:flex;gap:6px;}
+.mq-btn2{flex:1;border:none;padding:5px 8px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;}
+.mq-btn2.p{background:#0D1B2A;color:white;}
+.mq-btn2.s{background:#E8EDF0;color:#334;}
+
+/* NBA */
+.nba-wrap{background:#EEF4FF;border:1px solid #BDD6F7;border-radius:4px;padding:9px 10px;display:flex;gap:9px;}
+.nba-icon2{font-size:22px;flex-shrink:0;}
+.nba-ttl2{font-size:11.5px;font-weight:800;color:#0070D2;margin-bottom:3px;}
+.nba-desc2{font-size:10px;color:#444;line-height:1.5;}
+.nba-cta{margin-top:8px;background:#0070D2;color:white;border:none;padding:5px 10px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;width:100%;}
+
+/* Priority Queue */
+.pq-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;margin-bottom:5px;border-left:3px solid;}
+.pq-row:last-child{margin-bottom:0;}
+.pq-row.hot{background:#FFF5F5;border-color:#EA001E;}
+.pq-row.warm{background:#FFFDF0;border-color:#CA8501;}
+.pq-row.cool{background:#F3F2F2;border-color:#AAAAAA;}
+.pq-rank{font-size:9px;font-weight:800;min-width:16px;}
+.pq-name{font-size:11.5px;font-weight:700;color:#181818;}
+.pq-sub{font-size:9.5px;color:#706E6B;}
+.pq-score{font-size:9px;font-weight:800;padding:2px 5px;border-radius:3px;flex-shrink:0;}
+.pq-score.hot{background:#EA001E;color:white;}
+.pq-score.warm{background:#CA8501;color:white;}
+.pq-score.cool{background:#AAAAAA;color:white;}
+
+/* Skip flag */
+.skip-flag-box{background:#FFF5F5;border:1px solid #FECACA;border-radius:4px;padding:8px 10px;display:flex;gap:8px;align-items:flex-start;}
+.sfb-icon{font-size:17px;flex-shrink:0;}
+.sfb-ttl{font-size:11px;font-weight:700;color:#EA001E;margin-bottom:2px;}
+.sfb-sub{font-size:10px;color:#706E6B;line-height:1.4;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:#DDDBDA;border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- SALESFORCE APP BAR -->
+<div class="sf-app-bar">
+  <div class="sf-logo">
+    <svg width="22" height="16" viewBox="0 0 100 70" fill="none">
+      <path d="M41.5 7C34 7 27.5 11 23.5 17C21 14.5 17.5 13 13.5 13C6 13 0 19 0 26.5C0 27.5 0.1 28.5 0.3 29.5C-0.1 30.7 -0.5 32.5 1 35C-1 37 -1.5 40 0.5 43C2.5 46 6 47 9.5 46.5C11 49.5 14 51.5 17.5 51.5C19 51.5 20.5 51 21.5 50.5C24 55.5 29.5 59 35.5 59C38 59 40.5 58.5 42.5 57C45 62 50 65.5 55.5 65.5C60 65.5 64 63.5 66.5 60C68 60.5 69.5 60.5 71 60.5C79 60.5 85.5 54 85.5 46C85.5 45 85.5 44 85 43C89.5 40.5 92.5 35.5 92.5 30C92.5 21.5 85.5 14.5 77 14.5C75.5 14.5 74 14.5 72.5 15C69.5 10 64 7 58 7C54 7 50.5 8.5 47.5 11C45.5 8.5 43.5 7 41.5 7Z" fill="white"/>
+    </svg>
+    <span class="sf-logo-txt"><b>Sales</b>force</span>
+  </div>
+  <nav class="sf-nav">
+    <div class="sf-nav-item">Home</div>
+    <div class="sf-nav-item active">Leads</div>
+    <div class="sf-nav-item">Contacts</div>
+    <div class="sf-nav-item">Accounts</div>
+    <div class="sf-nav-item">Opportunities</div>
+    <div class="sf-nav-item">Reports</div>
+  </nav>
+  <div class="sf-right">
+    <div class="sf-search-wrap">
+      <span class="sf-search-icon">🔍</span>
+      <input class="sf-search" placeholder="Search Salesforce" />
+    </div>
+    <div class="sf-icons">🔔 ⚙️</div>
+    <div class="sf-avatar">SM</div>
+  </div>
+</div>
+
+<!-- DEMO VIEW SWITCHER -->
+<div class="view-switcher">
+  <span class="vs-label">Demo View</span>
+  <a href="related-agentforce-demo.html" class="vs-tab">🌐 Website Experience</a>
+  <span class="vs-sep">·</span>
+  <span class="vs-tab active">📋 Salesforce CRM Console</span>
+  <div class="vs-af-badge">⚡ Agentforce SDR</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="sf-tabs">
+  <div class="sf-tab-bg">Leads</div>
+  <div class="sf-tab">Lead: Alex Chen <span class="sf-tab-x">×</span></div>
+</div>
+
+<!-- RECORD HEADER -->
+<div class="record-header">
+  <div class="record-breadcrumb">
+    <a href="#">Leads</a> › <span>Alex Chen</span>
+  </div>
+  <div class="record-top">
+    <div class="lead-avatar">AC</div>
+    <div class="record-meta">
+      <div class="record-name-row">
+        <span class="record-name">Alex Chen</span>
+        <span class="hot-badge">HOT</span>
+        <span class="confirmed-pill">✓ Tour Confirmed · Jun 17</span>
+        <span class="urgent-pill" id="urgent-pill">🚨 Urgent — Callback Requested</span>
+      </div>
+      <div class="record-sub">Related Residential Lead · Chelsea / Hudson Yards · 2 Bedrooms · <strong>Abington House</strong></div>
+      <div class="record-highlights">
+        <div class="rh-item"><div class="rh-label">Email</div><div class="rh-val">alex.chen@email.com</div></div>
+        <div class="rh-item"><div class="rh-label">Phone</div><div class="rh-val">(917) 555-0142</div></div>
+        <div class="rh-item"><div class="rh-label">Budget</div><div class="rh-val">$8,000–$10,000/mo</div></div>
+        <div class="rh-item"><div class="rh-label">Move-In</div><div class="rh-val">60–90 days</div></div>
+        <div class="rh-item"><div class="rh-label">Fit Score</div><div class="rh-val hot">94 / 100 🔥</div></div>
+        <div class="rh-item"><div class="rh-label">Tour</div><div class="rh-val">Tue Jun 17 · 2:00 PM</div></div>
+      </div>
+    </div>
+    <div style="flex-shrink:0;">
+      <div class="record-actions">
+        <button class="ra-btn primary">📧 Email</button>
+        <button class="ra-btn">📅 Schedule</button>
+        <button class="ra-btn">📞 Call</button>
+        <button class="ra-btn">✏️ Edit</button>
+        <button class="ra-btn" onclick="triggerUrgent()">🚨 Flag Urgent</button>
+        <button class="ra-btn">⟳ Convert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN 3-COLUMN BODY -->
+<div class="record-body">
+
+  <!-- ── LEFT: DETAILS ── -->
+  <div class="left-col">
+
+    <div class="sf-card">
+      <div class="sf-card-head">Lead Information <button class="edit-lnk">Edit</button></div>
+      <div class="sf-card-body">
+        <div class="detail-row"><div class="det-lbl">Status</div><div class="det-val">Working</div></div>
+        <div class="detail-row"><div class="det-lbl">Rating</div><div class="det-val hot">● Hot</div></div>
+        <div class="detail-row"><div class="det-lbl">Source</div><div class="det-val">Website Chat</div></div>
+        <div class="detail-row"><div class="det-lbl">Created</div><div class="det-val">Jun 15 · 11:43 PM</div></div>
+        <div class="detail-row"><div class="det-lbl">Owner</div><div class="det-val link">Sarah M.</div></div>
+        <div class="detail-row"><div class="det-lbl">Assigned by</div><div class="det-val ai">⚡ Agentforce SDR</div></div>
+        <div class="detail-row"><div class="det-lbl">Tour Date</div><div class="det-val green">Tue Jun 17 · 2 PM ✓</div></div>
+      </div>
+    </div>
+
+    <div class="sf-card">
+      <div class="sf-card-head">Qualification Profile</div>
+      <div class="sf-card-body">
+        <div class="detail-row"><div class="det-lbl">City</div><div class="det-val">Manhattan, NYC</div></div>
+        <div class="detail-row"><div class="det-lbl">Neighborhood</div><div class="det-val">Chelsea / Hudson Yards</div></div>
+        <div class="detail-row"><div class="det-lbl">Bedrooms</div><div class="det-val">2 Bedrooms</div></div>
+        <div class="detail-row"><div class="det-lbl">Bathrooms</div><div class="det-val">2 Baths</div></div>
+        <div class="detail-row"><div class="det-lbl">Budget</div><div class="det-val green">$8,000–$10,000/mo</div></div>
+        <div class="detail-row"><div class="det-lbl">Move-In</div><div class="det-val">60–90 days</div></div>
+        <div class="detail-row"><div class="det-lbl">Pets</div><div class="det-val">🐶 Dog (Labrador)</div></div>
+        <div class="detail-row"><div class="det-lbl">Amenities</div><div class="det-val">Fitness &amp; Wellness</div></div>
+        <div class="detail-row"><div class="det-lbl">Interest</div><div class="det-val link">Abington House</div></div>
+      </div>
+    </div>
+
+    <div class="sf-card">
+      <div class="sf-card-head">Lead Score · 94 / 100</div>
+      <div class="sf-card-body">
+        <div class="score-num">94 <span style="font-size:13px;color:#EA001E;">HOT 🔥</span></div>
+        <div class="score-bar-sf"><div class="score-fill-sf" style="width:94%"></div></div>
+        <div class="score-breakdown">
+          <div class="sb-row"><span class="sb-lbl">Neighborhood match</span><span class="sb-ck">✅</span><span class="sb-pts">+15</span></div>
+          <div class="sb-row"><span class="sb-lbl">Budget confirmed</span><span class="sb-ck">✅</span><span class="sb-pts">+20</span></div>
+          <div class="sb-row"><span class="sb-lbl">Move-in timing</span><span class="sb-ck">✅</span><span class="sb-pts">+18</span></div>
+          <div class="sb-row"><span class="sb-lbl">Pet needs addressed</span><span class="sb-ck">✅</span><span class="sb-pts">+12</span></div>
+          <div class="sb-row"><span class="sb-lbl">Property selected</span><span class="sb-ck">✅</span><span class="sb-pts">+15</span></div>
+          <div class="sb-row"><span class="sb-lbl">2× email replies</span><span class="sb-ck">✅</span><span class="sb-pts">+14</span></div>
+          <div class="sb-total"><span>Total</span><span class="sb-hot">94 · HOT 🔥</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── CENTER: ACTIVITY TIMELINE ── -->
+  <div class="center-col">
+    <div class="sf-card" style="flex:1;display:flex;flex-direction:column;">
+      <div class="act-header-row">
+        <div class="act-filters">
+          <button class="act-filter active">All Activity</button>
+          <button class="act-filter">Emails (3)</button>
+          <button class="act-filter">Tasks</button>
+          <button class="act-filter">Notes</button>
+        </div>
+        <button class="act-compose">+ Compose</button>
+      </div>
+      <div class="tl-wrap" style="overflow-y:auto;flex:1;">
+
+        <!-- 1. Website Chat -->
+        <div class="tl-item">
+          <div class="tl-icon chat">💬</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 15 · 11:43 PM</span>
+              <span class="tb ai">⚡ AI Agent</span>
+            </div>
+            <div class="tl-simple">
+              <div class="tl-simple-lbl">Website chat session started · related.com/residential</div>
+              <div class="tl-simple-sub">Reya captured partial preferences: Chelsea/HY · 2BR · Dog-friendly · Session ended at 11:45 PM · 2 min 17 sec</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Chat Abandoned → SDR Triggered -->
+        <div class="tl-item">
+          <div class="tl-icon abandoned">🔁</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 15 · 11:45 PM</span>
+              <span class="tb sys">System</span>
+            </div>
+            <div class="tl-simple">
+              <div class="tl-simple-lbl">Chat ended without contact capture — Agentforce SDR triggered</div>
+              <div class="tl-simple-sub">Re-engagement workflow started · Personalized follow-up email queued based on chat preferences</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Email #1 from Agentforce SDR -->
+        <div class="tl-item">
+          <div class="tl-icon email-out">✉️</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 15 · 11:47 PM</span>
+              <span class="tb ai">⚡ Agentforce SDR</span>
+            </div>
+            <div class="tl-card">
+              <div class="tl-card-head" onclick="toggleEmail(this)">
+                <div>
+                  <div class="tl-subject">Your Chelsea search — a few quick questions 🏙️</div>
+                  <div class="tl-preview">To: alex.chen@email.com · Sent by Agentforce SDR</div>
+                </div>
+                <span class="tl-toggle">▾</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Hi Alex,</p>
+                <p>I noticed you were exploring our Chelsea and Hudson Yards properties a few minutes ago. You're browsing at a great time — we have some exceptional 2-bedroom options available right now.</p>
+                <p>To make sure I send you the perfect matches, two quick questions:</p>
+                <p><strong>1. What's your target monthly budget?</strong><br><strong>2. Are you thinking about moving in the next 30, 60, or 90 days?</strong></p>
+                <p>I can have personalized floor plans and pricing in your inbox within the hour.</p>
+                <div class="email-sig">Reya · AI Leasing Assistant, Related Residential · Available 24/7 · 212-555-0100</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Alex's first reply -->
+        <div class="tl-item">
+          <div class="tl-icon email-in">↩️</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 16 · 9:23 AM</span>
+              <span class="tb reply">Reply Received</span>
+            </div>
+            <div class="tl-card">
+              <div class="tl-card-head" onclick="toggleEmail(this)">
+                <div>
+                  <div class="tl-subject">Re: Your Chelsea search — a few quick questions 🏙️</div>
+                  <div class="tl-preview">From: alex.chen@email.com · New qualifying info captured — CRM auto-updated</div>
+                </div>
+                <span class="tl-toggle">▾</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Hi Reya,</p>
+                <p>Budget is around <strong>$8,000–$10,000/month</strong>. I'm hoping to move in <strong>60–90 days</strong>. Also, I have a large labrador, so dog-friendly buildings are a must — the Dog City program you mentioned sounds perfect!</p>
+                <p>— Alex</p>
+                <div class="tl-updates">
+                  <span class="tl-tag green">✓ Budget: $8,000–$10,000/mo</span>
+                  <span class="tl-tag green">✓ Move-in: 60–90 days</span>
+                  <span class="tl-tag green">✓ Pet: Labrador (confirmed)</span>
+                  <span class="tl-tag blue">Lead Score: 68 → 86</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Email #2 with floor plans -->
+        <div class="tl-item">
+          <div class="tl-icon email-out">✉️</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 16 · 10:15 AM</span>
+              <span class="tb ai">⚡ Agentforce SDR</span>
+            </div>
+            <div class="tl-card">
+              <div class="tl-card-head" onclick="toggleEmail(this)">
+                <div>
+                  <div class="tl-subject">Your top 2 dog-friendly matches in Chelsea / Hudson Yards 🐾</div>
+                  <div class="tl-preview">To: alex.chen@email.com · 2 attachments · Property match curated by AI</div>
+                </div>
+                <span class="tl-toggle">▾</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Hi Alex,</p>
+                <p>Based on your $8–10K budget and 60–90 day timeline, here are your two best matches. Both buildings feature <strong>Dog City™</strong> — Related's exclusive in-building dog daycare, grooming, training, and walking service.</p>
+                <div class="prop-pill">
+                  <div class="pp-name">⭐ Abington House — Hudson Yards, NYC</div>
+                  <div class="pp-detail">From $8,200/mo · 2BR · Dog City™ · Resort Pool · Equinox Access · Sky Lounge</div>
+                </div>
+                <div class="prop-pill">
+                  <div class="pp-name">The Caledonia — Chelsea, NYC</div>
+                  <div class="pp-detail">From $6,900/mo · 2BR · Dog City™ · Rooftop Terrace · Co-working Lounge</div>
+                </div>
+                <p>Which one catches your eye? I have private tour availability this Tuesday and Thursday.</p>
+                <div>
+                  <span class="attach">📎 Abington_House_2BR_Floorplans.pdf</span>
+                  <span class="attach">📎 Caledonia_2BR_Floorplans.pdf</span>
+                </div>
+                <div class="email-sig">Reya · AI Leasing Assistant, Related Residential</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Alex's second reply (tour request) -->
+        <div class="tl-item">
+          <div class="tl-icon email-in">↩️</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 16 · 2:47 PM</span>
+              <span class="tb reply">Reply Received</span>
+            </div>
+            <div class="tl-card">
+              <div class="tl-card-head" onclick="toggleEmail(this)">
+                <div>
+                  <div class="tl-subject">Re: Your top 2 dog-friendly matches 🐾</div>
+                  <div class="tl-preview">From: alex.chen@email.com · Tour request received — scheduling triggered</div>
+                </div>
+                <span class="tl-toggle">▾</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Abington House looks incredible. The resort pool and Equinox access are exactly what I've been looking for. I'd love to schedule a tour — <strong>Tuesday works perfectly for me.</strong></p>
+                <p>— Alex</p>
+                <div class="tl-updates">
+                  <span class="tl-tag green">✓ Property selected: Abington House</span>
+                  <span class="tl-tag blue">Lead Score: 86 → 94</span>
+                  <span class="tl-tag hot">Stage: Warm → HOT 🔥</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Tour Confirmation email -->
+        <div class="tl-item">
+          <div class="tl-icon tour">📅</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 16 · 3:02 PM</span>
+              <span class="tb ai">⚡ Agentforce SDR</span>
+              <span class="tb confirmed">Tour Confirmed</span>
+            </div>
+            <div class="tl-card">
+              <div class="tl-card-head" onclick="toggleEmail(this)">
+                <div>
+                  <div class="tl-subject">✅ Tour confirmed — Abington House · Tue Jun 17, 2:00 PM</div>
+                  <div class="tl-preview">To: alex.chen@email.com · Calendar invite sent · Sarah M. notified</div>
+                </div>
+                <span class="tl-toggle">▾</span>
+              </div>
+              <div class="tl-card-body">
+                <p>Hi Alex! Your private tour is confirmed:</p>
+                <p>📍 <strong>Abington House</strong>, Hudson Yards, NYC<br>
+                   📅 <strong>Tuesday, June 17 · 2:00 PM – 3:00 PM</strong><br>
+                   👤 Your consultant: <strong>Sarah M.</strong> (Hudson Yards Specialist)<br>
+                   🐶 <em>Feel free to bring your lab — we'd love to meet them!</em></p>
+                <p>A calendar invite has been sent to alex.chen@email.com. Sarah will meet you in the lobby.</p>
+                <div class="email-sig">Reya + the Related Team · related.com/residential</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Morning Queue surfaced -->
+        <div class="tl-item">
+          <div class="tl-icon queue">🌙</div>
+          <div class="tl-right">
+            <div class="tl-meta">
+              <span class="tl-time">Jun 17 · 10:00 AM</span>
+              <span class="tb ai">⚡ Agentforce</span>
+            </div>
+            <div class="tl-simple">
+              <div class="tl-simple-lbl highlight">🌙 Surfaced in Sarah's Morning Queue — #1 Priority Lead</div>
+              <div class="tl-simple-sub">Fit Score 94/100 · Tour confirmed today at 2 PM · Full AI conversation summary delivered to Sarah M.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: AI PANEL ── -->
+  <div class="right-col">
+
+    <div class="sf-card">
+      <div class="sf-card-head">⚡ Agentforce SDR Status</div>
+      <div class="sf-card-body">
+        <div class="af-status-row">
+          <div class="af-status-dot"></div>
+          <div class="af-status-lbl">Active · Email Nurture</div>
+          <div class="af-mode-tag">Tour Mode</div>
+        </div>
+        <div class="af-stats">
+          <div class="af-stat"><div class="af-stat-n">3</div><div class="af-stat-lbl">Emails Sent</div></div>
+          <div class="af-stat"><div class="af-stat-n">2</div><div class="af-stat-lbl">Replies Received</div></div>
+          <div class="af-stat"><div class="af-stat-n">18h</div><div class="af-stat-lbl">Lead to Tour</div></div>
+          <div class="af-stat"><div class="af-stat-n">94%</div><div class="af-stat-lbl">Close Confidence</div></div>
+        </div>
+        <div class="af-insight">
+          Next: <strong>Post-tour follow-up queued</strong> — Reya will send a personalized summary within 1 hr of tour completion.<br><br>
+          💡 <strong>Skip-to-human:</strong> If Alex replies "connect me now" at any point, Agentforce flags the lead urgent and alerts the next available consultant immediately.
+        </div>
+      </div>
+    </div>
+
+    <div class="sf-card">
+      <div class="sf-card-head">🌙 Morning Queue · Sarah's View</div>
+      <div class="sf-card-body" style="padding:0;">
+        <div class="mq-outer">
+          <div class="mq-hd2">
+            <div class="mq-ttl2">10:00 AM Review</div>
+            <div class="mq-when2">Sarah's queue · Jun 17</div>
+          </div>
+          <div class="mq-body2">
+            <div class="mq-pos2">#1 Priority Lead</div>
+            <div class="mq-nm2">Alex Chen <span class="hot-badge">HOT</span></div>
+            <div class="mq-checks">
+              <div class="mq-chk"><span class="ck">✅</span>Budget confirmed: $8,000–$10,000/mo</div>
+              <div class="mq-chk"><span class="ck">✅</span>Timeline: 60–90 days</div>
+              <div class="mq-chk"><span class="ck">✅</span>Dog City unit required (Labrador)</div>
+              <div class="mq-chk"><span class="ck">✅</span>Property selected: Abington House</div>
+              <div class="mq-chk"><span class="ck">✅</span>Tour today: 2:00 PM ← top priority</div>
+            </div>
+            <div class="mq-insight-box">"High urgency · Strong fit · Tour confirmed today — prime close opportunity."</div>
+          </div>
+          <div class="mq-ft2">
+            <button class="mq-btn2 p">View Full Summary</button>
+            <button class="mq-btn2 s">Prep Tour Brief</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sf-card">
+      <div class="sf-card-head">⚡ Next Best Action</div>
+      <div class="sf-card-body">
+        <div class="nba-wrap">
+          <div class="nba-icon2">🏠</div>
+          <div style="flex:1;">
+            <div class="nba-ttl2">Prepare Abington House Tour Brief</div>
+            <div class="nba-desc2">Alex's tour is today at 2 PM. Prep dog-friendly floor plans, Dog City overview, and the $8,200/mo 2BR unit on Floor 14 with pool & Equinox access.</div>
+            <button class="nba-cta">Generate Tour Brief with AI →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sf-card">
+      <div class="sf-card-head">Priority Queue — Sarah's Leads</div>
+      <div class="sf-card-body">
+        <div class="pq-row hot">
+          <div class="pq-rank" style="color:#EA001E;">#1</div>
+          <div style="flex:1;"><div class="pq-name">Alex Chen</div><div class="pq-sub">Tour today · 2BR · $8–10K · 🐶</div></div>
+          <div class="pq-score hot">94</div>
+        </div>
+        <div class="pq-row warm">
+          <div class="pq-rank" style="color:#CA8501;">#2</div>
+          <div style="flex:1;"><div class="pq-name">Morgan Lee</div><div class="pq-sub">Tour Thu · 1BR · $5–6K</div></div>
+          <div class="pq-score warm">78</div>
+        </div>
+        <div class="pq-row cool">
+          <div class="pq-rank" style="color:#888;">#3</div>
+          <div style="flex:1;"><div class="pq-name">Jordan Kim</div><div class="pq-sub">Email nurture · 2BR · $6–8K</div></div>
+          <div class="pq-score cool">65</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sf-card" id="skip-flag-card" style="display:none;">
+      <div class="sf-card-head" style="color:#EA001E;">🚨 Skip-to-Human Flagged</div>
+      <div class="sf-card-body">
+        <div class="skip-flag-box">
+          <div class="sfb-icon">🚨</div>
+          <div>
+            <div class="sfb-ttl">Prospect Requested Immediate Contact</div>
+            <div class="sfb-sub">Alex Chen has been flagged as urgent. A leasing consultant should reach out within 15–30 minutes via call or text.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleEmail(header) {
+  const body = header.parentElement.querySelector('.tl-card-body');
+  if (!body) return;
+  const isOpen = body.style.display !== 'none' && body.style.display !== '';
+  body.style.display = isOpen ? 'none' : 'block';
+  const arrow = header.querySelector('.tl-toggle');
+  if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
+}
+
+function triggerUrgent() {
+  document.getElementById('urgent-pill').style.display = 'inline-flex';
+  document.getElementById('skip-flag-card').style.display = 'block';
+  const pq1 = document.querySelector('.pq-row.hot .pq-sub');
+  if (pq1) pq1.textContent = '🚨 Urgent · Tour today · HOT';
+}
+</script>
+</body>
+</html>
