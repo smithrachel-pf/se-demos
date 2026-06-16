@@ -299,7 +299,6 @@ body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0D1B2A;he
       </div>
       <div class="chat-msgs" id="msgs"></div>
       <div id="input-area"></div>
-      <div class="skip-bar"><button class="skip-lnk" onclick="skipToHuman()">Prefer to speak with someone now? Connect me →</button></div>
       <div class="chat-foot"><span>☁️</span><span class="chat-foot-txt">Salesforce Agentforce · CRM data captured automatically</span></div>
     </div>
   </div>
@@ -321,7 +320,7 @@ body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#0D1B2A;he
           <div class="cf"><div class="cf-lbl">Name</div><div class="cf-val empty" id="c-name">—</div></div>
           <div class="cf"><div class="cf-lbl">Email</div><div class="cf-val empty" id="c-email">—</div></div>
           <div class="cf"><div class="cf-lbl">Phone</div><div class="cf-val empty" id="c-phone">—</div></div>
-          <div class="cf"><div class="cf-lbl">Source</div><div class="cf-val" id="c-source">Website Chat · Google Ads</div></div>
+          <div class="cf"><div class="cf-lbl">Source</div><div class="cf-val" id="c-source">Website Chat</div></div>
           <div class="cf"><div class="cf-lbl">Assigned To</div><div class="cf-val" id="c-owner">Agentforce SDR</div></div>
           <div class="cf"><div class="cf-lbl">Priority</div><div class="cf-val empty" id="c-priority">—</div></div>
         </div>
@@ -893,109 +892,11 @@ async function afterHoursQueue(day, time) {
     setScore(96);
     setNBA('✅', 'Lead Successfully Queued', 'Priority #1 · Sarah reviews at 10:00 AM');
     addAct('Conversation complete · Overnight lead queued', 'green');
-
-    await wait(700);
-    await agentSay("One last thing — if you'd prefer to reach someone **right now**, I can flag you as urgent:");
-    showBtns([
-      { text: "Yes, please have someone reach out tonight 🚨" },
-      { text: "Tomorrow morning is perfect ✓" }
-    ], async (o2) => {
-      addMsg('user', o2.text);
-      clearInput();
-      if (o2.text.includes('Yes')) {
-        await wait(300);
-        await agentSay("Done! Your request is flagged as **urgent** 🚨 — expect a call or text within 15–30 minutes. Good luck finding your new home!");
-        setPriority('hot', '🚨 URGENT');
-        const badge = document.getElementById('mq-badge');
-        if (badge) { badge.textContent = '🚨 URGENT'; badge.className = 'pri hot'; }
-        addAct('⚡ Urgent callback requested · HIGH PRIORITY', 'gold');
-        setNBA('🚨', 'Urgent Callback Requested', 'Team member notified for immediate outreach');
-        setScore(100);
-      } else {
-        await wait(300);
-        await agentSay(`Wonderful! See you **${day}** — goodnight, **${crm.name}**! 🏙️✨`);
-        setScore(100);
-        setNBA('🎯', 'Lead Successfully Queued', 'Overnight lead · Priority #1 · Score: 100');
-        addAct('Lead confirmed: overnight queue · No urgent flag needed', 'green');
-      }
-    });
-  });
-}
-
-window.skipToHuman = async function() {
-  if (busy) return;
-  busy = true;
-  clearInput();
-  addMsg('user', "I'd prefer to speak with a human right now.");
-  addAct('Skip-to-human requested', 'gold');
-  setPriority('hot', '🚨 URGENT');
-  setNBA('🚨', 'Urgent Handoff Requested', 'Connecting to available leasing consultant');
-  await wait(300);
-  await agentSay("Of course! 🚨 I'm flagging this as **urgent** and connecting you with a leasing consultant right now...");
-  await wait(500);
-  const day = selectedTour ? selectedTour.day : 'your preferred time';
-  const time = selectedTour ? selectedTour.time : 'TBD';
-  await doHandoff(day, time);
-};
-
-async function doHandoff(day, time) {
-  setStage(4);
-  const propName = document.getElementById('c-interest').textContent || 'the property';
-  const hood = prefs.hood || 'Manhattan';
-  const bedsLabel = prefs.beds ? prefs.beds.toLowerCase() : 'apartment';
-
-  await agentSay(`Perfect! I'm booking your private tour of **${propName}** on **${day} at ${time}** with Sarah. Connecting you now...`);
-  await wait(700);
-
-  const cw = document.getElementById('cw');
-  const ov = document.createElement('div');
-  ov.className = 'ho-overlay';
-  ov.innerHTML = `<div class="ho-spin"></div><div class="ho-txt">Connecting to your Leasing Consultant...</div><div class="ho-sub">Reya is transferring your preferences<br>and full conversation history to Sarah M.</div>`;
-  cw.appendChild(ov);
-
-  setCRM('owner', 'Sarah M. · Leasing Consultant');
-  addAct('Lead assigned to Sarah M.', 'gold');
-  addAct('Full conversation context transferred', 'purple');
-
-  await wait(2800);
-  ov.remove();
-
-  const av = document.getElementById('av');
-  av.textContent = 'S';
-  av.classList.add('human');
-  document.getElementById('aname').textContent = 'Sarah M. · Leasing Consultant';
-  document.getElementById('astatus').innerHTML = `<span class="human-tag">👤 Human Agent</span>&nbsp; ${hood} Specialist`;
-
-  setScore(95);
-  setNBA('✅', 'Human Handoff Complete', 'Sarah M. notified with full lead profile and conversation history');
-  addAct('Human agent Sarah M. joined the conversation', 'green');
-
-  await agentSay(`Hi **${crm.name}**! I'm Sarah, your dedicated leasing consultant at Related. 😊`);
-  await wait(300);
-  await agentSay(`I can see you're looking for a **${bedsLabel}** at **${propName}** in ${hood}${prefs.pet === 'Dog' ? ' — and your pup is very welcome! 🐾' : ' — excellent taste!'} I have all your preferences right here.`);
-  await wait(300);
-  await agentSay(`Your **${day} at ${time}** tour is confirmed. You'll receive a calendar invite and floor plans at your email shortly. Is there anything you'd like to know before your visit?`);
-
-  showBtns([
-    { text: "Any current move-in specials?" },
-    { text: "What should I bring to the tour?" },
-    { text: "I'm all set, thank you!" }
-  ], async (o) => {
-    addMsg('user', o.text);
-    clearInput();
-    await wait(500);
-    if (o.text.includes('special')) {
-      await agentSay("Great question! 🎉 We currently have a **Summer Move-In** promotion — waived amenity fee ($500 value) and complimentary first-month parking for leases signed before July 31. I'll go over everything during your tour.");
-    } else if (o.text.includes('bring')) {
-      await agentSay("Just yourself! Tuesday's visit is purely exploratory — no paperwork needed yet. For a formal application later you'd need ID, proof of income, and references. We'll have refreshments ready. See you soon! 🏙️");
-    } else {
-      await agentSay(`Wonderful! We're excited to show you your potential new home, **${crm.name}**. 🏠 See you ${day} — a calendar invite and welcome email are on their way.`);
-    }
     setScore(100);
-    setNBA('🎯', 'Lead Successfully Converted', 'Tour booked · Handed off · Score: 100');
-    addAct('Conversation complete · Tour confirmed', 'green');
+    setNBA('🎯', 'Lead Successfully Queued', 'Overnight lead · Priority #1 · Score: 100');
   });
 }
+
 
 // ── START ──────────────────────────────────────
 setTimeout(step0, 600);
