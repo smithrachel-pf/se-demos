@@ -27,42 +27,40 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .sf-icon-btn:hover{background:rgba(255,255,255,.12);color:white;}
 .sf-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#8B6914);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;cursor:pointer;margin-left:4px;}
 
-/* ── DEMO NAV BAR (styled as SF utility bar) ── */
-.demo-nav{background:#F3F2F2;border-bottom:1px solid #DDDBDA;height:30px;display:flex;align-items:center;padding:0 16px;gap:0;flex-shrink:0;}
-.demo-nav-label{font-size:10px;color:#706E6B;font-weight:600;margin-right:10px;letter-spacing:.03em;}
-.demo-nav-item{height:30px;padding:0 14px;font-size:11.5px;display:flex;align-items:center;gap:5px;cursor:pointer;color:#444;text-decoration:none;border-right:1px solid #DDDBDA;transition:all .15s;}
-.demo-nav-item:first-of-type{border-left:1px solid #DDDBDA;}
-.demo-nav-item:hover{background:rgba(0,0,0,.04);color:#080707;}
-.demo-nav-item.active{background:white;color:#0070D2;font-weight:600;box-shadow:inset 0 -2px 0 #0070D2;}
-.demo-nav-badge{margin-left:auto;background:#F3ECF9;color:#7B5EA7;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;border:1px solid #C5A8E4;}
-
 /* ── TAB BAR ── */
 .sf-tabs{background:#F3F2F2;border-bottom:1px solid #DDDBDA;display:flex;padding:0 0 0 10px;flex-shrink:0;height:36px;align-items:flex-end;gap:2px;}
 .sf-tab{background:white;border:1px solid #DDDBDA;border-bottom:none;border-radius:4px 4px 0 0;padding:0 14px;height:30px;display:flex;align-items:center;gap:6px;font-size:12px;color:#080707;font-weight:500;cursor:pointer;position:relative;}
-.sf-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#0070D2;}
+.sf-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#0176d3;}
 .sf-tab-icon{width:14px;height:14px;opacity:.6;}
 .sf-tab-x{color:#706E6B;font-size:12px;margin-left:6px;opacity:.55;cursor:pointer;}
 .sf-tab-x:hover{opacity:1;}
 .sf-tab-bg{padding:0 14px;height:30px;display:flex;align-items:center;font-size:12px;color:#706E6B;cursor:pointer;background:transparent;gap:5px;}
 
-/* ── STATUS PATH ── */
-.sf-path-bar{background:white;border-bottom:1px solid #DDDBDA;display:flex;align-items:stretch;overflow:hidden;flex-shrink:0;}
-.sf-path-step{flex:1;padding:7px 12px 7px 20px;font-size:11px;font-weight:500;color:#706E6B;cursor:pointer;position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background .15s;border-right:1px solid #E8E8E8;}
-.sf-path-step:last-child{border-right:none;}
-.sf-path-step:hover{background:#F3F2F2;}
-.sf-path-step.done{color:#2E844A;}
-.sf-path-step.done .sp-dot{background:#2E844A;}
-.sf-path-step.active{background:#F0F8FF;color:#0070D2;font-weight:700;border-top:3px solid #0070D2;}
-.sf-path-step.active .sp-dot{background:#0070D2;}
-.sf-path-step.active .sp-stage{font-size:10px;color:#0070D2;font-weight:600;}
-.sp-dot{width:8px;height:8px;border-radius:50%;background:#DDDBDA;margin-bottom:1px;}
+/* ── STATUS PATH (SLDS chevrons via skew) ── */
+.sf-path-bar{background:white;border-bottom:1px solid #DDDBDA;display:flex;align-items:stretch;flex-shrink:0;height:44px;overflow:visible;position:relative;padding:4px 8px;gap:0;}
+.sf-path-step{flex:1;height:36px;position:relative;background:#F3F2F2;color:#706E6B;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;padding:0 6px 0 22px;transition:background .15s,color .15s;}
+.sf-path-step::before{content:'';position:absolute;right:-9px;top:0;width:18px;height:calc(50% + 1px);background:inherit;transform:skewX(28deg);transform-origin:bottom left;z-index:2;}
+.sf-path-step::after{content:'';position:absolute;right:-9px;bottom:0;width:18px;height:50%;background:inherit;transform:skewX(-28deg);transform-origin:top left;z-index:2;}
+.sf-path-step:nth-child(1){z-index:10;padding-left:12px;}
+.sf-path-step:nth-child(2){z-index:9;}
+.sf-path-step:nth-child(3){z-index:8;}
+.sf-path-step:nth-child(4){z-index:7;}
+.sf-path-step:nth-child(5){z-index:6;padding-right:12px;}
+.sf-path-step:last-child::before,.sf-path-step:last-child::after{display:none;}
+.sf-path-step:hover{background:#E8E8E8;}
+.sf-path-step.done{background:#D8EDFF;color:#0176d3;}
+.sf-path-step.done .sp-dot{background:#0176d3;}
+.sf-path-step.active{background:white;color:#0176d3;font-weight:700;border-top:3px solid #0176d3;z-index:15;}
+.sf-path-step.active .sp-dot{background:#0176d3;}
+.sf-path-step.active .sp-stage{color:#0176d3;}
+.sp-dot{width:7px;height:7px;border-radius:50%;background:#AEAEAE;margin-bottom:1px;}
 .sp-label{font-size:11px;font-weight:600;}
 .sp-stage{font-size:9.5px;color:#706E6B;}
 
 /* ── RECORD HEADER ── */
 .record-header{background:white;border-bottom:1px solid #DDDBDA;padding:10px 20px 0;flex-shrink:0;}
 .record-breadcrumb{font-size:11px;color:#706E6B;margin-bottom:8px;display:flex;align-items:center;gap:4px;}
-.record-breadcrumb a{color:#0070D2;text-decoration:none;}
+.record-breadcrumb a{color:#0176d3;text-decoration:none;}
 .record-breadcrumb a:hover{text-decoration:underline;}
 .record-top{display:flex;align-items:flex-start;gap:12px;padding-bottom:12px;}
 .lead-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#7D5700);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0;margin-top:2px;}
@@ -72,21 +70,20 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .sf-badge{font-size:10px;font-weight:600;padding:1px 8px;border-radius:12px;border:1px solid;}
 .sf-badge.hot{background:#FEEFEE;color:#BA0517;border-color:#FDB8B8;}
 .sf-badge.confirmed{background:#EEF9F1;color:#2E844A;border-color:#91E5AA;}
-.sf-badge.urgent{background:#FEEFEE;color:#BA0517;border-color:#FDB8B8;display:none;}
 .record-sub{font-size:12px;color:#706E6B;margin-bottom:8px;}
-.record-highlights{display:flex;gap:0;border-top:1px solid #F3F2F2;padding-top:8px;flex-wrap:wrap;}
-.rh-item{padding:0 18px 0 0;margin-right:18px;border-right:1px solid #E8E8E8;display:flex;flex-direction:column;gap:2px;}
-.rh-item:last-child{border-right:none;}
-.rh-label{font-size:10px;color:#706E6B;text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
-.rh-val{font-size:12.5px;color:#080707;font-weight:500;}
+.record-highlights{display:flex;gap:0;border-top:1px solid #F3F2F2;padding-top:8px;flex-wrap:nowrap;overflow:hidden;}
+.rh-item{padding:0 18px 0 0;margin-right:18px;border-right:1px solid #E8E8E8;display:flex;flex-direction:column;gap:2px;min-width:0;flex-shrink:0;}
+.rh-item:last-child{border-right:none;padding-right:0;margin-right:0;}
+.rh-label{font-size:10px;color:#706E6B;text-transform:uppercase;letter-spacing:.06em;font-weight:600;white-space:nowrap;}
+.rh-val{font-size:12.5px;color:#080707;font-weight:500;white-space:nowrap;}
 .rh-val.score{color:#BA0517;font-weight:700;}
-.rh-val a{color:#0070D2;text-decoration:none;}
+.rh-val a{color:#0176d3;text-decoration:none;}
 .rh-val a:hover{text-decoration:underline;}
 .record-actions-wrap{display:flex;gap:4px;padding-bottom:10px;margin-top:4px;align-items:center;flex-wrap:wrap;}
 .ra-btn{padding:5px 14px;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid #DDDBDA;background:white;color:#080707;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
 .ra-btn:hover{border-color:#ADADAB;background:#F3F2F2;}
-.ra-btn.primary{background:#0070D2;color:white;border-color:#0070D2;font-weight:600;}
-.ra-btn.primary:hover{background:#005FB2;}
+.ra-btn.primary{background:#0176d3;color:white;border-color:#0176d3;font-weight:600;}
+.ra-btn.primary:hover{background:#0162B3;}
 .ra-btn svg{opacity:.7;}
 .ra-btn.primary svg{opacity:1;}
 .ra-divider{width:1px;height:20px;background:#DDDBDA;margin:0 2px;}
@@ -95,10 +92,10 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .record-body{flex:1;display:grid;grid-template-columns:252px 1fr 280px;gap:10px;padding:10px 14px;overflow:hidden;min-height:0;}
 
 /* ── SHARED CARD ── */
-.sf-card{background:white;border:1px solid #DDDBDA;border-radius:4px;overflow:hidden;margin-bottom:9px;}
+.sf-card{background:white;border:1px solid #DDDBDA;border-radius:4px;overflow:hidden;margin-bottom:9px;box-shadow:0 2px 2px 0 rgba(0,0,0,.10);}
 .sf-card:last-child{margin-bottom:0;}
 .sf-card-head{padding:8px 12px;background:white;border-bottom:1px solid #E8E8E8;font-size:12px;font-weight:600;color:#3E3E3C;display:flex;align-items:center;justify-content:space-between;}
-.sf-card-head .edit-lnk{background:none;border:none;color:#0070D2;font-size:11.5px;cursor:pointer;font-weight:500;}
+.sf-card-head .edit-lnk{background:none;border:none;color:#0176d3;font-size:11.5px;cursor:pointer;font-weight:500;}
 .sf-card-head .edit-lnk:hover{text-decoration:underline;}
 .sf-card-body{padding:10px 12px;}
 
@@ -108,7 +105,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .detail-row:last-child{margin-bottom:0;}
 .det-lbl{font-size:11px;color:#706E6B;font-weight:500;padding-top:1px;}
 .det-val{font-size:12.5px;color:#181818;font-weight:400;word-break:break-word;}
-.det-val.link{color:#0070D2;cursor:pointer;}
+.det-val.link{color:#0176d3;cursor:pointer;}
 .det-val.link:hover{text-decoration:underline;}
 .det-val.hot{color:#BA0517;font-weight:600;}
 .det-val.ai{color:#7B5EA7;font-size:12px;}
@@ -135,7 +132,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .act-publisher{background:white;border-bottom:1px solid #E8E8E8;padding:0 12px;display:flex;align-items:center;gap:0;}
 .ap-tab{padding:10px 14px;font-size:12px;font-weight:500;color:#706E6B;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
 .ap-tab:hover{color:#080707;}
-.ap-tab.active{color:#0070D2;border-bottom-color:#0070D2;font-weight:600;}
+.ap-tab.active{color:#0176d3;border-bottom-color:#0176d3;font-weight:600;}
 .ap-spacer{flex:1;}
 .ap-btn-new{background:white;border:1px solid #DDDBDA;color:#080707;padding:5px 12px;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
 .ap-btn-new:hover{border-color:#ADADAB;background:#F3F2F2;}
@@ -146,9 +143,10 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .tl-item::before{content:'';position:absolute;left:15px;top:36px;bottom:-4px;width:2px;background:#E8E8E8;z-index:0;}
 .tl-item:last-child::before{display:none;}
 .tl-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;margin-top:2px;}
-.tl-icon.chat{background:#E8E8F8;color:#5C5CE0;}
+.tl-icon.import{background:#F3ECF9;color:#7B5EA7;}
+.tl-icon.trigger{background:#FEF9EE;color:#8A6400;}
 .tl-icon.sys{background:#F3F2F2;color:#706E6B;}
-.tl-icon.email-out{background:#EEF4FF;color:#0070D2;}
+.tl-icon.email-out{background:#EEF4FF;color:#0176d3;}
 .tl-icon.email-in{background:#EEFAF3;color:#2E844A;}
 .tl-icon.calendar{background:#F3FBF7;color:#2E844A;}
 .tl-icon.queue{background:#F3ECF9;color:#7B5EA7;}
@@ -168,7 +166,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .tl-card-body p:last-child{margin-bottom:0;}
 .tl-card-body strong{color:#080707;}
 .prop-pill{background:#FAFAF9;border:1px solid #E8E8E8;border-radius:4px;padding:8px 10px;margin:5px 0;}
-.prop-pill .pp-name{font-weight:600;font-size:12px;color:#0070D2;}
+.prop-pill .pp-name{font-weight:600;font-size:12px;color:#0176d3;}
 .prop-pill .pp-detail{font-size:11px;color:#3E3E3C;margin-top:2px;}
 .attach{display:inline-flex;align-items:center;gap:4px;background:#F3F2F2;border:1px solid #DDDBDA;border-radius:3px;padding:3px 7px;font-size:10.5px;color:#444;margin:4px 4px 0 0;}
 .email-sig{margin-top:9px;padding-top:8px;border-top:1px solid #F3F2F2;font-size:11px;color:#706E6B;}
@@ -178,7 +176,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .tl-simple{padding:2px 0 0;}
 .tl-simple-title{font-size:12.5px;font-weight:600;color:#080707;margin-bottom:2px;}
 .tl-simple-body{font-size:11.5px;color:#706E6B;line-height:1.5;}
-.tl-simple-body.highlight{color:#0070D2;font-weight:500;}
+.tl-simple-body.highlight{color:#0176d3;font-weight:500;}
 
 /* ── RIGHT COLUMN ── */
 .right-col{overflow-y:auto;}
@@ -188,20 +186,28 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .ai-mode{font-size:10.5px;font-weight:600;background:#EEFAF3;color:#2E844A;padding:2px 7px;border-radius:3px;}
 .ai-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#E8E8E8;border:1px solid #E8E8E8;border-radius:4px;overflow:hidden;margin-bottom:8px;}
 .ai-stat{background:white;padding:8px;text-align:center;}
-.ai-stat-n{font-size:20px;font-weight:700;color:#0070D2;line-height:1;}
+.ai-stat-n{font-size:20px;font-weight:700;color:#0176d3;line-height:1;}
 .ai-stat-lbl{font-size:10px;color:#706E6B;text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+/* After-hours response callout */
+.ai-response-note{background:#F3FBF7;border:1px solid #91E5AA;border-radius:4px;padding:7px 9px;font-size:11px;color:#2E844A;line-height:1.5;margin-bottom:8px;}
+.ai-response-note strong{color:#194E2C;}
+.ai-response-vs{display:flex;gap:6px;margin-top:5px;}
+.ai-vs-item{flex:1;background:white;border:1px solid #E8E8E8;border-radius:3px;padding:5px 7px;text-align:center;}
+.ai-vs-item.bad .ai-vs-n{color:#BA0517;font-size:14px;font-weight:700;}
+.ai-vs-item.good .ai-vs-n{color:#2E844A;font-size:14px;font-weight:700;}
+.ai-vs-lbl{font-size:9.5px;color:#706E6B;margin-top:1px;}
 .ai-insight{font-size:11.5px;color:#3E3E3C;line-height:1.55;}
 .ai-insight strong{color:#080707;}
-.ai-insight .ai-link{color:#0070D2;cursor:pointer;}
+.ai-insight .ai-link{color:#0176d3;cursor:pointer;}
 .ai-note{margin-top:8px;padding-top:8px;border-top:1px solid #F3F2F2;font-size:11px;color:#706E6B;line-height:1.5;}
 
 /* Morning Queue card */
-.mq-card{border:1px solid #DDDBDA;border-radius:4px;overflow:hidden;margin-bottom:9px;}
+.mq-card{border:1px solid #DDDBDA;border-radius:4px;overflow:hidden;margin-bottom:9px;box-shadow:0 2px 2px 0 rgba(0,0,0,.10);}
 .mq-head{background:#0D1B2A;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;}
 .mq-head-ttl{font-size:11px;font-weight:700;color:white;letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
 .mq-head-sub{font-size:10px;color:rgba(255,255,255,.45);}
 .mq-body{background:white;padding:10px 12px;}
-.mq-priority-lbl{font-size:10px;font-weight:700;color:#0070D2;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.mq-priority-lbl{font-size:10px;font-weight:700;color:#0176d3;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
 .mq-name-row{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
 .mq-name{font-size:14px;font-weight:700;color:#080707;}
 .mq-checks{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;}
@@ -210,7 +216,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .mq-insight{background:#FFFBF0;border:1px solid #F5E09A;border-radius:3px;padding:7px 9px;font-size:11px;color:#6B4C00;line-height:1.5;font-style:italic;}
 .mq-footer{background:#F3F2F2;border-top:1px solid #E8E8E8;padding:6px 12px;display:flex;gap:6px;}
 .mq-btn{flex:1;border:none;padding:5px 8px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;}
-.mq-btn.primary{background:#0070D2;color:white;}
+.mq-btn.primary{background:#0176d3;color:white;}
 .mq-btn.secondary{background:white;border:1px solid #DDDBDA;color:#080707;}
 
 /* NBA card */
@@ -218,8 +224,8 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .nba-icon{width:32px;height:32px;border-radius:4px;background:#EEF4FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .nba-ttl{font-size:12px;font-weight:600;color:#080707;margin-bottom:3px;}
 .nba-desc{font-size:11.5px;color:#3E3E3C;line-height:1.5;}
-.nba-cta{margin-top:8px;background:#0070D2;color:white;border:none;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:600;cursor:pointer;width:100%;}
-.nba-cta:hover{background:#005FB2;}
+.nba-cta{margin-top:8px;background:#0176d3;color:white;border:none;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:600;cursor:pointer;width:100%;}
+.nba-cta:hover{background:#0162B3;}
 
 /* Priority Queue */
 .pq-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #F3F2F2;}
@@ -230,7 +236,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .pq-avatar.warm{background:#CA8501;}
 .pq-avatar.cool{background:#706E6B;}
 .pq-info{flex:1;}
-.pq-name{font-size:12px;font-weight:600;color:#0070D2;cursor:pointer;}
+.pq-name{font-size:12px;font-weight:600;color:#0176d3;cursor:pointer;}
 .pq-name:hover{text-decoration:underline;}
 .pq-sub{font-size:11px;color:#706E6B;margin-top:1px;}
 .pq-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;flex-shrink:0;}
@@ -238,11 +244,14 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 .pq-badge.warm{background:#FEF9EE;color:#8A6400;border:1px solid #F5D787;}
 .pq-badge.cool{background:#F3F2F2;color:#706E6B;border:1px solid #DDDBDA;}
 
-/* Skip flag */
-.skip-flag{background:#FEEFEE;border:1px solid #FDB8B8;border-radius:4px;padding:9px 11px;display:flex;gap:9px;align-items:flex-start;}
-.sf-flag-icon{color:#BA0517;flex-shrink:0;margin-top:1px;}
-.sf-flag-ttl{font-size:12px;font-weight:600;color:#BA0517;margin-bottom:2px;}
-.sf-flag-sub{font-size:11.5px;color:#706E6B;line-height:1.45;}
+/* ── DEMO NAV (SF utility bar — BOTTOM) ── */
+.demo-nav{background:#F3F2F2;border-top:1px solid #DDDBDA;height:32px;display:flex;align-items:center;padding:0 16px;gap:0;flex-shrink:0;}
+.demo-nav-label{font-size:10px;color:#706E6B;font-weight:600;margin-right:10px;letter-spacing:.03em;}
+.demo-nav-item{height:32px;padding:0 14px;font-size:11.5px;display:flex;align-items:center;gap:5px;cursor:pointer;color:#444;text-decoration:none;border-right:1px solid #DDDBDA;transition:all .15s;}
+.demo-nav-item:first-of-type{border-left:1px solid #DDDBDA;}
+.demo-nav-item:hover{background:rgba(0,0,0,.04);color:#080707;}
+.demo-nav-item.active{background:white;color:#0176d3;font-weight:600;box-shadow:inset 0 2px 0 #0176d3;}
+.demo-nav-badge{margin-left:auto;background:#F3ECF9;color:#7B5EA7;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;border:1px solid #C5A8E4;}
 
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-thumb{background:#DDDBDA;border-radius:2px;}
@@ -252,7 +261,6 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
 
 <!-- SALESFORCE APP BAR -->
 <div class="sf-app-bar">
-  <!-- Waffle / App Launcher -->
   <div class="sf-waffle">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
       <circle cx="2.5" cy="2.5" r="2"/><circle cx="9" cy="2.5" r="2"/><circle cx="15.5" cy="2.5" r="2"/>
@@ -260,7 +268,6 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
       <circle cx="2.5" cy="15.5" r="2"/><circle cx="9" cy="15.5" r="2"/><circle cx="15.5" cy="15.5" r="2"/>
     </svg>
   </div>
-  <!-- Logo -->
   <div class="sf-logo">
     <svg width="22" height="16" viewBox="0 0 100 70" fill="none"><path d="M41.5 7C34 7 27.5 11 23.5 17C21 14.5 17.5 13 13.5 13C6 13 0 19 0 26.5C0 27.5 0.1 28.5 0.3 29.5C-0.1 30.7 -0.5 32.5 1 35C-1 37 -1.5 40 0.5 43C2.5 46 6 47 9.5 46.5C11 49.5 14 51.5 17.5 51.5C19 51.5 20.5 51 21.5 50.5C24 55.5 29.5 59 35.5 59C38 59 40.5 58.5 42.5 57C45 62 50 65.5 55.5 65.5C60 65.5 64 63.5 66.5 60C68 60.5 69.5 60.5 71 60.5C79 60.5 85.5 54 85.5 46C85.5 45 85.5 44 85 43C89.5 40.5 92.5 35.5 92.5 30C92.5 21.5 85.5 14.5 77 14.5C75.5 14.5 74 14.5 72.5 15C69.5 10 64 7 58 7C54 7 50.5 8.5 47.5 11C45.5 8.5 43.5 7 41.5 7Z" fill="white"/></svg>
     <span class="sf-logo-txt"><b>Sales</b>force</span>
@@ -288,20 +295,6 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
   </div>
 </div>
 
-<!-- DEMO NAV BAR (SF utility bar style) -->
-<div class="demo-nav">
-  <span class="demo-nav-label">Demo Views</span>
-  <a href="related-agentforce-demo.html" class="demo-nav-item">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-    Website Experience
-  </a>
-  <span class="demo-nav-item active">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-    CRM Console
-  </span>
-  <span class="demo-nav-badge">⚡ Agentforce SDR</span>
-</div>
-
 <!-- TAB BAR -->
 <div class="sf-tabs">
   <div class="sf-tab-bg">
@@ -309,7 +302,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
     Leads
   </div>
   <div class="sf-tab">
-    <svg class="sf-tab-icon" viewBox="0 0 24 24" fill="none" stroke="#0070D2" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <svg class="sf-tab-icon" viewBox="0 0 24 24" fill="none" stroke="#0176d3" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     Lead: Alex Chen
     <span class="sf-tab-x">×</span>
   </div>
@@ -354,14 +347,12 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
         <span class="record-name">Alex Chen</span>
         <span class="sf-badge hot">Hot</span>
         <span class="sf-badge confirmed">✓ Tour Confirmed · Jun 17</span>
-        <span class="sf-badge urgent" id="urgent-pill">🚨 Urgent — Callback Requested</span>
       </div>
       <div class="record-sub">Lead · Related Residential · Chelsea / Hudson Yards · 2 Bedrooms · Abington House</div>
       <div class="record-highlights">
         <div class="rh-item"><div class="rh-label">Email</div><div class="rh-val"><a href="#">alex.chen@email.com</a></div></div>
         <div class="rh-item"><div class="rh-label">Phone</div><div class="rh-val">(917) 555-0142</div></div>
         <div class="rh-item"><div class="rh-label">Budget</div><div class="rh-val">$8,000–$10,000/mo</div></div>
-        <div class="rh-item"><div class="rh-label">Move-In</div><div class="rh-val">60–90 days</div></div>
         <div class="rh-item"><div class="rh-label">Einstein Score</div><div class="rh-val score">94 / 100</div></div>
         <div class="rh-item"><div class="rh-label">Tour</div><div class="rh-val">Tue Jun 17 · 2:00 PM</div></div>
       </div>
@@ -383,7 +374,6 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
         </button>
         <div class="ra-divider"></div>
         <button class="ra-btn">Edit</button>
-        <button class="ra-btn" onclick="triggerUrgent()">Flag Urgent</button>
         <button class="ra-btn">Convert</button>
       </div>
     </div>
@@ -401,8 +391,8 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
       <div class="sf-card-body">
         <div class="detail-row"><div class="det-lbl">Status</div><div class="det-val">Working</div></div>
         <div class="detail-row"><div class="det-lbl">Rating</div><div class="det-val hot">Hot</div></div>
-        <div class="detail-row"><div class="det-lbl">Lead Source</div><div class="det-val">Website</div></div>
-        <div class="detail-row"><div class="det-lbl">Created</div><div class="det-val">Jun 15, 2026</div></div>
+        <div class="detail-row"><div class="det-lbl">Lead Source</div><div class="det-val">StreetEasy (ILS)</div></div>
+        <div class="detail-row"><div class="det-lbl">Created</div><div class="det-val">Jun 15, 2026 · 11:43 PM</div></div>
         <div class="detail-row"><div class="det-lbl">Lead Owner</div><div class="det-val link">Sarah Phillips</div></div>
         <div class="detail-row"><div class="det-lbl">Assigned By</div><div class="det-val ai">Agentforce SDR</div></div>
         <div class="detail-row"><div class="det-lbl">Tour Date</div><div class="det-val green">Tue Jun 17 · 2:00 PM</div></div>
@@ -464,36 +454,36 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
       </div>
       <div class="tl-wrap" style="overflow-y:auto;flex:1;">
 
-        <!-- 1. Website Chat -->
+        <!-- 1. StreetEasy Import -->
         <div class="tl-item">
-          <div class="tl-icon chat">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div class="tl-icon import">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
           </div>
           <div class="tl-right">
             <div class="tl-meta">
-              <span class="tl-title">Website chat session started</span>
-              <span class="tl-source">Agentforce SDR</span>
+              <span class="tl-title">Inquiry received via StreetEasy</span>
+              <span class="tl-source">StreetEasy (ILS)</span>
               <span class="tl-time">Jun 15 · 11:43 PM</span>
             </div>
             <div class="tl-simple">
-              <div class="tl-simple-body">Reya captured partial preferences: Chelsea / HY · 2BR · Dog-friendly · Session ended at 11:45 PM · 2 min 17 sec</div>
+              <div class="tl-simple-body">2-bedroom inquiry submitted on StreetEasy. Partial preferences captured: Chelsea / Hudson Yards, 2BR. Lead auto-imported to Salesforce and assigned to Agentforce SDR for immediate qualification.</div>
             </div>
           </div>
         </div>
 
-        <!-- 2. Chat Abandoned -->
+        <!-- 2. SDR Triggered -->
         <div class="tl-item">
-          <div class="tl-icon sys">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          <div class="tl-icon trigger">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           </div>
           <div class="tl-right">
             <div class="tl-meta">
-              <span class="tl-title">Chat ended — email nurture triggered</span>
+              <span class="tl-title">Agentforce SDR triggered — qualification email queued</span>
               <span class="tl-source">System</span>
-              <span class="tl-time">Jun 15 · 11:45 PM</span>
+              <span class="tl-time">Jun 15 · 11:47 PM</span>
             </div>
             <div class="tl-simple">
-              <div class="tl-simple-body">Lead left the website without completing tour booking. Re-engagement workflow started — personalized follow-up email queued based on chat preferences.</div>
+              <div class="tl-simple-body">First outreach email queued 4 minutes after import. Marketing Cloud automated cadence paused — SDR handling qualification sequence. Without Agentforce: lead sits untouched until 10 AM.</div>
             </div>
           </div>
         </div>
@@ -512,17 +502,17 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
             <div class="tl-card">
               <div class="tl-card-head" onclick="toggleEmail(this)">
                 <div>
-                  <div class="tl-subject">Your Chelsea search — a few quick questions</div>
+                  <div class="tl-subject">Still available: 2-bedroom options in Chelsea + Hudson Yards</div>
                   <div class="tl-preview">To: alex.chen@email.com · Sent by Agentforce SDR (Reya)</div>
                 </div>
                 <span class="tl-toggle">▾</span>
               </div>
               <div class="tl-card-body">
                 <p>Hi Alex,</p>
-                <p>I noticed you were exploring our Chelsea and Hudson Yards properties a few minutes ago. You're browsing at a great time — we have some exceptional 2-bedroom options available right now.</p>
-                <p>To make sure I send you the perfect matches, two quick questions:</p>
+                <p>Thank you for your inquiry on StreetEasy — you've found your way to some of Manhattan's most sought-after addresses. I'm Reya, Related's AI Leasing Assistant, and I'd love to make sure we match you with exactly the right home.</p>
+                <p>To personalize your options, two quick questions:</p>
                 <p><strong>1. What's your target monthly budget?</strong><br><strong>2. Are you thinking about moving in the next 30, 60, or 90 days?</strong></p>
-                <p>I can have personalized floor plans and pricing in your inbox within the hour.</p>
+                <p>Reply and I'll have your top matches — with floor plans and pricing — in your inbox within the hour, no matter the time.</p>
                 <div class="email-sig">Reya · AI Leasing Assistant, Related Residential · Available 24/7 · 212-555-0100</div>
               </div>
             </div>
@@ -543,7 +533,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
             <div class="tl-card">
               <div class="tl-card-head" onclick="toggleEmail(this)">
                 <div>
-                  <div class="tl-subject">Re: Your Chelsea search — a few quick questions</div>
+                  <div class="tl-subject">Re: Still available: 2-bedroom options in Chelsea + Hudson Yards</div>
                   <div class="tl-preview">From: alex.chen@email.com · New qualifying info — record auto-updated</div>
                 </div>
                 <span class="tl-toggle">▾</span>
@@ -690,10 +680,10 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
             <div class="tl-meta">
               <span class="tl-title">Surfaced in Morning Queue — #1 Priority</span>
               <span class="tl-source">Agentforce</span>
-              <span class="tl-time">Jun 17 · 10:00 AM</span>
+              <span class="tl-time">Jun 17 · 9:55 AM</span>
             </div>
             <div class="tl-simple">
-              <div class="tl-simple-body highlight">Lead surfaced to Sarah Phillips as #1 priority in the morning queue. Score 94/100 · Tour confirmed today at 2:00 PM · Full AI conversation summary delivered.</div>
+              <div class="tl-simple-body highlight">Lead surfaced to Sarah Phillips as #1 priority. Score 94/100 · Fully qualified overnight · Tour confirmed today at 2:00 PM · Full conversation summary delivered.</div>
             </div>
           </div>
         </div>
@@ -716,16 +706,23 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
           <div class="ai-lbl">Email Nurture · Tour Mode</div>
         </div>
         <div class="ai-stats">
+          <div class="ai-stat"><div class="ai-stat-n">4m</div><div class="ai-stat-lbl">First Response</div></div>
           <div class="ai-stat"><div class="ai-stat-n">3</div><div class="ai-stat-lbl">Emails Sent</div></div>
           <div class="ai-stat"><div class="ai-stat-n">2</div><div class="ai-stat-lbl">Replies Received</div></div>
-          <div class="ai-stat"><div class="ai-stat-n">18h</div><div class="ai-stat-lbl">Lead to Tour</div></div>
-          <div class="ai-stat"><div class="ai-stat-n">94%</div><div class="ai-stat-lbl">Close Confidence</div></div>
+          <div class="ai-stat"><div class="ai-stat-n">18h</div><div class="ai-stat-lbl">Inquiry to Tour</div></div>
+        </div>
+        <div class="ai-response-note">
+          <strong>After-hours response</strong> — StreetEasy inquiry at 11:43 PM, first email sent at 11:47 PM.
+          <div class="ai-response-vs">
+            <div class="ai-vs-item bad"><div class="ai-vs-n">10+ hrs</div><div class="ai-vs-lbl">Without Agentforce</div></div>
+            <div class="ai-vs-item good"><div class="ai-vs-n">4 min</div><div class="ai-vs-lbl">With Agentforce</div></div>
+          </div>
         </div>
         <div class="ai-insight">
           <strong>Next action:</strong> Post-tour follow-up queued — Reya will send a personalized summary within 1 hr of tour completion.
         </div>
         <div class="ai-note">
-          Skip-to-human: If Alex replies "connect me now" at any point, Agentforce flags the lead urgent and alerts the next available consultant immediately.
+          MC automated cadence paused during active SDR nurture to prevent duplication — resumes post-tour if no conversion. If Alex requests to speak with someone, lead is escalated to Priority #1 and Sarah is notified at 10 AM.
         </div>
       </div>
     </div>
@@ -737,7 +734,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           Morning Queue
         </div>
-        <div class="mq-head-sub">Sarah's queue · Jun 17</div>
+        <div class="mq-head-sub">Sarah's queue · Jun 17 · 9:55 AM</div>
       </div>
       <div class="mq-body">
         <div class="mq-priority-lbl">#1 Priority Lead</div>
@@ -747,12 +744,12 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
         </div>
         <div class="mq-checks">
           <div class="mq-chk"><span class="mq-chk-icon">✓</span>Budget confirmed: $8,000–$10,000/mo</div>
-          <div class="mq-chk"><span class="mq-chk-icon">✓</span>Timeline: 60–90 days</div>
+          <div class="mq-chk"><span class="mq-chk-icon">✓</span>Timeline: 60–90 days · Move-in ready</div>
           <div class="mq-chk"><span class="mq-chk-icon">✓</span>Dog City unit required (Labrador)</div>
           <div class="mq-chk"><span class="mq-chk-icon">✓</span>Property: Abington House selected</div>
           <div class="mq-chk"><span class="mq-chk-icon">✓</span>Tour today at 2:00 PM — top priority</div>
         </div>
-        <div class="mq-insight">"High urgency · Strong fit · Tour confirmed today — prime close opportunity."</div>
+        <div class="mq-insight">"Fully qualified overnight from StreetEasy inquiry. Budget, timeline, and property confirmed via email. Tour confirmed — strong close opportunity."</div>
       </div>
       <div class="mq-footer">
         <button class="mq-btn primary">View Summary</button>
@@ -765,7 +762,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
       <div class="sf-card-body">
         <div class="nba-inner">
           <div class="nba-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0070D2" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0176d3" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
           <div style="flex:1;">
             <div class="nba-ttl">Prepare Abington House Tour Brief</div>
@@ -784,7 +781,7 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
           <div class="pq-avatar hot">AC</div>
           <div class="pq-info">
             <div class="pq-name">Alex Chen</div>
-            <div class="pq-sub" id="pq1-sub">Tour today · 2BR · $8–10K/mo</div>
+            <div class="pq-sub">Tour today · 2BR · $8–10K/mo</div>
           </div>
           <span class="pq-badge hot">94</span>
         </div>
@@ -809,22 +806,21 @@ body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',Arial,sans-serif;bac
       </div>
     </div>
 
-    <div class="sf-card" id="skip-flag-card" style="display:none;">
-      <div class="sf-card-head" style="color:#BA0517;">Urgent — Skip-to-Human Flagged</div>
-      <div class="sf-card-body">
-        <div class="skip-flag">
-          <div class="sf-flag-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <div>
-            <div class="sf-flag-ttl">Prospect Requested Immediate Contact</div>
-            <div class="sf-flag-sub">Alex Chen has been flagged as urgent. A leasing consultant should reach out within 15–30 minutes via call or text.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
+</div>
+
+<!-- DEMO NAV (SF utility bar — bottom) -->
+<div class="demo-nav">
+  <span class="demo-nav-label">Demo Views</span>
+  <a href="related-agentforce-demo.html" class="demo-nav-item">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    Website Experience
+  </a>
+  <span class="demo-nav-item active">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    CRM Console
+  </span>
+  <span class="demo-nav-badge">⚡ Agentforce SDR</span>
 </div>
 
 <script>
@@ -835,13 +831,6 @@ function toggleEmail(header) {
   body.style.display = isOpen ? 'none' : 'block';
   const arrow = header.querySelector('.tl-toggle');
   if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
-}
-
-function triggerUrgent() {
-  document.getElementById('urgent-pill').style.display = 'inline-flex';
-  document.getElementById('skip-flag-card').style.display = 'block';
-  const sub = document.getElementById('pq1-sub');
-  if (sub) sub.textContent = 'URGENT · Tour today · Callback requested';
 }
 </script>
 </body>
