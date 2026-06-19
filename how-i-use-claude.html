@@ -98,11 +98,29 @@
     .hero-lauryl {
       font-size: 1.3rem; font-style: italic; font-weight: 500;
       color: rgba(255,255,255,.9);
-      max-width: 500px; margin: 0 auto 2.75rem;
+      max-width: 500px; margin: 0 auto 1.5rem;
       border-left: 3px solid var(--claude);
       padding-left: 1rem; text-align: left;
       line-height: 1.6;
     }
+    .hero-connector { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.35); margin: 0 auto 1.25rem; text-align: center; }
+    .slack-exchange {
+      background: #1a1d21; border: 1px solid rgba(255,255,255,.09); border-radius: 12px;
+      padding: 1.35rem 1.5rem; max-width: 560px; margin: 0 auto 2.75rem; text-align: left;
+    }
+    .sl-msg { display: flex; gap: .75rem; }
+    .sl-msg + .sl-msg { margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid rgba(255,255,255,.06); }
+    .sl-av { width: 36px; height: 36px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 800; color: #fff; }
+    .sl-av-r { background: #0176D3; }
+    .sl-av-l { background: #611f69; }
+    .sl-right { flex: 1; min-width: 0; }
+    .sl-meta { margin-bottom: .3rem; }
+    .sl-name { font-size: .82rem; font-weight: 700; color: #fff; }
+    .sl-time { font-size: .7rem; color: rgba(255,255,255,.35); margin-left: .4rem; }
+    .sl-body { font-size: .82rem; color: rgba(255,255,255,.78); line-height: 1.7; }
+    .sl-mention { color: #1d9bd1; font-weight: 500; }
+    .sl-muted { color: rgba(255,255,255,.42); font-style: italic; }
+    .sl-love { font-size: .9rem; font-weight: 700; color: #fff; }
     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4.5rem; }
     .btn {
       padding: .75rem 1.75rem; border-radius: 8px; font-weight: 600;
@@ -443,6 +461,33 @@
     <h1>My Brain on <em>Claude</em></h1>
     <p class="hero-sub">a few weeks ago in the midst of an existential crisis side effects included wondering if i'm being paid to dj, still overwhelmed by 1,989 AI acronyms and tools, lauryl posted this:</p>
     <p class="hero-lauryl">"Visually, how would you tell the story...."</p>
+    <p class="hero-connector">and this happened</p>
+    <div class="slack-exchange">
+      <div class="sl-msg">
+        <div class="sl-av sl-av-r">R</div>
+        <div class="sl-right">
+          <div class="sl-meta">
+            <span class="sl-name">Rachel Smith</span>
+            <span class="sl-time">Jun 3rd at 4:42 PM</span>
+          </div>
+          <div class="sl-body">
+            <span class="sl-mention">@Lauryl Denega</span> at risk of seeming dumb but i like you enough so just go with me here:<br><br>
+            what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!<br><br>
+            <span class="sl-muted">...brb while i put this into claude and see what cartoon i get?</span>
+          </div>
+        </div>
+      </div>
+      <div class="sl-msg">
+        <div class="sl-av sl-av-l">L</div>
+        <div class="sl-right">
+          <div class="sl-meta">
+            <span class="sl-name">Lauryl Denega</span>
+            <span class="sl-time">Jun 3rd at 7:14 PM</span>
+          </div>
+          <div class="sl-body sl-love">I....love it.</div>
+        </div>
+      </div>
+    </div>
     <div class="hero-btns">
       <a href="#work" class="btn btn-fill">See What Happened →</a>
     </div>
