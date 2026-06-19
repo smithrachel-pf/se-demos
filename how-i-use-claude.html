@@ -325,6 +325,42 @@
       font-style: normal;
     }
 
+    /* ── TABS ────────────────────────────────────────────── */
+    .tab-bar { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 100; }
+    .tab-bar-inner { max-width: 1080px; margin: 0 auto; padding: 0 2.5rem; display: flex; }
+    .tab-btn { padding: .9rem 1.5rem; font-size: .875rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; display: flex; align-items: center; gap: .5rem; transition: all .2s; white-space: nowrap; margin-bottom: -1px; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.tab-work.is-active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-btn.tab-meta.is-active { color: var(--claude); border-bottom-color: var(--claude); }
+    .tab-panel { display: none; }
+    .tab-panel.is-active { display: block; }
+
+    /* ── THE MAKING OF ───────────────────────────────────── */
+    .making-hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); margin-bottom: 3.5rem; }
+    .making-hero h2 { font-size: 2rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .75rem; }
+    .making-hero h2 em { font-style: normal; background: linear-gradient(135deg, var(--claude-lt), var(--claude)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .making-hero p { font-size: 1rem; color: var(--text-muted); max-width: 620px; line-height: 1.75; }
+    .collab-thread { max-width: 760px; }
+    .prompt-entry { margin-bottom: .5rem; }
+    .prompt-bubble { background: #f0f7ff; border: 1px solid rgba(1,118,211,.15); border-radius: 12px 12px 12px 3px; padding: 1.1rem 1.35rem; }
+    .prompt-bubble.is-pivot { background: #fff8f5; border-color: rgba(212,120,90,.25); border-radius: 12px 12px 12px 3px; }
+    .prompt-who { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--blue); margin-bottom: .4rem; display: flex; align-items: center; gap: .45rem; }
+    .prompt-who.claude-who { color: var(--claude); }
+    .prompt-who-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+    .prompt-who-dot.claude-dot { background: var(--claude); }
+    .prompt-text { font-size: .9rem; line-height: 1.75; color: var(--text); }
+    .prompt-text em { color: var(--text-muted); font-style: italic; }
+    .prompt-text strong { font-weight: 700; }
+    .what-changed { margin: .6rem 0 0 1.5rem; border-left: 2px solid var(--border); padding: .75rem 0 .75rem 1.25rem; }
+    .wc-label { font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--text-faint); margin-bottom: .35rem; display: block; }
+    .wc-text { font-size: .875rem; color: var(--text-muted); line-height: 1.7; }
+    .wc-text strong { color: var(--text); font-weight: 700; }
+    .wc-text em { font-style: normal; background: rgba(212,120,90,.1); color: var(--claude-dim); padding: .05em .35em; border-radius: 3px; font-size: .875em; }
+    .thread-connector { width: 2px; height: 1.75rem; background: var(--border); margin: 0 0 0 calc(1.35rem + 1px); }
+    .meta-end { margin-top: 3rem; padding: 2rem; background: var(--navy); border-radius: var(--radius); text-align: center; }
+    .meta-end p { color: rgba(255,255,255,.55); font-size: .9rem; line-height: 1.75; }
+    .meta-end strong { color: var(--claude-lt); }
+
     /* ── SLACKBOT CALLOUT ────────────────────────────────── */
     .slack-callout {
       background: #130820;
@@ -414,11 +450,19 @@
       <div class="stat"><div class="stat-num">6</div><div class="stat-label">Thinking Sessions</div></div>
       <div class="stat"><div class="stat-num">4</div><div class="stat-label">Live Demos Built</div></div>
       <div class="stat"><div class="stat-num">3</div><div class="stat-label">Months In</div></div>
-      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Lines Coded Manually</div></div>
     </div>
   </div>
 </section>
 
+<!-- ───── TABS ───── -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn tab-work is-active" onclick="switchTab('work')"><span style="color:var(--blue-lt)">◈</span> The Thinking</button>
+    <button class="tab-btn tab-meta" onclick="switchTab('meta')"><span style="color:var(--claude-lt)">✦</span> The Making Of</button>
+  </div>
+</div>
+
+<div class="tab-panel is-active" id="panel-work">
 <section class="section" id="work">
   <div class="container">
     <div class="section-head">
@@ -1051,6 +1095,118 @@
 
   </div><!-- /container -->
 </section>
+</div><!-- /panel-work -->
+
+<!-- ───── TAB: THE MAKING OF ───── -->
+<div class="tab-panel" id="panel-meta">
+<section class="section">
+  <div class="container">
+
+    <div class="making-hero">
+      <div class="section-label" style="color:var(--claude);">The Making Of</div>
+      <h2>How we built <em>this.</em></h2>
+      <p>This site is itself a Claude collaboration. Below is the actual conversation — verbatim prompts, real pivots, the "wait no, change this" moments — that built what you're looking at right now.</p>
+    </div>
+
+    <div class="collab-thread">
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble">
+          <div class="prompt-who"><span class="prompt-who-dot"></span>Rachel</div>
+          <div class="prompt-text">"i am getting several questions from colleagues and teammates about how i am using claude... so lets just build an interactive website together that features ALL of the work i have done so far with you, but what is most important is the thinking and reasoning, the inputs i gave, the iterations, and the ultimate outputs. i dont want to show <strong>'this is what i did'</strong> i want to show <strong>'this is how i did it'"</strong></div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text">A 6-card interactive site built in one session. <strong>0 code written.</strong> The framing — "how I did it" not "what I did" — shaped every design decision that followed. A brief, not a spec. That distinction is the whole point.</div>
+        </div>
+      </div>
+
+      <div class="thread-connector"></div>
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble">
+          <div class="prompt-who"><span class="prompt-who-dot"></span>Rachel</div>
+          <div class="prompt-text">"change the title of the site to <strong>'me and mr. claude'</strong>"<br><br><em>...a few iterations later...</em><br><br>"change me and mr claude to <strong>'my brain on claude'</strong> / and i dont want this to read like an advice column. remove a good bit of the narrative entirely."</div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text">The name found itself in two steps — one felt personable, one felt true. The second ask also stripped out explanatory copy. The site got sharper every time Rachel <strong>cut</strong> something, not added it.</div>
+        </div>
+      </div>
+
+      <div class="thread-connector"></div>
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble">
+          <div class="prompt-who"><span class="prompt-who-dot"></span>Rachel</div>
+          <div class="prompt-text">"change this: <em>Not a tutorial. Not a product pitch...</em><br><br>to this: a few weeks ago in the midst of an existential crisis side effects included wondering if i'm being paid to dj, still overwhelmed by 1,989 AI acronyms and tools, lauryl posted this: <strong>'Visually, how would you tell the story....'</strong>"</div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text">The moment the site found its actual voice. One rewrite replaced a polished, generic hero with the real story. <strong>The specificity of the feeling — not the outcome — is what made it land.</strong></div>
+        </div>
+      </div>
+
+      <div class="thread-connector"></div>
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble">
+          <div class="prompt-who"><span class="prompt-who-dot"></span>Rachel</div>
+          <div class="prompt-text">"i also want this to be a <strong>hybrid branding of salesforce and claude</strong> (love claude orange and the bot)"</div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text">One sentence rewrote the entire visual identity. Salesforce blue stayed as the foundation. Claude orange came in as the accent — every heading highlight, every gradient, every CTA. <strong>The color system is now doing narrative work.</strong></div>
+        </div>
+      </div>
+
+      <div class="thread-connector"></div>
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble">
+          <div class="prompt-who"><span class="prompt-who-dot"></span>Rachel</div>
+          <div class="prompt-text">"i also <strong>don't want slackbot to be another tab</strong>, but a callout in each story / also want to somehow incorporate the slackbot emoji visual <em>:slackbot-dab:</em>"</div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text">What started as a feature became context. Moving Slackbot from a separate tab into a callout inside each case study made the <em>research-before-Claude</em> habit visible without isolating it. A structural decision driven by a strategic instinct — not a design brief.</div>
+        </div>
+      </div>
+
+      <div class="thread-connector"></div>
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble">
+          <div class="prompt-who"><span class="prompt-who-dot"></span>Rachel</div>
+          <div class="prompt-text">"there should be more inclusion of specific times in my prompting that i made you <strong>THINK DIFFERENTLY</strong> or really impacted the output / one point i really want to convey is that <strong>HOW you THINK and PROMPT is critical</strong>"</div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text">Every case study now has <em>"the prompt that mattered"</em> callouts — verbatim framing from the actual sessions where one specific question redirected the entire output. <strong>The meta-insight became the design element.</strong></div>
+        </div>
+      </div>
+
+      <div class="thread-connector"></div>
+
+      <div class="prompt-entry">
+        <div class="prompt-bubble is-pivot">
+          <div class="prompt-who claude-who"><span class="prompt-who-dot claude-dot"></span>Rachel</div>
+          <div class="prompt-text">"now i want a separate tab of a <strong>visual rendering of my prompting, your outputs, our iterations</strong> that built this project as an example of <strong>WHAT WE can do TOGETHER</strong>"</div>
+        </div>
+        <div class="what-changed">
+          <div class="wc-label">↓ what happened</div>
+          <div class="wc-text"><strong>This page. Right now.</strong> The site documenting how Claude helped build the site documenting how Claude helped build things. The recursion is the point.</div>
+        </div>
+      </div>
+
+      <div class="meta-end">
+        <p>Every prompt on this page was typed once. No code was written by hand. No design tool was opened.<br><strong>The thinking was the work.</strong></p>
+      </div>
+
+    </div>
+  </div>
+</section>
+</div><!-- /panel-meta -->
 
 <!-- ───── FOOTER ───── -->
 <footer>
@@ -1059,6 +1215,15 @@
 </footer>
 
 <script>
+  // ── Tab switching ────────────────────────────────────────
+  function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('is-active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('is-active'));
+    document.getElementById('panel-' + name).classList.add('is-active');
+    document.querySelector('.tab-btn.tab-' + name).classList.add('is-active');
+    window.scrollTo({ top: document.querySelector('.tab-bar').offsetTop - 58, behavior: 'smooth' });
+  }
+
   // ── Case study card interaction ──────────────────────────
   const cards = document.querySelectorAll('.case-card');
   const detailWraps = document.querySelectorAll('.detail-wrap');
