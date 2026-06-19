@@ -211,6 +211,11 @@
     .tag-strat { background: #fef3c7; color: #92400e; }
     .tag-rfp  { background: #fce7f3; color: #9d174d; }
     .tag-ttkr  { background: #f3e8ff; color: #6b21a8; }
+    .card-logo { height: 34px; margin-bottom: .8rem; display: flex; align-items: center; }
+    .card-logo img { max-height: 30px; max-width: 110px; object-fit: contain; object-position: left; }
+    .dp-logo { margin-bottom: 1rem; }
+    .dp-logo img { max-height: 28px; max-width: 130px; object-fit: contain; filter: brightness(0) invert(1); opacity: .85; }
+
     .card-chevron {
       position: absolute; bottom: 1.1rem; right: 1.25rem;
       width: 26px; height: 26px; border-radius: 50%;
@@ -520,6 +525,7 @@
 
       <div class="case-card" data-case="cbre">
         <div class="case-accent" style="background: linear-gradient(90deg, #006341, #00a651);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/cbre.com" alt="CBRE" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="card-co">CBRE</div>
         <div class="card-div">Global Workplace Solutions</div>
         <div class="tags">
@@ -531,11 +537,11 @@
 
       <div class="case-card" data-case="equinox">
         <div class="case-accent" style="background: linear-gradient(90deg, #111111, #444444);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/equinox.com" alt="Equinox" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="card-co">Equinox</div>
         <div class="card-div">Fitness &amp; Luxury Lifestyle</div>
         <div class="tags">
-          <span class="tag tag-demo">Clickable Demo Prototype</span>
-          <span class="tag tag-deck">SIC Deck</span>
+          <span class="tag tag-deck">Deck</span>
           <span class="tag tag-strat">Strategy</span>
         </div>
         <div class="card-chevron">↓</div>
@@ -543,6 +549,7 @@
 
       <div class="case-card" data-case="servicelogic">
         <div class="case-accent" style="background: linear-gradient(90deg, #1a5fa8, #2e7dd4);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/servicelogic.com" alt="Service Logic" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="card-co">Service Logic</div>
         <div class="card-div">FSM / Field Services · PE-backed</div>
         <div class="tags">
@@ -554,17 +561,19 @@
 
       <div class="case-card" data-case="gsapbs">
         <div class="case-accent" style="background: linear-gradient(90deg, #003366, #0057a8);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/gsa.gov" alt="GSA" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="card-co">GSA PBS</div>
         <div class="card-div">Federal Real Estate · Government</div>
         <div class="tags">
           <span class="tag tag-deck">Deck</span>
-          <span class="tag tag-ttkr">Talk Track</span>
+          <span class="tag tag-ttkr">Talk Track Points</span>
         </div>
         <div class="card-chevron">↓</div>
       </div>
 
       <div class="case-card" data-case="relatedrentals">
         <div class="case-accent" style="background: linear-gradient(90deg, #9b1d1d, #c0392b);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/related.com" alt="Related" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="card-co">Related Rentals</div>
         <div class="card-div">Residential Real Estate</div>
         <div class="tags">
@@ -576,6 +585,7 @@
 
       <div class="case-card" data-case="hertz">
         <div class="case-accent" style="background: linear-gradient(90deg, #FFD100, #FFA500);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/hertz.com" alt="Hertz" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="card-co">Hertz</div>
         <div class="card-div">Vehicle Rental &amp; Mobility</div>
         <div class="tags">
@@ -593,23 +603,34 @@
       <div class="detail-panel">
         <div class="dp-head">
           <div class="dp-head-glow"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/cbre.com" alt="CBRE" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company">CBRE / GWS</div>
           <p class="dp-situation">CBRE is the world's largest commercial real estate services firm. The Global Workplace Solutions team had a high-stakes demo coming up — and the standard demo environment didn't tell the story they needed to tell.</p>
           <div class="tags">
             <span class="tag tag-demo">Clickable Demo Prototype</span>
-            <span class="tag tag-deck">BOE Deck</span>
+            <span class="tag tag-deck">Deck</span>
           </div>
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid">
-              <span class="sl-yel"></span><span class="sl-red"></span>
-              <span class="sl-teal"></span><span class="sl-grn"></span>
-            </div>
+            <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="slackbot-dab">
+              <circle cx="18" cy="18" r="18" fill="#1e0a3c"/>
+              <rect x="14.5" y="27" width="3" height="7" rx="1.5" fill="#36C5F0"/>
+              <rect x="18.5" y="27" width="3" height="7" rx="1.5" fill="#2EB67D"/>
+              <rect x="12" y="18.5" width="12" height="9" rx="3.5" fill="#ECB22E"/>
+              <line x1="13" y1="22" x2="5" y2="14" stroke="#ECB22E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="5" cy="14" r="2.8" fill="#F0A040"/>
+              <line x1="24" y1="23" x2="32" y2="28" stroke="#E01E5A" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="28" r="2.8" fill="#F0A040"/>
+              <circle cx="18" cy="12.5" r="6.5" fill="#F0A040"/>
+              <path d="M15.5 11 Q16.5 9.8 17.5 11" stroke="#5a2a05" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="20.5" cy="11" r="1.3" fill="#5a2a05"/>
+              <path d="M16 14.5 Q18 16.2 20 14.5" stroke="#5a2a05" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
             <div class="slack-dab-label">dab ⚡</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Slackbot Intel · came first</div>
+            <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-callout-text">Before opening Claude, I queried Slackbot for <strong>[CBRE: what intel did you pull here?]</strong> — that context grounded the entire prompt and made the demo feel like it was built specifically for them.</div>
           </div>
         </div>
@@ -684,24 +705,34 @@
       <div class="detail-panel">
         <div class="dp-head" style="background: linear-gradient(135deg, #111, #1a1a2e);">
           <div class="dp-head-glow"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/equinox.com" alt="Equinox" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company">Equinox</div>
           <p class="dp-situation">Equinox is one of the most recognized premium fitness and lifestyle brands in the world. The FY27 SIC — Strategic Investment Council — was approaching. This is the highest-stakes internal meeting of the year: you're pitching the investment case for your account to Salesforce leadership.</p>
           <div class="tags">
-            <span class="tag tag-demo">Clickable Demo Prototype</span>
-            <span class="tag tag-deck">SIC Deck</span>
+            <span class="tag tag-deck">Deck</span>
             <span class="tag tag-strat">Executive POV</span>
           </div>
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid">
-              <span class="sl-yel"></span><span class="sl-red"></span>
-              <span class="sl-teal"></span><span class="sl-grn"></span>
-            </div>
+            <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="slackbot-dab">
+              <circle cx="18" cy="18" r="18" fill="#1e0a3c"/>
+              <rect x="14.5" y="27" width="3" height="7" rx="1.5" fill="#36C5F0"/>
+              <rect x="18.5" y="27" width="3" height="7" rx="1.5" fill="#2EB67D"/>
+              <rect x="12" y="18.5" width="12" height="9" rx="3.5" fill="#ECB22E"/>
+              <line x1="13" y1="22" x2="5" y2="14" stroke="#ECB22E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="5" cy="14" r="2.8" fill="#F0A040"/>
+              <line x1="24" y1="23" x2="32" y2="28" stroke="#E01E5A" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="28" r="2.8" fill="#F0A040"/>
+              <circle cx="18" cy="12.5" r="6.5" fill="#F0A040"/>
+              <path d="M15.5 11 Q16.5 9.8 17.5 11" stroke="#5a2a05" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="20.5" cy="11" r="1.3" fill="#5a2a05"/>
+              <path d="M16 14.5 Q18 16.2 20 14.5" stroke="#5a2a05" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
             <div class="slack-dab-label">dab ⚡</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Slackbot Intel · came first</div>
+            <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-callout-text">Before touching Claude, I used Slackbot to pull <strong>[Equinox: what did you search — deal history, SIC examples, leadership notes?]</strong> — that intel shaped how I framed the narrative arc before writing a single prompt.</div>
           </div>
         </div>
@@ -760,7 +791,7 @@
                 <div class="output-foot">
                   <div>
                     <div class="output-name">Equinox SIC Suite</div>
-                    <div class="output-type">Interactive Demo + 2 PDF Decks</div>
+                    <div class="output-type">SIC Deck · 2 PDF Decks</div>
                   </div>
                   <a href="https://smithrachel-pf.github.io/se-demos/equinox-sic-deck.html" target="_blank" class="output-cta">Open Live ↗</a>
                 </div>
@@ -775,6 +806,7 @@
       <div class="detail-panel">
         <div class="dp-head" style="background: linear-gradient(135deg, #0d2240, #1a3a6e);">
           <div class="dp-head-glow"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/servicelogic.com" alt="Service Logic" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company">Service Logic</div>
           <p class="dp-situation">Service Logic is a Bain Capital portfolio company — 60 operating companies, $1B+ in HVAC and mechanical services revenue, and heading toward an IPO. They issued a formal FSM RFP. They had already rejected ServiceMax. The bar was high and the stakes were real.</p>
           <div class="tags">
@@ -785,14 +817,24 @@
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid">
-              <span class="sl-yel"></span><span class="sl-red"></span>
-              <span class="sl-teal"></span><span class="sl-grn"></span>
-            </div>
+            <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="slackbot-dab">
+              <circle cx="18" cy="18" r="18" fill="#1e0a3c"/>
+              <rect x="14.5" y="27" width="3" height="7" rx="1.5" fill="#36C5F0"/>
+              <rect x="18.5" y="27" width="3" height="7" rx="1.5" fill="#2EB67D"/>
+              <rect x="12" y="18.5" width="12" height="9" rx="3.5" fill="#ECB22E"/>
+              <line x1="13" y1="22" x2="5" y2="14" stroke="#ECB22E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="5" cy="14" r="2.8" fill="#F0A040"/>
+              <line x1="24" y1="23" x2="32" y2="28" stroke="#E01E5A" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="28" r="2.8" fill="#F0A040"/>
+              <circle cx="18" cy="12.5" r="6.5" fill="#F0A040"/>
+              <path d="M15.5 11 Q16.5 9.8 17.5 11" stroke="#5a2a05" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="20.5" cy="11" r="1.3" fill="#5a2a05"/>
+              <path d="M16 14.5 Q18 16.2 20 14.5" stroke="#5a2a05" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
             <div class="slack-dab-label">dab ⚡</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Slackbot Intel · came first</div>
+            <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-callout-text">Before feeding the 100-page RFP to Claude, I queried Slackbot for <strong>[Service Logic: prior FSM deal threads, ServiceMax competitive intel, ASC 606 references?]</strong> — knowing WHY they rejected ServiceMax made the prompt far more targeted.</div>
           </div>
         </div>
@@ -868,23 +910,34 @@
       <div class="detail-panel">
         <div class="dp-head" style="background: linear-gradient(135deg, #0b1f3a, #163561);">
           <div class="dp-head-glow"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/gsa.gov" alt="GSA" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company">GSA PBS</div>
           <p class="dp-situation">GSA Public Buildings Service is the federal government's real estate arm — managing billions in property across the country. Federal accounts have specific procurement rules, formal stakeholder hierarchies, and very little tolerance for a pitch that doesn't feel tailored to government reality.</p>
           <div class="tags">
-            <span class="tag tag-deck">Presentation Deck</span>
-            <span class="tag tag-ttkr">Full Talk Track</span>
+            <span class="tag tag-deck">Deck</span>
+            <span class="tag tag-ttkr">Talk Track Points</span>
           </div>
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid">
-              <span class="sl-yel"></span><span class="sl-red"></span>
-              <span class="sl-teal"></span><span class="sl-grn"></span>
-            </div>
+            <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="slackbot-dab">
+              <circle cx="18" cy="18" r="18" fill="#1e0a3c"/>
+              <rect x="14.5" y="27" width="3" height="7" rx="1.5" fill="#36C5F0"/>
+              <rect x="18.5" y="27" width="3" height="7" rx="1.5" fill="#2EB67D"/>
+              <rect x="12" y="18.5" width="12" height="9" rx="3.5" fill="#ECB22E"/>
+              <line x1="13" y1="22" x2="5" y2="14" stroke="#ECB22E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="5" cy="14" r="2.8" fill="#F0A040"/>
+              <line x1="24" y1="23" x2="32" y2="28" stroke="#E01E5A" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="28" r="2.8" fill="#F0A040"/>
+              <circle cx="18" cy="12.5" r="6.5" fill="#F0A040"/>
+              <path d="M15.5 11 Q16.5 9.8 17.5 11" stroke="#5a2a05" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="20.5" cy="11" r="1.3" fill="#5a2a05"/>
+              <path d="M16 14.5 Q18 16.2 20 14.5" stroke="#5a2a05" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
             <div class="slack-dab-label">dab ⚡</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Slackbot Intel · came first</div>
+            <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-callout-text">Before building the talk track, I pulled <strong>[GSA PBS: attendee context, prior meeting notes, what had resonated before?]</strong> from Slackbot — walking into a federal room knowing who the real decision-makers are changes everything.</div>
           </div>
         </div>
@@ -946,7 +999,7 @@
                 <div class="output-foot">
                   <div>
                     <div class="output-name">GSA PBS CRE Presentation</div>
-                    <div class="output-type">Detailed Slide Guide &amp; Full Talk Track · PowerPoint Deck</div>
+                    <div class="output-type">Detailed Slide Guide &amp; Talk Track Points · PowerPoint Deck</div>
                   </div>
                 </div>
               </div>
@@ -960,6 +1013,7 @@
       <div class="detail-panel">
         <div class="dp-head" style="background: linear-gradient(135deg, #2d0a0a, #5c1212);">
           <div class="dp-head-glow"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/related.com" alt="Related" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company">Related Rentals</div>
           <p class="dp-situation">Related Rentals is part of The Related Companies — one of the country's largest private real estate owners. They needed to see Agentforce working in a context that felt real for a property management business, not a generic product demo.</p>
           <div class="tags">
@@ -968,14 +1022,24 @@
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid">
-              <span class="sl-yel"></span><span class="sl-red"></span>
-              <span class="sl-teal"></span><span class="sl-grn"></span>
-            </div>
+            <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="slackbot-dab">
+              <circle cx="18" cy="18" r="18" fill="#1e0a3c"/>
+              <rect x="14.5" y="27" width="3" height="7" rx="1.5" fill="#36C5F0"/>
+              <rect x="18.5" y="27" width="3" height="7" rx="1.5" fill="#2EB67D"/>
+              <rect x="12" y="18.5" width="12" height="9" rx="3.5" fill="#ECB22E"/>
+              <line x1="13" y1="22" x2="5" y2="14" stroke="#ECB22E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="5" cy="14" r="2.8" fill="#F0A040"/>
+              <line x1="24" y1="23" x2="32" y2="28" stroke="#E01E5A" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="28" r="2.8" fill="#F0A040"/>
+              <circle cx="18" cy="12.5" r="6.5" fill="#F0A040"/>
+              <path d="M15.5 11 Q16.5 9.8 17.5 11" stroke="#5a2a05" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="20.5" cy="11" r="1.3" fill="#5a2a05"/>
+              <path d="M16 14.5 Q18 16.2 20 14.5" stroke="#5a2a05" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
             <div class="slack-dab-label">dab ⚡</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Slackbot Intel · came first</div>
+            <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-callout-text">I searched Slackbot for <strong>[Related Rentals: deal history, conversation threads, property manager pain points that came up?]</strong> — the one-sentence anchor that drove both demos came from those threads.</div>
           </div>
         </div>
@@ -1052,6 +1116,7 @@
       <div class="detail-panel">
         <div class="dp-head" style="background: linear-gradient(135deg, #0a0800, #1a1200);">
           <div class="dp-head-glow" style="background: radial-gradient(circle, rgba(255,209,0,.25) 0%, transparent 65%);"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/hertz.com" alt="Hertz" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company" style="color: #FFD100;">Hertz</div>
           <p class="dp-situation">Hertz is one of the world's most iconic rental car brands — 100+ years old, operating at massive scale, and in the middle of a significant transformation. They needed to see Agentforce not as a new AI tool sitting next to their existing systems, but as something living inside the screens their service agents already use every day.</p>
           <div class="tags">
@@ -1060,14 +1125,24 @@
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid">
-              <span class="sl-yel"></span><span class="sl-red"></span>
-              <span class="sl-teal"></span><span class="sl-grn"></span>
-            </div>
+            <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg" aria-label="slackbot-dab">
+              <circle cx="18" cy="18" r="18" fill="#1e0a3c"/>
+              <rect x="14.5" y="27" width="3" height="7" rx="1.5" fill="#36C5F0"/>
+              <rect x="18.5" y="27" width="3" height="7" rx="1.5" fill="#2EB67D"/>
+              <rect x="12" y="18.5" width="12" height="9" rx="3.5" fill="#ECB22E"/>
+              <line x1="13" y1="22" x2="5" y2="14" stroke="#ECB22E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="5" cy="14" r="2.8" fill="#F0A040"/>
+              <line x1="24" y1="23" x2="32" y2="28" stroke="#E01E5A" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="28" r="2.8" fill="#F0A040"/>
+              <circle cx="18" cy="12.5" r="6.5" fill="#F0A040"/>
+              <path d="M15.5 11 Q16.5 9.8 17.5 11" stroke="#5a2a05" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="20.5" cy="11" r="1.3" fill="#5a2a05"/>
+              <path d="M16 14.5 Q18 16.2 20 14.5" stroke="#5a2a05" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
             <div class="slack-dab-label">dab ⚡</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Slackbot Intel · came first</div>
+            <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-callout-text">I queried Slackbot for <strong>[Hertz: Lauryl's account context, prior touchpoints, positioning that had clicked?]</strong> — the "AI in the flow of work, not a separate tool" framing came directly from that research.</div>
           </div>
         </div>
