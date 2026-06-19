@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How I Actually Use Claude — Rachel Smith, Salesforce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #080c1e;
+      --navy-mid:   #0f172a;
+      --blue:       #0176D3;
+      --blue-lt:    #1D9BD1;
+      --cyan:       #06B6D4;
+      --purple:     #8B5CF6;
+      --green:      #10B981;
+      --amber:      #F59E0B;
+      --text:       #0f172a;
+      --text-muted: #64748b;
+      --text-faint: #94a3b8;
+      --border:     #e2e8f0;
+      --bg:         #f8fafc;
+      --white:      #ffffff;
+      --radius:     12px;
+      --shadow:     0 1px 4px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.09);
+      --shadow-lg:  0 4px 8px rgba(0,0,0,.05), 0 12px 48px rgba(0,0,0,.14);
+      --font:       'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(8,12,30,.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+    }
+    .nav-brand { color: #fff; font-size: .875rem; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
+    .nav-brand span { color: var(--blue-lt); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: rgba(255,255,255,.55); text-decoration: none; font-size: .8rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(155deg, #070b1c 0%, #0d1a3a 55%, #071424 100%);
+      color: #fff;
+      padding: 110px 2rem 130px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; top: -300px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(1,118,211,.14) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; bottom: -200px; right: 5%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(6,182,212,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(1,118,211,.12); border: 1px solid rgba(1,118,211,.25);
+      color: var(--blue-lt); font-size: .7rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.75rem;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue-lt); }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+      font-weight: 900; line-height: 1.03; letter-spacing: -.035em;
+      max-width: 820px; margin: 0 auto 1.5rem;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #4db8ff, var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem; font-weight: 400; color: rgba(255,255,255,.6);
+      max-width: 540px; margin: 0 auto 2.75rem; line-height: 1.75;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4.5rem; }
+    .btn {
+      padding: .75rem 1.75rem; border-radius: 8px; font-weight: 600;
+      font-size: .9rem; text-decoration: none; display: inline-block;
+      transition: all .2s; cursor: pointer; border: none;
+    }
+    .btn-fill { background: var(--blue); color: #fff; }
+    .btn-fill:hover { background: #015aaa; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.2); }
+    .btn-outline:hover { border-color: rgba(255,255,255,.45); color: #fff; }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 3.5rem; flex-wrap: wrap;
+      padding-top: 3rem; border-top: 1px solid rgba(255,255,255,.07);
+      max-width: 620px; margin: 0 auto;
+    }
+    .stat-num { font-size: 2.2rem; font-weight: 800; color: #fff; letter-spacing: -.04em; line-height: 1; }
+    .stat-label { font-size: .72rem; color: rgba(255,255,255,.35); font-weight: 600; text-transform: uppercase; letter-spacing: .07em; margin-top: .3rem; }
+
+    /* ── COMMON SECTION ──────────────────────────────── */
+    .section { padding: 90px 2.5rem; }
+    .section-bg { background: var(--bg); }
+    .section-dark { background: var(--navy-mid); color: #fff; }
+    .container { max-width: 1080px; margin: 0 auto; }
+    .section-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--blue); margin-bottom: .6rem; }
+    .section-title { font-size: clamp(1.9rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -.025em; line-height: 1.15; margin-bottom: .9rem; }
+    .section-sub { font-size: 1.05rem; color: var(--text-muted); max-width: 560px; line-height: 1.75; }
+    .section-head { margin-bottom: 3.5rem; }
+
+    /* ── HONEST SECTION ──────────────────────────────── */
+    .honest-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 5rem; align-items: start; }
+    .honest-text p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.25rem; }
+    .honest-text p:last-child { margin-bottom: 0; }
+    .pullquote {
+      background: linear-gradient(135deg, #eff7ff, #e0f0fd);
+      border-left: 4px solid var(--blue);
+      padding: 1.5rem 1.75rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 1.1rem; line-height: 1.7;
+      color: var(--navy-mid); font-style: italic; margin-top: 1.5rem;
+    }
+    .journey {display: flex; flex-direction: column; gap: 0; }
+    .jitem { display: flex; gap: 1.25rem; padding-bottom: 2rem; position: relative; }
+    .jitem:last-child { padding-bottom: 0; }
+    .jdot {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .jitem:not(:last-child) .jdot::after {
+      content: ''; position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
+      width: 2px; height: calc(100% - 38px + 2rem); background: var(--border);
+    }
+    .jcontent h4 { font-size: .95rem; font-weight: 700; margin-bottom: .2rem; }
+    .jcontent p { font-size: .875rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── FRAMEWORK ───────────────────────────────────── */
+    .fw-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .fw-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem;
+      position: relative; overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .fw-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .fw-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: var(--radius) var(--radius) 0 0; }
+    .fw-num { font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: .9rem; }
+    .fw-icon { font-size: 2rem; margin-bottom: .9rem; display: block; }
+    .fw-card h3 { font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .5rem; }
+    .fw-card p { font-size: .875rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── CASE STUDIES ─────────────────────────────────── */
+    .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+    .case-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem 1.5rem 1.25rem;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: all .22s;
+    }
+    .case-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: #c7dff0; }
+    .case-card.is-active { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(1,118,211,.1), var(--shadow-lg); }
+    .case-accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+    .card-co { font-size: 1.15rem; font-weight: 800; letter-spacing: -.015em; margin-bottom: .2rem; }
+    .card-div { font-size: .8rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .tags { display: flex; gap: .45rem; flex-wrap: wrap; }
+    .tag { font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: .2rem .65rem; border-radius: 100px; }
+    .tag-demo { background: #dbeafe; color: #1d4ed8; }
+    .tag-deck { background: #dcfce7; color: #166534; }
+    .tag-strat { background: #fef3c7; color: #92400e; }
+    .tag-rfp  { background: #fce7f3; color: #9d174d; }
+    .tag-ttkr  { background: #f3e8ff; color: #6b21a8; }
+    .card-chevron {
+      position: absolute; bottom: 1.1rem; right: 1.25rem;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bg); display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; color: var(--text-faint); transition: all .2s;
+    }
+    .case-card:hover .card-chevron, .case-card.is-active .card-chevron { background: var(--blue); color: #fff; }
+
+    /* ── DETAIL PANEL ─────────────────────────────────── */
+    .detail-wrap { display: none; }
+    .detail-wrap.is-open { display: block; animation: slideDown .3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .detail-panel {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-lg);
+      margin-bottom: 2px;
+    }
+    .dp-head {
+      padding: 2.25rem 2.5rem;
+      background: linear-gradient(135deg, var(--navy-mid), #0d2143);
+      color: #fff; position: relative; overflow: hidden;
+    }
+    .dp-head-glow {
+      position: absolute; top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(1,118,211,.2) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .dp-company { font-size: 1.9rem; font-weight: 900; letter-spacing: -.03em; margin-bottom: .3rem; }
+    .dp-situation { font-size: .95rem; color: rgba(255,255,255,.65); max-width: 620px; line-height: 1.7; margin-bottom: 1.5rem; }
+    .dp-body { padding: 2.5rem; }
+    .dp-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
+
+    .dp-col-label {
+      font-size: .65rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .12em; color: var(--blue); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .dp-col-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* Input chips */
+    .input-chips { display: flex; flex-direction: column; gap: .55rem; }
+    .input-chip {
+      display: flex; align-items: center; gap: .7rem;
+      background: var(--bg); border-radius: 8px;
+      padding: .55rem .85rem; font-size: .82rem; font-weight: 500;
+    }
+    .input-chip-icon { font-size: .9rem; }
+
+    /* Journey steps */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step-row { display: flex; gap: 1rem; padding-bottom: 1.4rem; position: relative; }
+    .step-row:last-child { padding-bottom: 0; }
+    .step-n {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      font-size: .72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .step-row:not(:last-child) .step-n::after {
+      content: ''; position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+      width: 2px; height: calc(100% - 26px + 1.4rem);
+      background: linear-gradient(to bottom, rgba(1,118,211,.4), var(--border));
+    }
+    .step-text h5 { font-size: .875rem; font-weight: 700; margin-bottom: .2rem; }
+    .step-text p  { font-size: .8rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* Output box */
+    .output-box {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .output-preview {
+      background: var(--navy-mid); aspect-ratio: 16/10;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .output-preview iframe { width: 100%; height: 100%; border: none; }
+    .output-placeholder { text-align: center; color: rgba(255,255,255,.25); }
+    .output-placeholder-icon { font-size: 2.75rem; margin-bottom: .5rem; }
+    .output-placeholder p { font-size: .75rem; }
+    .output-foot {
+      padding: .9rem 1.1rem; background: var(--white);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .output-name { font-size: .85rem; font-weight: 700; }
+    .output-type { font-size: .72rem; color: var(--text-muted); margin-top: .1rem; }
+    .output-cta {
+      font-size: .78rem; color: var(--blue); text-decoration: none;
+      font-weight: 600; display: flex; align-items: center; gap: .3rem;
+      transition: opacity .2s;
+    }
+    .output-cta:hover { opacity: .7; }
+
+    /* Lesson */
+    .lesson {
+      background: linear-gradient(135deg, #f0f9ff, #e0f3fd);
+      border-left: 4px solid var(--blue);
+      padding: 1.1rem 1.35rem;
+      border-radius: 0 8px 8px 0;
+      font-size: .9rem; line-height: 1.72;
+      color: var(--navy-mid); font-style: italic;
+      margin-top: 1.5rem;
+    }
+    .lesson-label {
+      font-style: normal; font-size: .65rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--blue); margin-bottom: .45rem; display: block;
+    }
+
+    /* ── GET STARTED ─────────────────────────────────── */
+    .start-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .start-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius); padding: 2rem;
+    }
+    .start-card-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+    .start-card h3 { color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+    .start-card p { color: rgba(255,255,255,.48); font-size: .855rem; line-height: 1.65; }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,.35);
+      text-align: center; padding: 2.25rem 2rem; font-size: .8rem;
+    }
+    footer a { color: rgba(255,255,255,.55); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 960px) {
+      .fw-grid { grid-template-columns: repeat(2,1fr); }
+      .case-grid { grid-template-columns: repeat(2,1fr); }
+      .dp-grid { grid-template-columns: 1fr 1fr; }
+      .honest-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .start-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .fw-grid { grid-template-columns: 1fr; }
+      .case-grid { grid-template-columns: 1fr; }
+      .dp-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      nav { padding: 0 1.25rem; }
+      .hero { padding: 70px 1.25rem 90px; }
+      .hero-stats { gap: 2rem; }
+      .section { padding: 60px 1.25rem; }
+      .dp-body { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ───── NAV ───── -->
+<nav>
+  <div class="nav-brand">Rachel Smith <span>/ Claude Playbook</span></div>
+  <div class="nav-links">
+    <a href="#framework">The Framework</a>
+    <a href="#work">The Work</a>
+    <a href="#start">Where to Start</a>
+  </div>
+</nav>
+
+<!-- ───── HERO ───── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="eyebrow-dot"></span>A Real SE Playbook</div>
+    <h1>This Is How I <em>Actually</em><br>Use Claude</h1>
+    <p class="hero-sub">Not a tutorial. Not a product pitch. A real workflow from a Distinguished SE who started skeptical — and got convinced by the work itself.</p>
+    <div class="hero-btns">
+      <a href="#work" class="btn btn-fill">See the Work →</a>
+      <a href="#framework" class="btn btn-outline">The Framework</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Accounts</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Live Demos Built</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Months In</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Lines Coded Manually</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── HONEST INTRO ───── -->
+<section class="section" id="honest">
+  <div class="container">
+    <div class="honest-grid">
+      <div class="honest-text">
+        <div class="section-label">The Honest Part</div>
+        <h2 class="section-title">I was skeptical for longer than I'd like to admit.</h2>
+        <p>For months I watched colleagues talk about AI like it was changing everything, and I mostly nodded along while thinking: <em>this probably isn't for me.</em> I'm not a developer. I'm not a prompt engineer. I don't have time to learn a new tool when I'm already running at 100% on real deals.</p>
+        <p>What finally got me in wasn't a company mandate or a shiny demo — it was a specific deadline and a willingness to just try one thing. Not AI in the abstract. One conversation, for one account, with a clear goal.</p>
+        <p>What I found is that Claude works the same way a smart, fast colleague works. You give it context. You tell it what you're trying to accomplish. You push back when it's off. And the output is something you can actually use — not a draft you have to rewrite from scratch.</p>
+        <div class="pullquote">"I didn't need to become a different person to use this. I just needed to stop treating it like software and start treating it like a conversation."</div>
+      </div>
+      <div>
+        <p class="section-label" style="margin-bottom:1.25rem;">My actual journey</p>
+        <div class="journey">
+          <div class="jitem">
+            <div class="jdot" style="background:#fef3c7;">🤔</div>
+            <div class="jcontent">
+              <h4>Months of watching, not doing</h4>
+              <p>Lots of "that's interesting" in meetings. Zero actual usage. The trepidation was real — worried about looking like I didn't know what I was doing.</p>
+            </div>
+          </div>
+          <div class="jitem">
+            <div class="jdot" style="background:#dbeafe;">🎯</div>
+            <div class="jcontent">
+              <h4>One account, one deadline</h4>
+              <p>Service Logic RFP hit my desk. 100+ pages, tight timeline, real stakes. I decided to try using Claude just for the analysis — not to replace my thinking, to accelerate it.</p>
+            </div>
+          </div>
+          <div class="jitem">
+            <div class="jdot" style="background:#dcfce7;">⚡</div>
+            <div class="jcontent">
+              <h4>Wait — it actually read the whole thing?</h4>
+              <p>That moment when you realize Claude actually processed the full document, caught things you'd have glossed over, and mapped them back to your solution — that was the turning point.</p>
+            </div>
+          </div>
+          <div class="jitem">
+            <div class="jdot" style="background:#f3e8ff;">🚀</div>
+            <div class="jcontent">
+              <h4>Building things I couldn't build before</h4>
+              <p>Interactive demos. Branded prototypes. Talk tracks tuned to specific stakeholders. Work that used to take days — or require a dev team — taking hours.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FRAMEWORK ───── -->
+<section class="section section-bg" id="framework">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">The Framework</div>
+      <h2 class="section-title">Four things I do every single time.</h2>
+      <p class="section-sub">This isn't theory. It's the actual pattern I follow — figured out through doing, not reading about AI.</p>
+    </div>
+    <div class="fw-grid">
+      <div class="fw-card">
+        <div class="fw-bar" style="background:var(--blue);"></div>
+        <div class="fw-num">Step 01</div>
+        <span class="fw-icon">📂</span>
+        <h3>Fill the Room</h3>
+        <p>Give it everything. Discovery screenshots. The actual PDF. Brand assets. Call notes. Your org chart. Claude can handle more context than you think — and more context means better output.</p>
+      </div>
+      <div class="fw-card">
+        <div class="fw-bar" style="background:var(--purple);"></div>
+        <div class="fw-num">Step 02</div>
+        <span class="fw-icon">🗣️</span>
+        <h3>Think Out Loud</h3>
+        <p>Don't ask for deliverables yet. Explain the situation. The account. The stakeholders. What you're trying to accomplish and why. Treat it like a briefing, not a search query.</p>
+      </div>
+      <div class="fw-card">
+        <div class="fw-bar" style="background:var(--cyan);"></div>
+        <div class="fw-num">Step 03</div>
+        <span class="fw-icon">🔄</span>
+        <h3>Push Back, Redirect</h3>
+        <p>The first output is a starting point, not a final answer. Tell it what's off. Ask it to go deeper on one section. Say "that's not quite right, here's why." It gets better fast.</p>
+      </div>
+      <div class="fw-card">
+        <div class="fw-bar" style="background:var(--green);"></div>
+        <div class="fw-num">Step 04</div>
+        <span class="fw-icon">✅</span>
+        <h3>Ship Real Work</h3>
+        <p>The goal isn't a draft to rewrite — it's something that goes directly into the deal. A live demo. A polished deck. A playbook your whole team can use. Real output for real stakes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── CASE STUDIES ───── -->
+<section class="section" id="work">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">The Work</div>
+      <h2 class="section-title">Six accounts. Real outputs.</h2>
+      <p class="section-sub">Click any card to see what I actually fed Claude, how I worked through it, and what came out the other side.</p>
+    </div>
+
+    <div class="case-grid" id="caseGrid">
+
+      <div class="case-card" data-case="cbre">
+        <div class="case-accent" style="background: linear-gradient(90deg, #006341, #00a651);"></div>
+        <div class="card-co">CBRE</div>
+        <div class="card-div">Global Workplace Solutions</div>
+        <div class="tags">
+          <span class="tag tag-demo">Live Demo</span>
+          <span class="tag tag-deck">Deck</span>
+        </div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="equinox">
+        <div class="case-accent" style="background: linear-gradient(90deg, #111111, #444444);"></div>
+        <div class="card-co">Equinox</div>
+        <div class="card-div">Fitness &amp; Luxury Lifestyle</div>
+        <div class="tags">
+          <span class="tag tag-demo">Live Demo</span>
+          <span class="tag tag-deck">SIC Deck</span>
+          <span class="tag tag-strat">Strategy</span>
+        </div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="servicelogic">
+        <div class="case-accent" style="background: linear-gradient(90deg, #1a5fa8, #2e7dd4);"></div>
+        <div class="card-co">Service Logic</div>
+        <div class="card-div">FSM / Field Services · PE-backed</div>
+        <div class="tags">
+          <span class="tag tag-rfp">RFP Response</span>
+          <span class="tag tag-strat">Playbook</span>
+        </div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="gsapbs">
+        <div class="case-accent" style="background: linear-gradient(90deg, #003366, #0057a8);"></div>
+        <div class="card-co">GSA PBS</div>
+        <div class="card-div">Federal Real Estate · Government</div>
+        <div class="tags">
+          <span class="tag tag-deck">Deck</span>
+          <span class="tag tag-ttkr">Talk Track</span>
+        </div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="relatedrentals">
+        <div class="case-accent" style="background: linear-gradient(90deg, #9b1d1d, #c0392b);"></div>
+        <div class="card-co">Related Rentals</div>
+        <div class="card-div">Residential Real Estate</div>
+        <div class="tags">
+          <span class="tag tag-demo">2 Live Demos</span>
+          <span class="tag tag-strat">Agentforce</span>
+        </div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="stockland">
+        <div class="case-accent" style="background: linear-gradient(90deg, #d4880a, #f59e0b);"></div>
+        <div class="card-co">Stockland</div>
+        <div class="card-div">Diversified Property · Australia</div>
+        <div class="tags">
+          <span class="tag tag-deck">SIC Deck</span>
+          <span class="tag tag-strat">Strategy</span>
+        </div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+    </div><!-- /case-grid -->
+
+    <!-- Detail panels (all hidden by default, shown on click) -->
+
+    <div class="detail-wrap" id="detail-cbre">
+      <div class="detail-panel">
+        <div class="dp-head">
+          <div class="dp-head-glow"></div>
+          <div class="dp-company">CBRE / GWS</div>
+          <p class="dp-situation">CBRE is the world's largest commercial real estate services firm. The Global Workplace Solutions team had a high-stakes demo coming up — and the standard demo environment didn't tell the story they needed to tell.</p>
+          <div class="tags">
+            <span class="tag tag-demo">Live Interactive Demo</span>
+            <span class="tag tag-deck">BOE Deck</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">What I Fed Claude</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">📸</span>Screenshots of their existing FM platform</div>
+                <div class="input-chip"><span class="input-chip-icon">📝</span>Discovery call notes and stakeholder themes</div>
+                <div class="input-chip"><span class="input-chip-icon">🎯</span>The story I needed to tell in the demo</div>
+                <div class="input-chip"><span class="input-chip-icon">🏢</span>CBRE GWS portfolio context and scale</div>
+              </div>
+              <div class="lesson">
+                <span class="lesson-label">The Lesson</span>
+                "I didn't give it a spec. I gave it screenshots and a narrative goal. That's when I realized you don't need to know how to build things — you need to know how to describe them."
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Journey</div>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="step-n">1</div>
+                  <div class="step-text">
+                    <h5>I started with screenshots, not a spec</h5>
+                    <p>Dropped in screenshots of their current platform and asked Claude to understand what it was and what the user was trying to accomplish in it.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">2</div>
+                  <div class="step-text">
+                    <h5>Described the story, not the UI</h5>
+                    <p>Told Claude what the ideal day-in-the-life looked like for a GWS facility manager — the outcomes they wanted, not the screens they needed.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">3</div>
+                  <div class="step-text">
+                    <h5>Iterated on UX flow and narrative</h5>
+                    <p>Pushed back on what to show first, how to make interactions feel modern, which data points would land in the room.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">4</div>
+                  <div class="step-text">
+                    <h5>Tuned the data to match their portfolio</h5>
+                    <p>Made the demo feel like it was built for CBRE — their terminology, their scale, their operational reality.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Output</div>
+              <div class="output-box">
+                <div class="output-preview">
+                  <iframe src="https://smithrachel-pf.github.io/se-demos/cbre-gws-prototype.html" title="CBRE GWS Prototype" loading="lazy"></iframe>
+                </div>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">CBRE GWS Prototype</div>
+                    <div class="output-type">Interactive HTML Demo</div>
+                  </div>
+                  <a href="https://smithrachel-pf.github.io/se-demos/cbre-gws-prototype.html" target="_blank" class="output-cta">Open Live ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-cbre -->
+
+    <div class="detail-wrap" id="detail-equinox">
+      <div class="detail-panel">
+        <div class="dp-head" style="background: linear-gradient(135deg, #111, #1a1a2e);">
+          <div class="dp-head-glow"></div>
+          <div class="dp-company">Equinox</div>
+          <p class="dp-situation">Equinox is one of the most recognized premium fitness and lifestyle brands in the world. The FY27 SIC — Strategic Investment Council — was approaching. This is the highest-stakes internal meeting of the year: you're pitching the investment case for your account to Salesforce leadership.</p>
+          <div class="tags">
+            <span class="tag tag-demo">Live Demo</span>
+            <span class="tag tag-deck">SIC Deck</span>
+            <span class="tag tag-strat">Executive POV</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">What I Fed Claude</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">🏋️</span>Equinox brand and business context</div>
+                <div class="input-chip"><span class="input-chip-icon">💼</span>Current deal status and stakeholder map</div>
+                <div class="input-chip"><span class="input-chip-icon">📋</span>SIC format and what leadership expects</div>
+                <div class="input-chip"><span class="input-chip-icon">🤖</span>Agentforce capabilities relevant to fitness/luxury</div>
+              </div>
+              <div class="lesson">
+                <span class="lesson-label">The Lesson</span>
+                "The SIC prep used to be a Sunday project. This became a Tuesday afternoon. And the story was better — because I asked Claude to challenge my assumptions first, before building the slide."
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Journey</div>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="step-n">1</div>
+                  <div class="step-text">
+                    <h5>Started with what Equinox actually cares about</h5>
+                    <p>Before building anything, I asked Claude to play back Equinox's business priorities. Not the CRM pitch — the real business priorities. That grounded the whole narrative.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">2</div>
+                  <div class="step-text">
+                    <h5>Built the arc: why now, why Salesforce, why Agentforce</h5>
+                    <p>What's the transformation story? How does AI fit the Equinox brand and member experience? Claude helped make the case feel inevitable, not pitched.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">3</div>
+                  <div class="step-text">
+                    <h5>Slide by slide — talking points, not just content</h5>
+                    <p>Built not just what to say, but how to say it for a Salesforce leadership audience. The inflection points. The proof points. The questions they'd ask.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">4</div>
+                  <div class="step-text">
+                    <h5>Built the interactive demo for the meeting itself</h5>
+                    <p>Asked Claude to turn the key concepts into a live, clickable experience. Went from "can you make this interactive?" to a shareable demo in one session.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Output</div>
+              <div class="output-box">
+                <div class="output-preview">
+                  <iframe src="https://smithrachel-pf.github.io/se-demos/equinox-sic-deck.html" title="Equinox SIC Demo" loading="lazy"></iframe>
+                </div>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">Equinox SIC Suite</div>
+                    <div class="output-type">Interactive Demo + 2 PDF Decks</div>
+                  </div>
+                  <a href="https://smithrachel-pf.github.io/se-demos/equinox-sic-deck.html" target="_blank" class="output-cta">Open Live ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-equinox -->
+
+    <div class="detail-wrap" id="detail-servicelogic">
+      <div class="detail-panel">
+        <div class="dp-head" style="background: linear-gradient(135deg, #0d2240, #1a3a6e);">
+          <div class="dp-head-glow"></div>
+          <div class="dp-company">Service Logic</div>
+          <p class="dp-situation">Service Logic is a Bain Capital portfolio company — 60 operating companies, $1B+ in HVAC and mechanical services revenue, and heading toward an IPO. They issued a formal FSM RFP. They had already rejected ServiceMax. The bar was high and the stakes were real.</p>
+          <div class="tags">
+            <span class="tag tag-rfp">Complex RFP</span>
+            <span class="tag tag-strat">SE Playbook</span>
+            <span class="tag tag-strat">Solution Architecture</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">What I Fed Claude</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">📄</span>The full 100+ page RFP document</div>
+                <div class="input-chip"><span class="input-chip-icon">⚠️</span>Why ServiceMax was previously rejected</div>
+                <div class="input-chip"><span class="input-chip-icon">🏗️</span>Context on their 60-OpCo multi-entity structure</div>
+                <div class="input-chip"><span class="input-chip-icon">📊</span>ASC 606 / IPO readiness as a known Must-have</div>
+              </div>
+              <div class="lesson">
+                <span class="lesson-label">The Lesson</span>
+                "A 100-page RFP is just a conversation waiting to happen. Claude reads faster than I do and it doesn't miss things I'm tired of reading. The ASC 606 gap came up in the first five minutes."
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Journey</div>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="step-n">1</div>
+                  <div class="step-text">
+                    <h5>Full RFP analysis: strong, gap, or ISV needed</h5>
+                    <p>Asked Claude to map every requirement to one of three categories. It caught things I would have glossed over — and flagged them in terms of deal risk, not just feature coverage.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">2</div>
+                  <div class="step-text">
+                    <h5>ASC 606 surfaced immediately as the critical gap</h5>
+                    <p>Claude flagged that this is exactly why ServiceMax lost, identified it as an IPO-driver Must-have, and suggested leading with RightRev as the named ISV — with CBRE as a reference.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">3</div>
+                  <div class="step-text">
+                    <h5>Built the SE Playbook: what to say, what to avoid</h5>
+                    <p>Not just the solution — the positioning. How to frame our gaps confidently. How to differentiate from ServiceMax. The language that lands with a PE-backed leadership team.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">4</div>
+                  <div class="step-text">
+                    <h5>Solution Architecture for a 60-OpCo structure</h5>
+                    <p>Mapped Salesforce Revenue Cloud + RightRev + FSC to their actual organizational model. Built the "This Week's Actions" doc so the team had clear next steps.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Output</div>
+              <div class="output-box">
+                <div class="output-preview">
+                  <div class="output-placeholder">
+                    <div class="output-placeholder-icon">📋</div>
+                    <p>4-Document Strategic Package</p>
+                  </div>
+                </div>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">FSM RFP Response Suite</div>
+                    <div class="output-type">SE Playbook · Solution Architecture · RFP Analysis · Action Plan</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-servicelogic -->
+
+    <div class="detail-wrap" id="detail-gsapbs">
+      <div class="detail-panel">
+        <div class="dp-head" style="background: linear-gradient(135deg, #0b1f3a, #163561);">
+          <div class="dp-head-glow"></div>
+          <div class="dp-company">GSA PBS</div>
+          <p class="dp-situation">GSA Public Buildings Service is the federal government's real estate arm — managing billions in property across the country. Federal accounts have specific procurement rules, formal stakeholder hierarchies, and very little tolerance for a pitch that doesn't feel tailored to government reality.</p>
+          <div class="tags">
+            <span class="tag tag-deck">Presentation Deck</span>
+            <span class="tag tag-ttkr">Full Talk Track</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">What I Fed Claude</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">🏛️</span>GSA PBS account context and mission</div>
+                <div class="input-chip"><span class="input-chip-icon">👥</span>Attendee list with roles and seniority</div>
+                <div class="input-chip"><span class="input-chip-icon">📐</span>Meeting agenda structure and time constraints</div>
+                <div class="input-chip"><span class="input-chip-icon">💡</span>Notes on what had resonated in prior meetings</div>
+              </div>
+              <div class="lesson">
+                <span class="lesson-label">The Lesson</span>
+                "I've done hundreds of presentations. But having a talk track written for THIS specific room, with THESE specific stakeholders — including how to handle procurement questions — changed how I walked in."
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Journey</div>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="step-n">1</div>
+                  <div class="step-text">
+                    <h5>"What should actually happen in the first 20 minutes?"</h5>
+                    <p>That was my first question. Claude pushed back immediately: who are the decision-makers in the room? What does each of them need to walk out believing?</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">2</div>
+                  <div class="step-text">
+                    <h5>Built a government-specific narrative arc</h5>
+                    <p>Lead with mission impact, not product features. Federal is different — the language, the proof points, the ROI framing. Claude knew this without being told.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">3</div>
+                  <div class="step-text">
+                    <h5>Slide-by-slide talk track with transitions and pauses</h5>
+                    <p>Not bullet points to read off — actual language. Specific transitions between slides. How to handle the inevitable procurement question. Where to pause for reaction.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">4</div>
+                  <div class="step-text">
+                    <h5>Turned it into a printed guide for the table</h5>
+                    <p>The guide went with me into the room. Not to read verbatim — to walk in knowing exactly what I was going to say before I said it.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Output</div>
+              <div class="output-box">
+                <div class="output-preview">
+                  <div class="output-placeholder">
+                    <div class="output-placeholder-icon">🏛️</div>
+                    <p>Slide Guide + Presentation Deck</p>
+                  </div>
+                </div>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">GSA PBS CRE Presentation</div>
+                    <div class="output-type">Detailed Slide Guide &amp; Full Talk Track · PowerPoint Deck</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-gsapbs -->
+
+    <div class="detail-wrap" id="detail-relatedrentals">
+      <div class="detail-panel">
+        <div class="dp-head" style="background: linear-gradient(135deg, #2d0a0a, #5c1212);">
+          <div class="dp-head-glow"></div>
+          <div class="dp-company">Related Rentals</div>
+          <p class="dp-situation">Related Rentals is part of The Related Companies — one of the country's largest private real estate owners. They needed to see Agentforce working in a context that felt real for a property management business, not a generic product demo.</p>
+          <div class="tags">
+            <span class="tag tag-demo">2 Live Interactive Demos</span>
+            <span class="tag tag-strat">Agentforce</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">What I Fed Claude</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">🏘️</span>Related Rentals company profile and portfolio</div>
+                <div class="input-chip"><span class="input-chip-icon">😤</span>Core pain points: tenant comms, vendor mgmt, leases</div>
+                <div class="input-chip"><span class="input-chip-icon">👤</span>Day-in-the-life of a property manager persona</div>
+                <div class="input-chip"><span class="input-chip-icon">🤖</span>Where Agentforce should visibly improve the workflow</div>
+              </div>
+              <div class="lesson">
+                <span class="lesson-label">The Lesson</span>
+                "Two fully interactive, account-specific demos — no dev team request, no 2-week wait. Just a conversation that got specific enough. The second demo came from one sentence: 'now show what happens when Agentforce touches this.'"
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Journey</div>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="step-n">1</div>
+                  <div class="step-text">
+                    <h5>Anchored on one relatable workflow</h5>
+                    <p>"A property manager shouldn't need 4 systems to answer a tenant's maintenance question." That sentence became the demo's entire narrative hook.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">2</div>
+                  <div class="step-text">
+                    <h5>Built the CRM Console demo first</h5>
+                    <p>Showed the data model and the service case flow — what the world looks like today, before Agentforce. A realistic baseline they'd recognize.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">3</div>
+                  <div class="step-text">
+                    <h5>"Now show what happens when Agentforce touches this"</h5>
+                    <p>That was the entire prompt for the second demo. Claude built the Agentforce experience from one sentence — because the context was already established.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">4</div>
+                  <div class="step-text">
+                    <h5>Team tested both before the meeting</h5>
+                    <p>Shared the live demos with the AE and internal team for review and feedback. Made tweaks in the same session — no handoffs, no waiting.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Output</div>
+              <div class="output-box">
+                <div class="output-preview">
+                  <div class="output-placeholder">
+                    <div class="output-placeholder-icon">🏘️</div>
+                    <p>2 Live Interactive Demos</p>
+                  </div>
+                </div>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">Related Rentals Demo Suite</div>
+                    <div class="output-type">CRM Console Demo · Agentforce Demo</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-relatedrentals -->
+
+    <div class="detail-wrap" id="detail-stockland">
+      <div class="detail-panel">
+        <div class="dp-head" style="background: linear-gradient(135deg, #2d1a00, #5c3600);">
+          <div class="dp-head-glow"></div>
+          <div class="dp-company">Stockland</div>
+          <p class="dp-situation">Stockland is one of Australia's largest diversified property groups — residential, retail, logistics. They were attending the Salesforce CRE industry summit. This is a room full of other property groups and pitch-fatigued executives. Standing out requires a story, not a product feature list.</p>
+          <div class="tags">
+            <span class="tag tag-deck">SIC Deck</span>
+            <span class="tag tag-strat">CRE @ SF Story</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">What I Fed Claude</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">🇦🇺</span>Stockland portfolio and Australian market context</div>
+                <div class="input-chip"><span class="input-chip-icon">🏙️</span>CRE @ SF event format and attendee audience</div>
+                <div class="input-chip"><span class="input-chip-icon">👂</span>What the other property groups in the room would hear</div>
+                <div class="input-chip"><span class="input-chip-icon">🧭</span>Stockland's stated transformation priorities</div>
+              </div>
+              <div class="lesson">
+                <span class="lesson-label">The Lesson</span>
+                "The angle we landed on wasn't about what Salesforce does — it was about what Stockland is trying to become. Claude helped me see the difference between a feature pitch and a transformation story."
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Journey</div>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="step-n">1</div>
+                  <div class="step-text">
+                    <h5>"What makes Stockland's story different in that room?"</h5>
+                    <p>Started by asking Claude to consider the audience — everyone else in the room has a pitch too. What does Stockland have that's uniquely theirs?</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">2</div>
+                  <div class="step-text">
+                    <h5>Australian market nuances — without the research hours</h5>
+                    <p>Australian property has distinct dynamics: build-to-rent is nascent, residential land lease is growing, the logistics surge is real. Claude knew this context. I didn't have to explain it.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">3</div>
+                  <div class="step-text">
+                    <h5>Built the transformation story, not the feature story</h5>
+                    <p>Mapped Stockland's stated priorities to specific Salesforce capabilities — but framed from their future state, not our product catalog.</p>
+                  </div>
+                </div>
+                <div class="step-row">
+                  <div class="step-n">4</div>
+                  <div class="step-text">
+                    <h5>Polished deck ready for an executive audience</h5>
+                    <p>Content, flow, and talking points — structured for a US event with an Australian lens. One session, one deliverable.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">The Output</div>
+              <div class="output-box">
+                <div class="output-preview">
+                  <div class="output-placeholder">
+                    <div class="output-placeholder-icon">🇦🇺</div>
+                    <p>CRE @ SF Presentation Deck</p>
+                  </div>
+                </div>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">Stockland SIC — CRE @ SF</div>
+                    <div class="output-type">Strategic Presentation Deck · PowerPoint</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-stockland -->
+
+  </div><!-- /container -->
+</section>
+
+<!-- ───── GET STARTED ───── -->
+<section class="section section-dark" id="start">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label" style="color:var(--blue-lt);">Where to Start</div>
+      <h2 class="section-title" style="color:#fff;">You don't need to overhaul anything.</h2>
+      <p class="section-sub" style="color:rgba(255,255,255,.55);">Start with one thing. The ramp is faster than you think — and the trepidation disappears after your first real output.</p>
+    </div>
+    <div class="start-grid">
+      <div class="start-card">
+        <span class="start-card-icon">📂</span>
+        <h3>Start with a document you already have</h3>
+        <p>Take a recent RFP, a 10-K, or a lengthy briefing doc and paste it in. Ask Claude to summarize the top 3 business priorities and flag any risks you should know about. That's it. See what comes back.</p>
+      </div>
+      <div class="start-card">
+        <span class="start-card-icon">🎯</span>
+        <h3>Try the briefing, not the prompt</h3>
+        <p>Instead of "write me a slide," try: "I have a meeting with [company] on [topic]. Here's what I know. Here's what I'm trying to accomplish. What should I say first?" The framing changes everything.</p>
+      </div>
+      <div class="start-card">
+        <span class="start-card-icon">🔄</span>
+        <h3>Push back once before you accept the output</h3>
+        <p>Whatever Claude gives you first — tell it one specific thing that's off. "The tone is too formal," "this doesn't account for X," "give me a sharper angle on the intro." One iteration makes a big difference.</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:3rem; padding-top:3rem; border-top:1px solid rgba(255,255,255,.08);">
+      <p style="color:rgba(255,255,255,.4); font-size:.875rem; margin-bottom:.75rem;">Want to dig into how any of this worked? Find me on Slack.</p>
+      <p style="color:rgba(255,255,255,.2); font-size:.8rem;">The conversations that built this took months. The methodology is simple enough to start tomorrow.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FOOTER ───── -->
+<footer>
+  <p>Rachel Smith · Distinguished Solution Engineer · Salesforce &nbsp;·&nbsp; <a href="mailto:rachel.smith@salesforce.com">rachel.smith@salesforce.com</a></p>
+  <p style="margin-top:.4rem; font-size:.72rem;">Built with Claude &nbsp;·&nbsp; This site is itself a product of the workflow it describes.</p>
+</footer>
+
+<script>
+  // ── Case study card interaction ──────────────────────────
+  const cards = document.querySelectorAll('.case-card');
+  const detailWraps = document.querySelectorAll('.detail-wrap');
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.case;
+      const target = document.getElementById('detail-' + id);
+      const isAlreadyOpen = target.classList.contains('is-open');
+
+      // Close all
+      detailWraps.forEach(d => d.classList.remove('is-open'));
+      cards.forEach(c => c.classList.remove('is-active'));
+
+      if (!isAlreadyOpen) {
+        target.classList.add('is-open');
+        card.classList.add('is-active');
+        // Scroll so detail panel is visible
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
+      }
+    });
+  });
+
+  // ── Place detail panels after every 3rd card (responsive) ──
+  function repositionPanels() {
+    const grid = document.getElementById('caseGrid');
+    const allCards = Array.from(grid.querySelectorAll('.case-card'));
+    const section = grid.closest('.container');
+
+    // Remove all detail panels from their current position
+    detailWraps.forEach(d => {
+      if (d.parentNode === section) {
+        // leave them — they're inserted after the grid already
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
