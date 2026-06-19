@@ -287,20 +287,21 @@
     }
     .output-cta:hover { opacity: .7; }
 
-    /* Lesson */
-    .lesson {
-      background: linear-gradient(135deg, #f0f9ff, #e0f3fd);
-      border-left: 4px solid var(--blue);
-      padding: 1.1rem 1.35rem;
-      border-radius: 0 8px 8px 0;
-      font-size: .9rem; line-height: 1.72;
-      color: var(--navy-mid); font-style: italic;
-      margin-top: 1.5rem;
+    /* Prompt moment */
+    .prompt-moment {
+      background: rgba(212,120,90,.07);
+      border-left: 3px solid var(--claude);
+      border-radius: 0 6px 6px 0;
+      padding: .65rem 1rem;
+      margin-top: .7rem;
+      font-size: .8rem;
+      color: var(--text);
+      line-height: 1.65;
     }
-    .lesson-label {
-      font-style: normal; font-size: .65rem; font-weight: 800;
-      text-transform: uppercase; letter-spacing: .1em;
-      color: var(--blue); margin-bottom: .45rem; display: block;
+    .pm-label {
+      font-size: .58rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--claude);
+      margin-bottom: .25rem; display: block;
     }
 
     /* ── GET STARTED ─────────────────────────────────── */
@@ -533,10 +534,6 @@
                 <div class="input-chip"><span class="input-chip-icon">🎯</span>The story I needed to tell in the demo</div>
                 <div class="input-chip"><span class="input-chip-icon">🏢</span>CBRE GWS portfolio context and scale</div>
               </div>
-              <div class="lesson">
-
-                "I didn't give it a spec. I gave it screenshots and a narrative goal. That's when I realized you don't need to know how to build things — you need to know how to describe them."
-              </div>
             </div>
             <div>
               <div class="dp-col-label">The Journey</div>
@@ -544,29 +541,32 @@
                 <div class="step-row">
                   <div class="step-n">1</div>
                   <div class="step-text">
-                    <h5>I started with screenshots, not a spec</h5>
-                    <p>Dropped in screenshots of their current platform and asked Claude to understand what it was and what the user was trying to accomplish in it.</p>
+                    <h5>Screenshots instead of a spec</h5>
+                    <p>Dropped in screenshots of their current FM platform and asked Claude to understand what the user was actually trying to do inside it.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Here's what their current system looks like. What story is this person trying to tell?" — no brief, no wireframe. Just context and an outcome question.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">2</div>
                   <div class="step-text">
-                    <h5>Described the story, not the UI</h5>
-                    <p>Told Claude what the ideal day-in-the-life looked like for a GWS facility manager — the outcomes they wanted, not the screens they needed.</p>
+                    <h5>Outcomes, not interfaces</h5>
+                    <p>Redirected Claude away from building screens and toward the experience — what a great day looks like for a GWS facility manager.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Don't build me a UI. Tell me what a great day looks like for a GWS facility manager — the outcomes, not the screens." That reframe is what made the demo feel like theirs.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">3</div>
                   <div class="step-text">
-                    <h5>Iterated on UX flow and narrative</h5>
-                    <p>Pushed back on what to show first, how to make interactions feel modern, which data points would land in the room.</p>
+                    <h5>One redirect rebuilt the entire UX hierarchy</h5>
+                    <p>When the first version buried the most important signal, I pushed back — and Claude reorganized everything around it.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Lead with the maintenance alert. The FM manager shouldn't have to dig for it." One sentence. Claude rebuilt the information hierarchy from scratch.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">4</div>
                   <div class="step-text">
-                    <h5>Tuned the data to match their portfolio</h5>
-                    <p>Made the demo feel like it was built for CBRE — their terminology, their scale, their operational reality.</p>
+                    <h5>Made it feel unmistakably CBRE</h5>
+                    <p>Asked Claude to tune every data point — terminology, portfolio scale, operational language — until it stopped feeling like a demo and started feeling like their system.</p>
                   </div>
                 </div>
               </div>
@@ -626,10 +626,6 @@
                 <div class="input-chip"><span class="input-chip-icon">📋</span>SIC format and what leadership expects</div>
                 <div class="input-chip"><span class="input-chip-icon">🤖</span>Agentforce capabilities relevant to fitness/luxury</div>
               </div>
-              <div class="lesson">
-
-                "The SIC prep used to be a Sunday project. This became a Tuesday afternoon. And the story was better — because I asked Claude to challenge my assumptions first, before building the slide."
-              </div>
             </div>
             <div>
               <div class="dp-col-label">The Journey</div>
@@ -637,29 +633,31 @@
                 <div class="step-row">
                   <div class="step-n">1</div>
                   <div class="step-text">
-                    <h5>Started with what Equinox actually cares about</h5>
-                    <p>Before building anything, I asked Claude to play back Equinox's business priorities. Not the CRM pitch — the real business priorities. That grounded the whole narrative.</p>
+                    <h5>Asked Claude to challenge my assumptions first</h5>
+                    <p>Before building a single slide, I asked Claude to push back on my narrative — not confirm it. That changed everything that came after.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Before you build anything — challenge my assumptions about what Equinox actually needs from this investment." Claude came back with questions I hadn't thought to ask.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">2</div>
                   <div class="step-text">
-                    <h5>Built the arc: why now, why Salesforce, why Agentforce</h5>
-                    <p>What's the transformation story? How does AI fit the Equinox brand and member experience? Claude helped make the case feel inevitable, not pitched.</p>
+                    <h5>Built the arc: why now, why this, why inevitable</h5>
+                    <p>The transformation story had to feel like something Equinox was already moving toward — not a pitch we were making. Claude helped make the case feel like a conclusion, not an ask.</p>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">3</div>
                   <div class="step-text">
-                    <h5>Slide by slide — talking points, not just content</h5>
-                    <p>Built not just what to say, but how to say it for a Salesforce leadership audience. The inflection points. The proof points. The questions they'd ask.</p>
+                    <h5>Wrote for the room, not the slide deck</h5>
+                    <p>Not talking points to read — actual language for a Salesforce leadership audience mid-interruption. The recovery lines. The pauses. The proof points that land at this level.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Write this for someone who will be interrupted mid-slide by a CFO. Give me the recovery line for each transition." That level of specificity completely changed the output.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">4</div>
                   <div class="step-text">
-                    <h5>Built the interactive demo for the meeting itself</h5>
-                    <p>Asked Claude to turn the key concepts into a live, clickable experience. Went from "can you make this interactive?" to a shareable demo in one session.</p>
+                    <h5>"Can you make this interactive?" → shareable demo, same session</h5>
+                    <p>One question. Claude turned the key concepts into a live, clickable experience without needing a new brief or starting over.</p>
                   </div>
                 </div>
               </div>
@@ -719,10 +717,6 @@
                 <div class="input-chip"><span class="input-chip-icon">🏗️</span>Context on their 60-OpCo multi-entity structure</div>
                 <div class="input-chip"><span class="input-chip-icon">📊</span>ASC 606 / IPO readiness as a known Must-have</div>
               </div>
-              <div class="lesson">
-
-                "A 100-page RFP is just a conversation waiting to happen. Claude reads faster than I do and it doesn't miss things I'm tired of reading. The ASC 606 gap came up in the first five minutes."
-              </div>
             </div>
             <div>
               <div class="dp-col-label">The Journey</div>
@@ -730,29 +724,31 @@
                 <div class="step-row">
                   <div class="step-n">1</div>
                   <div class="step-text">
-                    <h5>Full RFP analysis: strong, gap, or ISV needed</h5>
-                    <p>Asked Claude to map every requirement to one of three categories. It caught things I would have glossed over — and flagged them in terms of deal risk, not just feature coverage.</p>
+                    <h5>Mapped every requirement as a deal risk, not a feature</h5>
+                    <p>Instead of asking "do we cover this," I asked Claude to flag each gap in terms of whether it was the kind of thing that loses deals. Different framing, completely different output.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Don't just tell me what we cover. For every gap, tell me how it reads as deal risk — and whether it's the kind of thing that loses RFPs." That instruction changed how Claude organized its entire analysis.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">2</div>
                   <div class="step-text">
-                    <h5>ASC 606 surfaced immediately as the critical gap</h5>
-                    <p>Claude flagged that this is exactly why ServiceMax lost, identified it as an IPO-driver Must-have, and suggested leading with RightRev as the named ISV — with CBRE as a reference.</p>
+                    <h5>Pushed Claude past the gap — and into the proof point</h5>
+                    <p>When Claude flagged ASC 606, I didn't stop there. I pushed: is this a product gap or a positioning gap? That follow-up is what surfaced RightRev and CBRE as the answer.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"You flagged ASC 606. But tell me — is this a product gap or a positioning gap? And if I lead with RightRev, what's my proof point?" Claude connected it to the CBRE deal.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">3</div>
                   <div class="step-text">
-                    <h5>Built the SE Playbook: what to say, what to avoid</h5>
-                    <p>Not just the solution — the positioning. How to frame our gaps confidently. How to differentiate from ServiceMax. The language that lands with a PE-backed leadership team.</p>
+                    <h5>Built the SE Playbook: what to say AND what to avoid</h5>
+                    <p>Not just the solution — the positioning. Asked Claude for the language that lands with a PE-backed leadership team heading toward an IPO. Different audience, completely different register.</p>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">4</div>
                   <div class="step-text">
-                    <h5>Solution Architecture for a 60-OpCo structure</h5>
-                    <p>Mapped Salesforce Revenue Cloud + RightRev + FSC to their actual organizational model. Built the "This Week's Actions" doc so the team had clear next steps.</p>
+                    <h5>Solution Architecture mapped to their actual org model</h5>
+                    <p>60 OpCos, multi-entity structure, IPO readiness. Asked Claude to map the solution to HOW Service Logic actually operates — not a generic architecture slide.</p>
                   </div>
                 </div>
               </div>
@@ -813,10 +809,6 @@
                 <div class="input-chip"><span class="input-chip-icon">📐</span>Meeting agenda structure and time constraints</div>
                 <div class="input-chip"><span class="input-chip-icon">💡</span>Notes on what had resonated in prior meetings</div>
               </div>
-              <div class="lesson">
-
-                "I've done hundreds of presentations. But having a talk track written for THIS specific room, with THESE specific stakeholders — including how to handle procurement questions — changed how I walked in."
-              </div>
             </div>
             <div>
               <div class="dp-col-label">The Journey</div>
@@ -824,29 +816,31 @@
                 <div class="step-row">
                   <div class="step-n">1</div>
                   <div class="step-text">
-                    <h5>"What should actually happen in the first 20 minutes?"</h5>
-                    <p>That was my first question. Claude pushed back immediately: who are the decision-makers in the room? What does each of them need to walk out believing?</p>
+                    <h5>Asked what should HAPPEN — not what to present</h5>
+                    <p>That framing shift caused Claude to push back before building anything. It came back with questions about who was in the room and what each person needed to walk out believing.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"What should actually happen in the first 20 minutes?" — not "what should I say." The outcome framing changed the entire response. Claude interrogated the room before it touched the slides.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">2</div>
                   <div class="step-text">
-                    <h5>Built a government-specific narrative arc</h5>
-                    <p>Lead with mission impact, not product features. Federal is different — the language, the proof points, the ROI framing. Claude knew this without being told.</p>
+                    <h5>Federal framing without having to explain it</h5>
+                    <p>Mission impact first. Not product features. I told Claude this was a federal room — and it adjusted the language, proof points, and ROI framing without needing a primer on government selling.</p>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">3</div>
                   <div class="step-text">
-                    <h5>Slide-by-slide talk track with transitions and pauses</h5>
-                    <p>Not bullet points to read off — actual language. Specific transitions between slides. How to handle the inevitable procurement question. Where to pause for reaction.</p>
+                    <h5>Precision prompting produced precision output</h5>
+                    <p>The more specific I got about the format, the more useful the output became. Asking for exact transitions and recovery lines — not just bullets — is what turned this from a prep doc into a real guide.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Give me the exact words for the transition between slides 4 and 5. And tell me where to pause for the procurement person's question." That precision completely changed what came back.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">4</div>
                   <div class="step-text">
-                    <h5>Turned it into a printed guide for the table</h5>
-                    <p>The guide went with me into the room. Not to read verbatim — to walk in knowing exactly what I was going to say before I said it.</p>
+                    <h5>A printed guide that went into the room</h5>
+                    <p>Not to read verbatim. To walk in knowing exactly what I was going to say — and how to handle the moment it went off script.</p>
                   </div>
                 </div>
               </div>
@@ -881,7 +875,6 @@
           <p class="dp-situation">Related Rentals is part of The Related Companies — one of the country's largest private real estate owners. They needed to see Agentforce working in a context that felt real for a property management business, not a generic product demo.</p>
           <div class="tags">
             <span class="tag tag-demo">Clickable Demo Prototype</span>
-            <span class="tag tag-strat">Agentforce</span>
           </div>
         </div>
         <div class="slack-callout">
@@ -894,7 +887,7 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">Slackbot Intel · came first</div>
-            <div class="slack-callout-text">I searched Slackbot for <strong>[Related Rentals: deal history, Agentforce conversation threads, property manager pain points that came up?]</strong> — the one-sentence anchor that drove both demos came from those threads.</div>
+            <div class="slack-callout-text">I searched Slackbot for <strong>[Related Rentals: deal history, conversation threads, property manager pain points that came up?]</strong> — the one-sentence anchor that drove both demos came from those threads.</div>
           </div>
         </div>
         <div class="dp-body">
@@ -905,11 +898,7 @@
                 <div class="input-chip"><span class="input-chip-icon">🏘️</span>Related Rentals company profile and portfolio</div>
                 <div class="input-chip"><span class="input-chip-icon">😤</span>Core pain points: tenant comms, vendor mgmt, leases</div>
                 <div class="input-chip"><span class="input-chip-icon">👤</span>Day-in-the-life of a property manager persona</div>
-                <div class="input-chip"><span class="input-chip-icon">🤖</span>Where Agentforce should visibly improve the workflow</div>
-              </div>
-              <div class="lesson">
-
-                "Two fully interactive, account-specific demos — no dev team request, no 2-week wait. Just a conversation that got specific enough. The second demo came from one sentence: 'now show what happens when Agentforce touches this.'"
+                <div class="input-chip"><span class="input-chip-icon">🎯</span>Where AI should visibly improve the workflow</div>
               </div>
             </div>
             <div>
@@ -918,29 +907,31 @@
                 <div class="step-row">
                   <div class="step-n">1</div>
                   <div class="step-text">
-                    <h5>Anchored on one relatable workflow</h5>
-                    <p>"A property manager shouldn't need 4 systems to answer a tenant's maintenance question." That sentence became the demo's entire narrative hook.</p>
+                    <h5>The anchor sentence came before anything else</h5>
+                    <p>Before asking for a demo, I asked Claude for the one sentence a property manager would say on a Monday morning that describes exactly why their job is hard. That sentence became the entire narrative hook.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Give me one sentence that a property manager would say to their manager on a Monday morning about why their job is hard." That sentence built both demos.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">2</div>
                   <div class="step-text">
-                    <h5>Built the CRM Console demo first</h5>
-                    <p>Showed the data model and the service case flow — what the world looks like today, before Agentforce. A realistic baseline they'd recognize.</p>
+                    <h5>Built the baseline first — the world as it is today</h5>
+                    <p>Showed the fragmented workflow before any AI. A realistic baseline they'd recognize. The contrast only works if you earn it.</p>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">3</div>
                   <div class="step-text">
-                    <h5>"Now show what happens when Agentforce touches this"</h5>
-                    <p>That was the entire prompt for the second demo. Claude built the Agentforce experience from one sentence — because the context was already established.</p>
+                    <h5>One sentence. Second demo. No new brief.</h5>
+                    <p>The context was already established. The second demo didn't need a new conversation — just one follow-up that redirected Claude into building the AI-powered version of everything it had just built.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Now show what happens when AI touches this." That was the entire prompt for the second demo. Claude built it from one sentence because the foundation was already there.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">4</div>
                   <div class="step-text">
-                    <h5>Team tested both before the meeting</h5>
-                    <p>Shared the live demos with the AE and internal team for review and feedback. Made tweaks in the same session — no handoffs, no waiting.</p>
+                    <h5>Team reviewed both before the meeting — same session</h5>
+                    <p>Shared the live demos with the AE for feedback. Made tweaks in real time. No handoffs, no 2-week dev request, no waiting.</p>
                   </div>
                 </div>
               </div>
@@ -976,7 +967,6 @@
           <p class="dp-situation">Hertz is one of the world's most iconic rental car brands — 100+ years old, operating at massive scale, and in the middle of a significant transformation. They needed to see Agentforce not as a new AI tool sitting next to their existing systems, but as something living inside the screens their service agents already use every day.</p>
           <div class="tags">
             <span class="tag tag-demo">Clickable Demo Prototype</span>
-            <span class="tag tag-strat">Agentforce</span>
           </div>
         </div>
         <div class="slack-callout">
@@ -989,7 +979,7 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">Slackbot Intel · came first</div>
-            <div class="slack-callout-text">I queried Slackbot for <strong>[Hertz: Lauryl's account context, prior touchpoints, Agentforce positioning that had clicked?]</strong> — the "AI in the flow of work, not a separate tool" framing came directly from that research.</div>
+            <div class="slack-callout-text">I queried Slackbot for <strong>[Hertz: Lauryl's account context, prior touchpoints, positioning that had clicked?]</strong> — the "AI in the flow of work, not a separate tool" framing came directly from that research.</div>
           </div>
         </div>
         <div class="dp-body">
@@ -1003,10 +993,6 @@
                 <div class="input-chip"><span class="input-chip-icon">🎯</span>The story — AI in the flow of work, not a separate tool</div>
                 <div class="input-chip"><span class="input-chip-icon">👤</span>Specific stakeholder context (Lauryl)</div>
               </div>
-              <div class="lesson">
-
-                "The story wasn't 'here's what AI can do.' It was 'here's what Agentforce looks like in the exact screens you already use.' Showing it inside their world — not ours — completely changes the conversation."
-              </div>
             </div>
             <div>
               <div class="dp-col-label">The Journey</div>
@@ -1014,29 +1000,31 @@
                 <div class="step-row">
                   <div class="step-n">1</div>
                   <div class="step-text">
-                    <h5>The concept: show the before, not just the after</h5>
-                    <p>Instead of jumping straight to the AI-powered state, I asked Claude to help design a three-act reveal. Start where Hertz already is. Earn the transformation.</p>
+                    <h5>Told Claude to start in the problem, not the solution</h5>
+                    <p>Instead of jumping straight to AI, I asked Claude to design a reveal that started where Hertz already was. The contrast only lands if you earn the before.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Don't start with AI. Start where Hertz is today — let the room feel the problem before they see the answer." That instruction built the entire three-act structure.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">2</div>
                   <div class="step-text">
-                    <h5>Built the three-stage narrative structure</h5>
-                    <p>"Governed Foundation → AI in the Flow → One Platform." Each stage a click. Each click a visible shift — from greyscale and locked data to glowing Agentforce yellow.</p>
+                    <h5>Named the three acts before building any of them</h5>
+                    <p>"Governed Foundation → AI in the Flow → One Platform." I gave Claude the arc first. Once the narrative had names, every UI decision had a reason.</p>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">3</div>
                   <div class="step-text">
-                    <h5>Made it real with a specific service scenario</h5>
-                    <p>A Tesla damage dispute at LAX return. Real case type, real priority queue, real data fields unlocking as Agentforce comes online. Not abstract — recognizable.</p>
+                    <h5>Specificity made it real: a Tesla dispute at LAX</h5>
+                    <p>Not a generic service case — a real scenario. Real case type, real priority queue, real data fields. The more specific the scenario I gave, the more recognizable the output became.</p>
+                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Use a Tesla damage dispute at LAX return. Real fields. Real priority." Swapping generic for specific completely changed how the demo felt in the room.</div>
                   </div>
                 </div>
                 <div class="step-row">
                   <div class="step-n">4</div>
                   <div class="step-text">
-                    <h5>"Revise based on the story — and get the Hertz branding right"</h5>
-                    <p>That was my note heading into the final iteration. Claude dialed the Hertz yellow into every detail — the nav stripe, the glow, the case accent colors — until it felt unmistakably Hertz.</p>
+                    <h5>"Revise based on the story — and make it unmistakably Hertz"</h5>
+                    <p>That was the entire final direction. Claude dialed the Hertz yellow into every detail — the nav, the glow, the accents — until it felt like their product, not a mockup of it.</p>
                   </div>
                 </div>
               </div>
