@@ -17,6 +17,9 @@
       --purple:     #8B5CF6;
       --green:      #10B981;
       --amber:      #F59E0B;
+      --claude:     #D4785A;
+      --claude-lt:  #E8A07E;
+      --claude-dim: #7a3e2e;
       --text:       #0f172a;
       --text-muted: #64748b;
       --text-faint: #94a3b8;
@@ -43,14 +46,14 @@
       padding: 0 2.5rem;
     }
     .nav-brand { color: #fff; font-size: .875rem; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
-    .nav-brand span { color: var(--blue-lt); }
+    .nav-brand span { color: var(--claude-lt); }
     .nav-links { display: flex; gap: 2rem; }
     .nav-links a { color: rgba(255,255,255,.55); text-decoration: none; font-size: .8rem; font-weight: 500; transition: color .2s; }
     .nav-links a:hover { color: #fff; }
 
     /* ── HERO ─────────────────────────────────────────── */
     .hero {
-      background: linear-gradient(155deg, #070b1c 0%, #0d1a3a 55%, #071424 100%);
+      background: linear-gradient(155deg, #070b1c 0%, #0d1838 50%, #1a0d08 100%);
       color: #fff;
       padding: 110px 2rem 130px;
       text-align: center;
@@ -58,15 +61,15 @@
       overflow: hidden;
     }
     .hero-glow {
-      position: absolute; top: -300px; left: 50%; transform: translateX(-50%);
+      position: absolute; top: -300px; left: 30%; transform: translateX(-50%);
       width: 900px; height: 900px;
-      background: radial-gradient(circle, rgba(1,118,211,.14) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(1,118,211,.13) 0%, transparent 65%);
       pointer-events: none;
     }
     .hero-glow2 {
-      position: absolute; bottom: -200px; right: 5%;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(6,182,212,.07) 0%, transparent 70%);
+      position: absolute; top: -100px; right: -50px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(212,120,90,.18) 0%, transparent 65%);
       pointer-events: none;
     }
     .hero-inner { position: relative; z-index: 1; }
@@ -85,7 +88,7 @@
     }
     .hero h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, #4db8ff, var(--cyan));
+      background: linear-gradient(135deg, var(--claude-lt), var(--claude));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .hero-sub {
@@ -96,7 +99,7 @@
       font-size: 1.3rem; font-style: italic; font-weight: 500;
       color: rgba(255,255,255,.9);
       max-width: 500px; margin: 0 auto 2.75rem;
-      border-left: 3px solid var(--blue-lt);
+      border-left: 3px solid var(--claude);
       padding-left: 1rem; text-align: left;
       line-height: 1.6;
     }
@@ -311,6 +314,87 @@
     .start-card h3 { color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
     .start-card p { color: rgba(255,255,255,.48); font-size: .855rem; line-height: 1.65; }
 
+    /* ── CLAUDE BOT MARK ────────────────────────────────── */
+    .claude-bot {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--claude-lt), var(--claude));
+      font-size: .65rem; font-weight: 900; color: #fff;
+      flex-shrink: 0; box-shadow: 0 0 8px rgba(212,120,90,.4);
+      font-style: normal;
+    }
+
+    /* ── TABS ────────────────────────────────────────────── */
+    .tab-bar {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      position: sticky; top: 58px; z-index: 100;
+    }
+    .tab-bar-inner {
+      max-width: 1080px; margin: 0 auto; padding: 0 2.5rem; display: flex;
+    }
+    .tab-btn {
+      padding: .9rem 1.5rem; font-size: .875rem; font-weight: 600;
+      color: var(--text-muted); background: none; border: none;
+      border-bottom: 3px solid transparent; cursor: pointer;
+      display: flex; align-items: center; gap: .55rem;
+      transition: all .2s; white-space: nowrap; margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.tab-work.is-active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-btn.tab-slack.is-active { color: var(--claude); border-bottom-color: var(--claude); }
+    .tab-panel { display: none; }
+    .tab-panel.is-active { display: block; }
+
+    /* ── SLACKBOT TAB ────────────────────────────────────── */
+    .slack-hero { padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+    .slack-hero h2 { font-size: 2.2rem; font-weight: 800; letter-spacing: -.025em; margin-bottom: .75rem; }
+    .slack-hero h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--claude-lt), var(--claude));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .slack-hero p { font-size: 1.05rem; color: var(--text-muted); max-width: 620px; line-height: 1.75; }
+    .flow-diagram { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 2.5rem 0 0; }
+    .flow-node {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.25rem; text-align: center; min-width: 130px;
+    }
+    .flow-node-icon { font-size: 1.75rem; margin-bottom: .3rem; }
+    .flow-node-label { font-size: .8rem; font-weight: 700; }
+    .flow-node-sub { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+    .flow-arrow { font-size: 1.1rem; color: var(--text-faint); padding: 0 .75rem; flex-shrink: 0; }
+    .flow-node.node-claude { border-color: rgba(212,120,90,.4); background: #fff8f5; }
+    .flow-node.node-output { border-color: rgba(1,118,211,.3); background: #f0f7ff; }
+    .slack-sessions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+    .slack-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem; position: relative; overflow: hidden;
+    }
+    .slack-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--claude), var(--claude-lt));
+    }
+    .slack-card-tag {
+      display: inline-block; font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      background: rgba(212,120,90,.08); color: var(--claude);
+      border: 1px solid rgba(212,120,90,.2);
+      padding: .2rem .65rem; border-radius: 100px; margin-bottom: .75rem;
+    }
+    .slack-card h4 { font-size: 1rem; font-weight: 800; margin-bottom: .4rem; }
+    .slack-card p { font-size: .875rem; color: var(--text-muted); line-height: 1.7; }
+    .slack-prompt {
+      background: var(--navy-mid); border-radius: 8px; padding: 1rem 1.25rem;
+      margin-top: 1rem; font-size: .8rem; color: rgba(255,255,255,.7);
+      line-height: 1.65; font-style: italic; border-left: 3px solid var(--claude);
+    }
+    .slack-prompt-lbl {
+      font-style: normal; font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--claude-lt); margin-bottom: .4rem; display: block;
+    }
+    @media (max-width: 700px) { .slack-sessions { grid-template-columns: 1fr; } }
+
     /* ── FOOTER ──────────────────────────────────────── */
     footer {
       background: var(--navy); color: rgba(255,255,255,.35);
@@ -370,7 +454,20 @@
   </div>
 </section>
 
-<!-- ───── CASE STUDIES ───── -->
+<!-- ───── TABS ───── -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn tab-work is-active" onclick="switchTab('work')">
+      <span style="color:var(--blue-lt)">◈</span> The Work
+    </button>
+    <button class="tab-btn tab-slack" onclick="switchTab('slack')">
+      <span class="claude-bot">C</span> Slackbot &amp; Mr. Claude
+    </button>
+  </div>
+</div>
+
+<!-- ───── TAB: THE WORK ───── -->
+<div class="tab-panel is-active" id="panel-work">
 <section class="section" id="work">
   <div class="container">
     <div class="section-head">
@@ -1030,6 +1127,63 @@
   </div><!-- /container -->
 </section>
 
+</section><!-- /work section -->
+</div><!-- /panel-work -->
+
+<!-- ───── TAB: SLACKBOT ───── -->
+<div class="tab-panel" id="panel-slack">
+<section class="section" id="slackbot">
+  <div class="container">
+
+    <div class="slack-hero">
+      <div class="section-label" style="color:var(--claude);">Slackbot &amp; Mr. Claude</div>
+      <h2>The intel was <em>the input.</em></h2>
+      <p>Every session here started the same way — not in Claude, but in Slack. I used Slackbot to surface signals, patterns, and real account context that already lived in Salesforce. Then I brought that intelligence to Claude with a specific ask. No AI involved in the research phase. Just a human knowing where to look.</p>
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="flow-node-icon">💬</div>
+          <div class="flow-node-label">Slackbot Query</div>
+          <div class="flow-node-sub">Pull account intel from Salesforce</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="flow-node-icon">🧠</div>
+          <div class="flow-node-label">Synthesize</div>
+          <div class="flow-node-sub">Find the signal in the noise</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node node-claude">
+          <div class="flow-node-icon">✦</div>
+          <div class="flow-node-label">Strong Prompt</div>
+          <div class="flow-node-sub">Context + specific ask</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node node-output">
+          <div class="flow-node-icon">🎯</div>
+          <div class="flow-node-label">Output that lands</div>
+          <div class="flow-node-sub">Because the input was real</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slack-sessions" id="slackSessions">
+
+      <div class="slack-card">
+        <span class="slack-card-tag">Coming soon</span>
+        <h4>Sessions being added here</h4>
+        <p>The examples in this tab are being documented. Each one shows the Slackbot query that kicked it off, the intel it surfaced, and the prompt that went to Claude as a result.</p>
+        <div class="slack-prompt">
+          <span class="slack-prompt-lbl">The idea</span>
+          "Garbage in, garbage out. But when Slackbot gives you real account data as the starting point — the prompt writes itself."
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+</div><!-- /panel-slack -->
+
 <!-- ───── FOOTER ───── -->
 <footer>
   <p>Rachel Smith · Distinguished Solution Engineer · Salesforce &nbsp;·&nbsp; <a href="mailto:rachel.smith@salesforce.com">rachel.smith@salesforce.com</a></p>
@@ -1037,6 +1191,15 @@
 </footer>
 
 <script>
+  // ── Tab switching ────────────────────────────────────────
+  function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('is-active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('is-active'));
+    document.getElementById('panel-' + name).classList.add('is-active');
+    document.querySelector('.tab-' + (name === 'work' ? 'work' : 'slack')).classList.add('is-active');
+    window.scrollTo({ top: document.querySelector('.tab-bar').offsetTop - 58, behavior: 'smooth' });
+  }
+
   // ── Case study card interaction ──────────────────────────
   const cards = document.querySelectorAll('.case-card');
   const detailWraps = document.querySelectorAll('.detail-wrap');
