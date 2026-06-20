@@ -120,6 +120,7 @@
     .sl-body { font-size: .82rem; color: rgba(255,255,255,.78); line-height: 1.7; }
     .sl-mention { color: #1d9bd1; font-weight: 500; }
     .sl-muted { color: rgba(255,255,255,.42); font-style: italic; }
+    .sl-spark { color: var(--claude-lt); font-style: italic; font-weight: 500; }
     .sl-love { font-size: .9rem; font-weight: 700; color: #fff; }
     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4.5rem; }
     .btn {
@@ -348,15 +349,11 @@
       font-style: normal;
     }
 
-    /* ── TABS ────────────────────────────────────────────── */
-    .tab-bar { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 100; }
-    .tab-bar-inner { max-width: 1080px; margin: 0 auto; padding: 0 2.5rem; display: flex; }
-    .tab-btn { padding: .9rem 1.5rem; font-size: .875rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; display: flex; align-items: center; gap: .5rem; transition: all .2s; white-space: nowrap; margin-bottom: -1px; }
-    .tab-btn:hover { color: var(--text); }
-    .tab-btn.tab-work.is-active { color: var(--blue); border-bottom-color: var(--blue); }
-    .tab-btn.tab-meta.is-active { color: var(--claude); border-bottom-color: var(--claude); }
-    .tab-panel { display: none; }
-    .tab-panel.is-active { display: block; }
+    /* ── SECTION DIVIDER ─────────────────────────────────── */
+    .section-divider {
+      border: none; border-top: 1px solid var(--border);
+      max-width: 1080px; margin: 0 auto;
+    }
 
     /* ── THE MAKING OF ───────────────────────────────────── */
     .making-hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); margin-bottom: 3.5rem; }
@@ -493,6 +490,7 @@
   <div class="nav-brand">My Brain on <span>Claude</span></div>
   <div class="nav-links">
     <a href="#work">The Thinking</a>
+    <a href="#making-of">Making Of</a>
   </div>
 </nav>
 
@@ -504,7 +502,6 @@
     <h1>My Brain on <em>Claude</em></h1>
     <p class="hero-sub">a few weeks ago in the midst of an existential crisis side effects included wondering if i'm being paid to dj, still overwhelmed by 1,989 AI acronyms and tools, lauryl posted this:</p>
     <p class="hero-lauryl">"Visually, how would you tell the story...."</p>
-    <p class="hero-connector">and this happened</p>
     <div class="slack-exchange">
       <div class="sl-msg">
         <div class="sl-av sl-av-r">R</div>
@@ -516,7 +513,7 @@
           <div class="sl-body">
             <span class="sl-mention">@Lauryl Denega</span> at risk of seeming dumb but i like you enough so just go with me here:<br><br>
             what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!<br><br>
-            <span class="sl-muted">...brb while i put this into claude and see what cartoon i get?</span>
+            <span class="sl-spark">...brb while i put this into claude and see what cartoon i get?</span>
           </div>
         </div>
       </div>
@@ -542,15 +539,6 @@
   </div>
 </section>
 
-<!-- ───── TABS ───── -->
-<div class="tab-bar">
-  <div class="tab-bar-inner">
-    <button class="tab-btn tab-work is-active" onclick="switchTab('work')"><span style="color:var(--blue-lt)">◈</span> The Thinking</button>
-    <button class="tab-btn tab-meta" onclick="switchTab('meta')"><span style="color:var(--claude-lt)">✦</span> The Making Of</button>
-  </div>
-</div>
-
-<div class="tab-panel is-active" id="panel-work">
 <section class="section" id="work">
   <div class="container">
     <div class="section-head">
@@ -1329,11 +1317,11 @@
 
   </div><!-- /container -->
 </section>
-</div><!-- /panel-work -->
 
-<!-- ───── TAB: THE MAKING OF ───── -->
-<div class="tab-panel" id="panel-meta">
-<section class="section">
+<hr class="section-divider">
+
+<!-- ───── THE MAKING OF ───── -->
+<section class="section section-bg" id="making-of">
   <div class="container">
 
     <div class="making-hero">
@@ -1440,7 +1428,6 @@
     </div>
   </div>
 </section>
-</div><!-- /panel-meta -->
 
 <!-- ───── FOOTER ───── -->
 <footer>
@@ -1449,15 +1436,6 @@
 </footer>
 
 <script>
-  // ── Tab switching ────────────────────────────────────────
-  function switchTab(name) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('is-active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('is-active'));
-    document.getElementById('panel-' + name).classList.add('is-active');
-    document.querySelector('.tab-btn.tab-' + name).classList.add('is-active');
-    window.scrollTo({ top: document.querySelector('.tab-bar').offsetTop - 58, behavior: 'smooth' });
-  }
-
   // ── Case study card interaction ──────────────────────────
   const cards = document.querySelectorAll('.case-card');
   const detailWraps = document.querySelectorAll('.detail-wrap');
