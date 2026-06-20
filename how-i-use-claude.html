@@ -491,11 +491,20 @@
       max-width: 1080px; margin: 0 auto;
     }
 
+    /* ── PAGE BREAK CALLOUT ──────────────────────────────── */
+    .pbc { display: flex; align-items: center; gap: 2rem; padding: 3.5rem 2.5rem; }
+    .pbc-rule { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,120,90,.35), transparent); }
+    .pbc-word { font-size: 1.15rem; font-weight: 800; color: var(--claude); letter-spacing: .04em; white-space: nowrap; }
+
+    /* ── HERTZ THUMBNAIL ─────────────────────────────────── */
+    .ot-hertz-thumb { margin-top: .85rem; width: 240px; height: 150px; overflow: hidden; border-radius: 8px; border: 1px solid rgba(255,209,0,.2); background: #0a0800; flex-shrink: 0; }
+    .ot-hertz-thumb iframe { width: 800px; height: 500px; transform: scale(0.3); transform-origin: top left; border: none; pointer-events: none; }
+
     /* ── THE MAKING OF ───────────────────────────────────── */
     .making-hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); margin-bottom: 3.5rem; }
-    .making-hero h2 { font-size: 2rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .75rem; }
-    .making-hero h2 em { font-style: normal; background: linear-gradient(135deg, var(--claude-lt), var(--claude)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .making-hero p { font-size: 1rem; color: var(--text-muted); max-width: 620px; line-height: 1.75; }
+    .making-hero p { font-size: 1.15rem; color: rgba(255,255,255,.65); max-width: 620px; line-height: 1.8; font-style: italic; }
+    .meta-end { margin-top: 3rem; padding: 2.5rem 2rem; background: linear-gradient(135deg, #110e0c, #1a1410); border: 1px solid rgba(212,120,90,.2); border-radius: var(--radius); text-align: center; }
+    .meta-end-text { font-size: 1.4rem; font-weight: 900; color: var(--claude-lt); letter-spacing: -.01em; line-height: 1.3; }
     .collab-stats { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin: 1.6rem 0 .5rem; }
     .cs-stat { display: flex; flex-direction: column; }
     .cs-num { font-size: 1.75rem; font-weight: 900; color: var(--claude); letter-spacing: -.03em; line-height: 1; }
@@ -519,9 +528,6 @@
     .wc-text strong { color: var(--text); font-weight: 700; }
     .wc-text em { font-style: normal; background: rgba(212,120,90,.1); color: var(--claude-dim); padding: .05em .35em; border-radius: 3px; font-size: .875em; }
     .thread-connector { width: 2px; height: 1.75rem; background: var(--border); margin: 0 0 0 calc(1.35rem + 1px); }
-    .meta-end { margin-top: 3rem; padding: 2rem; background: var(--navy); border-radius: var(--radius); text-align: center; }
-    .meta-end p { color: rgba(255,255,255,.55); font-size: .9rem; line-height: 1.75; }
-    .meta-end strong { color: var(--claude-lt); }
 
     /* ── META-PATTERN PIPELINE ─────────────────────────────── */
     .meta-pattern {
@@ -633,15 +639,16 @@
 <!-- ───── NAV ───── -->
 <nav>
   <div class="nav-brand">
-    <svg viewBox="0 0 32 32" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="4" width="28" height="24" rx="10" fill="#D4785A"/>
-      <rect x="0" y="12" width="3" height="8" rx="1.5" fill="#C4603C"/>
-      <rect x="29" y="12" width="3" height="8" rx="1.5" fill="#C4603C"/>
-      <ellipse cx="11" cy="15" rx="2.8" ry="3.2" fill="rgba(0,0,0,.55)"/>
-      <ellipse cx="21" cy="15" rx="2.8" ry="3.2" fill="rgba(0,0,0,.55)"/>
-      <circle cx="12.1" cy="13.5" r="1" fill="rgba(255,255,255,.45)"/>
-      <circle cx="22.1" cy="13.5" r="1" fill="rgba(255,255,255,.45)"/>
-      <path d="M11 20.5 Q16 23.5 21 20.5" stroke="rgba(0,0,0,.35)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <svg viewBox="0 0 16 18" width="22" height="25" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+      <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
+      <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
+      <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
+      <rect x="4" y="4" width="3" height="3" fill="#111"/>
+      <rect x="9" y="4" width="3" height="3" fill="#111"/>
+      <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+      <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+      <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
+      <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
     </svg>
     <span class="nav-brand-emoji">🧠</span>
   </div>
@@ -654,25 +661,34 @@
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
   <div class="hero-inner">
-    <h1>me and mr. <em>claude</em><svg class="mr-claude-icon" viewBox="0 0 32 32" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-      <!-- Claude-style rounded head -->
-      <rect x="2" y="4" width="28" height="24" rx="10" fill="#D4785A"/>
-      <!-- Ear nubs -->
-      <rect x="0" y="12" width="3" height="8" rx="1.5" fill="#C4603C"/>
-      <rect x="29" y="12" width="3" height="8" rx="1.5" fill="#C4603C"/>
-      <!-- Eyes — clean dark ovals, Claude-style -->
-      <ellipse cx="11" cy="15" rx="2.8" ry="3.2" fill="rgba(0,0,0,.55)"/>
-      <ellipse cx="21" cy="15" rx="2.8" ry="3.2" fill="rgba(0,0,0,.55)"/>
-      <!-- Eye shine -->
-      <circle cx="12.1" cy="13.5" r="1" fill="rgba(255,255,255,.45)"/>
-      <circle cx="22.1" cy="13.5" r="1" fill="rgba(255,255,255,.45)"/>
-      <!-- Subtle smile -->
-      <path d="M11 20.5 Q16 23.5 21 20.5" stroke="rgba(0,0,0,.35)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <h1>me and mr. <em>claude</em><svg class="mr-claude-icon" viewBox="0 0 16 18" width="40" height="45" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+      <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
+      <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
+      <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
+      <rect x="4" y="4" width="3" height="3" fill="#111"/>
+      <rect x="9" y="4" width="3" height="3" fill="#111"/>
+      <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+      <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+      <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
+      <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
     </svg></h1>
     <p class="hero-sub">a few weeks ago in the midst of an existential crisis, still overwhelmed by 1,989 AI acronyms and tools, this happened:</p>
     <div class="slack-exchange">
       <div class="sl-msg">
-        <div class="sl-av sl-av-l">L</div>
+        <div class="sl-av sl-av-l" style="background:#1a1a2e;overflow:hidden;padding:0;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="display:block;width:100%;height:100%;image-rendering:pixelated">
+          <rect x="0" y="0" width="16" height="16" fill="#1a1a2e"/>
+          <rect x="3" y="1" width="2" height="2" fill="#c8a870"/><rect x="7" y="0" width="2" height="3" fill="#c8a870"/><rect x="11" y="1" width="2" height="2" fill="#c8a870"/>
+          <rect x="2" y="2" width="12" height="2" fill="#b89860"/>
+          <rect x="3" y="3" width="10" height="8" fill="#f0b090"/>
+          <rect x="1" y="4" width="2" height="5" fill="#b89860"/><rect x="13" y="4" width="2" height="5" fill="#b89860"/>
+          <rect x="4" y="5" width="3" height="2" fill="#1a1a1a"/><rect x="5" y="5" width="1" height="1" fill="rgba(255,255,255,.4)"/>
+          <rect x="9" y="5" width="3" height="2" fill="#1a1a1a"/><rect x="10" y="5" width="1" height="1" fill="rgba(255,255,255,.4)"/>
+          <rect x="4" y="5" width="7" height="1" fill="rgba(0,0,0,.5)"/>
+          <rect x="4" y="6" width="7" height="1" fill="rgba(0,0,0,.5)"/>
+          <rect x="6" y="9" width="4" height="1" fill="#c07060"/>
+          <rect x="5" y="11" width="6" height="1" fill="#f0b090"/>
+          <rect x="2" y="12" width="12" height="4" fill="#111"/>
+        </svg></div>
         <div class="sl-right">
           <div class="sl-meta">
             <span class="sl-name">Lauryl Denega</span>
@@ -705,7 +721,19 @@
         </div>
       </div>
       <div class="sl-msg">
-        <div class="sl-av sl-av-r">R</div>
+        <div class="sl-av sl-av-r" style="background:#2a1508;overflow:hidden;padding:0;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="display:block;width:100%;height:100%;image-rendering:pixelated">
+          <rect x="0" y="0" width="16" height="16" fill="#2a1508"/>
+          <rect x="2" y="1" width="12" height="3" fill="#4a2210"/>
+          <rect x="1" y="2" width="14" height="4" fill="#5c2d10"/>
+          <rect x="1" y="3" width="2" height="5" fill="#4a2210"/><rect x="13" y="3" width="2" height="5" fill="#4a2210"/>
+          <rect x="3" y="4" width="10" height="7" fill="#f0a882"/>
+          <rect x="4" y="6" width="3" height="2" fill="#1a1a1a"/><rect x="4" y="6" width="1" height="1" fill="rgba(255,255,255,.5)"/>
+          <rect x="9" y="6" width="3" height="2" fill="#1a1a1a"/><rect x="9" y="6" width="1" height="1" fill="rgba(255,255,255,.5)"/>
+          <rect x="5" y="9" width="1" height="1" fill="#c06040"/><rect x="6" y="10" width="4" height="1" fill="#c06040"/><rect x="10" y="9" width="1" height="1" fill="#c06040"/>
+          <rect x="6" y="11" width="4" height="1" fill="#f0a882"/>
+          <rect x="2" y="12" width="12" height="4" fill="#111"/>
+          <rect x="5" y="12" width="6" height="4" fill="#2a2a2a"/>
+        </svg></div>
         <div class="sl-right">
           <div class="sl-meta">
             <span class="sl-name">Rachel Smith</span>
@@ -775,6 +803,9 @@
             <span class="ot-output-label">the hertz prototype ↗</span>
             <p>screens start black &amp; white → come to life in full color → agentforce layered over with the "neon 3D art stars." the exact concept from the slack message, fully realized. lauryl shared it with the hertz team.</p>
           </a>
+          <div class="ot-hertz-thumb">
+            <iframe src="https://smithrachel-pf.github.io/se-demos/lauryl-hertz.html" loading="lazy" scrolling="no"></iframe>
+          </div>
         </div>
       </div>
 
@@ -784,14 +815,18 @@
       </div>
 
     </div>
-    <div style="text-align:center; margin-top: 2.5rem; font-size: 1rem; font-weight: 700; color: var(--claude); letter-spacing: .02em;">so i kept thinking.</div>
+    <div class="pbc">
+      <div class="pbc-rule"></div>
+      <span class="pbc-word">so i kept thinking.</span>
+      <div class="pbc-rule"></div>
+    </div>
   </div>
 </section>
 
 <!-- ───── SINCE THEN ───── -->
 <section class="since-then">
   <div class="container">
-    <span class="st-eyebrow">since then.</span>
+    <span class="st-eyebrow">me and mr. claude since</span>
     <div class="st-grid">
       <div class="st-card st-featured">
         <div class="st-card-label">accounts brainstormed</div>
@@ -829,7 +864,7 @@
 <section class="section" id="work">
   <div class="container">
     <div class="section-head">
-      <h2 class="section-title">More thinking sessions.</h2>
+      <h2 class="section-title">the thinking sessions.</h2>
       <p class="section-sub">Click any to see the inputs, the thinking, and what came out.</p>
     </div>
 
@@ -1533,7 +1568,7 @@
   <div class="container">
 
     <div class="making-hero">
-      <p>this site is itself a claude collaboration. below are the verbatim prompts and pivots that built what you're looking at right now.</p>
+      <p>"this site is itself a claude collaboration. below are the verbatim prompts and pivots that built what you're looking at right now."</p>
     </div>
 
     <div class="collab-thread">
@@ -1589,7 +1624,7 @@
       </div>
 
       <div class="meta-end">
-        <p>every prompt on this page was typed once. no code was written by hand. no design tool was opened.<br><strong>the thinking is the work.</strong></p>
+        <div class="meta-end-text">the thinking is the work.</div>
       </div>
 
     </div>
