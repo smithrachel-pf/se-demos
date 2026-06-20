@@ -432,6 +432,34 @@
       font-style: normal;
     }
 
+    /* ── SINCE THEN ─────────────────────────────────────── */
+    .since-then {
+      background: var(--bg);
+      padding: 64px 2.5rem 68px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      text-align: center;
+    }
+    .st-eyebrow {
+      font-size: .65rem; font-weight: 800; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--claude);
+      margin-bottom: 2.75rem; display: block;
+    }
+    .st-stats {
+      display: flex; justify-content: center; align-items: flex-start;
+      gap: 2rem 4.5rem; flex-wrap: wrap; max-width: 860px; margin: 0 auto;
+    }
+    .st-stat { display: flex; flex-direction: column; align-items: center; }
+    .st-num {
+      font-size: 3.5rem; font-weight: 900; color: #fff;
+      letter-spacing: -.05em; line-height: 1;
+    }
+    .st-unit { color: var(--claude-lt); }
+    .st-label {
+      font-size: .58rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: rgba(255,255,255,.28); margin-top: .4rem;
+    }
+    .st-sep { width: 1px; height: 52px; background: rgba(255,255,255,.07); align-self: center; }
+
     /* ── SECTION DIVIDER ─────────────────────────────────── */
     .section-divider {
       border: none; border-top: 1px solid var(--border);
@@ -653,7 +681,7 @@
       </div>
     </div>
     <div class="hero-btns">
-      <a href="#work" class="btn btn-fill">See What Happened →</a>
+      <a href="#work" class="btn btn-fill">See the cartoon I got →</a>
     </div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">6</div><div class="stat-label">Thinking Sessions</div></div>
@@ -713,6 +741,37 @@
 
     </div>
     <div class="ot-tail">five more of those ideas are below ↓</div>
+  </div>
+</section>
+
+<!-- ───── SINCE THEN ───── -->
+<section class="since-then">
+  <span class="st-eyebrow">since then.</span>
+  <div class="st-stats">
+    <div class="st-stat">
+      <span class="st-num">6</span>
+      <span class="st-label">Accounts</span>
+    </div>
+    <div class="st-sep"></div>
+    <div class="st-stat">
+      <span class="st-num">10</span>
+      <span class="st-label">Assets Produced</span>
+    </div>
+    <div class="st-sep"></div>
+    <div class="st-stat">
+      <span class="st-num">12</span>
+      <span class="st-label">Sessions</span>
+    </div>
+    <div class="st-sep"></div>
+    <div class="st-stat">
+      <span class="st-num">2,997</span>
+      <span class="st-label">Messages</span>
+    </div>
+    <div class="st-sep"></div>
+    <div class="st-stat">
+      <span class="st-num">2.5<span class="st-unit">M</span></span>
+      <span class="st-label">Tokens</span>
+    </div>
   </div>
 </section>
 
