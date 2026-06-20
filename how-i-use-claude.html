@@ -395,6 +395,25 @@
     .ot-entry p { font-size: .9rem; color: rgba(255,255,255,.52); line-height: 1.82; }
     .ot-entry em { color: rgba(255,255,255,.82); font-style: italic; }
     .ot-entry strong { color: var(--claude-lt); font-weight: 600; }
+    .ot-icon { font-size: 1.1rem; margin-bottom: .45rem; display: block; line-height: 1; }
+    .sl-mini {
+      display: flex; gap: .75rem; align-items: flex-start;
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 8px; padding: .75rem 1rem; margin-top: .3rem;
+    }
+    .sl-mini-avatar {
+      width: 28px; height: 28px; border-radius: 5px; background: #7C3AED; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .sl-mini-name { font-weight: 700; font-size: .82rem; color: rgba(255,255,255,.9); }
+    .sl-mini-time { font-size: .72rem; color: rgba(255,255,255,.28); margin-left: .45rem; }
+    .sl-mini-text { font-size: .92rem; color: rgba(255,255,255,.8); margin-top: .25rem; }
+    .sl-mini-reaction {
+      display: inline-flex; align-items: center; gap: .3rem; margin-top: .45rem;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 4px; padding: .1rem .5rem; font-size: .78rem; color: rgba(255,255,255,.55);
+    }
     .ot-output-box {
       margin-top: .7rem; background: rgba(212,120,90,.07);
       border: 1px solid rgba(212,120,90,.2); border-radius: 8px;
@@ -434,31 +453,31 @@
 
     /* ── SINCE THEN ─────────────────────────────────────── */
     .since-then {
-      background: var(--bg);
-      padding: 64px 2.5rem 68px;
+      background: #0f0f0f;
+      padding: 60px 2.5rem 68px;
       border-bottom: 1px solid rgba(255,255,255,.06);
-      text-align: center;
     }
     .st-eyebrow {
       font-size: .65rem; font-weight: 800; letter-spacing: .18em;
       text-transform: uppercase; color: var(--claude);
-      margin-bottom: 2.75rem; display: block;
+      margin-bottom: 1.5rem; display: block;
     }
-    .st-stats {
-      display: flex; justify-content: center; align-items: flex-start;
-      gap: 2rem 4.5rem; flex-wrap: wrap; max-width: 860px; margin: 0 auto;
+    .st-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .65rem;
     }
-    .st-stat { display: flex; flex-direction: column; align-items: center; }
-    .st-num {
-      font-size: 3.5rem; font-weight: 900; color: #fff;
-      letter-spacing: -.05em; line-height: 1;
+    .st-card {
+      background: #1c1c1c;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
     }
-    .st-unit { color: var(--claude-lt); }
-    .st-label {
-      font-size: .58rem; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: rgba(255,255,255,.28); margin-top: .4rem;
-    }
-    .st-sep { width: 1px; height: 52px; background: rgba(255,255,255,.07); align-self: center; }
+    .st-card.st-featured { border-color: rgba(212,120,90,.25); }
+    .st-card-label { font-size: .75rem; color: rgba(255,255,255,.4); margin-bottom: .55rem; }
+    .st-card-val { font-size: 1.65rem; font-weight: 800; color: #fff; letter-spacing: -.03em; line-height: 1; }
+    .st-card.st-featured .st-card-val { color: var(--claude-lt); font-size: 1.9rem; }
+    @media (max-width: 640px) { .st-grid { grid-template-columns: repeat(2, 1fr); } }
 
     /* ── SECTION DIVIDER ─────────────────────────────────── */
     .section-divider {
@@ -683,11 +702,6 @@
     <div class="hero-btns">
       <a href="#work" class="btn btn-fill">See the cartoon I got →</a>
     </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Thinking Sessions</div></div>
-      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Live Demos Built</div></div>
-      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Months In</div></div>
-    </div>
   </div>
 </section>
 
@@ -698,24 +712,31 @@
       <div class="ot-entry">
         <div class="ot-dot"></div>
         <div class="ot-body">
-          <div class="ot-label">why it landed</div>
-          <p>these are my favorite types of questions. <em>"help me re-think this." "help me tell this story." "help me convey this idea."</em> the creative kind. not a task. not a spreadsheet.</p>
+          <div class="ot-icon">💡</div>
+          <p>spoiler alert: lauryl asking for re-think help meant i could use my brain and stop worrying about showing up on a no tokens consumed dashboard. <em>(spoiler: which led to tokens being consumed)</em></p>
         </div>
       </div>
 
       <div class="ot-entry">
         <div class="ot-dot"></div>
         <div class="ot-body">
-          <div class="ot-label">the thinking</div>
-          <p>so i sat with it. <em>no tools. just my brain.</em> i had an idea. figured it was dumb — but per the crisis, everything felt dumb. good thing we have a team where it's safe to post dumb things. so i went with it.</p>
+          <div class="ot-icon">🤔</div>
+          <p>so i thought about it. had an idea. figured it was dumb, per the existential crisis. good thing we have a team where it's safe to post dumb things <em>so i went with it.</em></p>
         </div>
       </div>
 
       <div class="ot-entry">
         <div class="ot-dot"></div>
         <div class="ot-body">
-          <div class="ot-label">she loved it</div>
-          <p>lauryl's "i....love it" was proof enough. but i had already typed the brb. <em>half joking.</em> i had just installed claude desktop the day before — a much preferred experience. i put my slack reply in as the entire prompt.</p>
+          <div class="sl-mini">
+            <div class="sl-mini-avatar">L</div>
+            <div>
+              <span class="sl-mini-name">Lauryl Denega</span>
+              <span class="sl-mini-time">7:14 PM</span>
+              <div class="sl-mini-text">I....love it.</div>
+              <div class="sl-mini-reaction">❤️ 5</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -746,31 +767,37 @@
 
 <!-- ───── SINCE THEN ───── -->
 <section class="since-then">
-  <span class="st-eyebrow">since then.</span>
-  <div class="st-stats">
-    <div class="st-stat">
-      <span class="st-num">6</span>
-      <span class="st-label">Accounts</span>
-    </div>
-    <div class="st-sep"></div>
-    <div class="st-stat">
-      <span class="st-num">10</span>
-      <span class="st-label">Assets Produced</span>
-    </div>
-    <div class="st-sep"></div>
-    <div class="st-stat">
-      <span class="st-num">12</span>
-      <span class="st-label">Sessions</span>
-    </div>
-    <div class="st-sep"></div>
-    <div class="st-stat">
-      <span class="st-num">2,997</span>
-      <span class="st-label">Messages</span>
-    </div>
-    <div class="st-sep"></div>
-    <div class="st-stat">
-      <span class="st-num">2.5<span class="st-unit">M</span></span>
-      <span class="st-label">Tokens</span>
+  <div class="container">
+    <span class="st-eyebrow">since then.</span>
+    <div class="st-grid">
+      <div class="st-card st-featured">
+        <div class="st-card-label">Accounts brainstormed</div>
+        <div class="st-card-val">6</div>
+      </div>
+      <div class="st-card st-featured">
+        <div class="st-card-label">Assets produced</div>
+        <div class="st-card-val">10</div>
+      </div>
+      <div class="st-card">
+        <div class="st-card-label">Sessions</div>
+        <div class="st-card-val">12</div>
+      </div>
+      <div class="st-card">
+        <div class="st-card-label">Messages</div>
+        <div class="st-card-val">2,997</div>
+      </div>
+      <div class="st-card">
+        <div class="st-card-label">Total tokens</div>
+        <div class="st-card-val">2.5M</div>
+      </div>
+      <div class="st-card">
+        <div class="st-card-label">Peak hour</div>
+        <div class="st-card-val">10 PM</div>
+      </div>
+      <div class="st-card">
+        <div class="st-card-label">Favorite model</div>
+        <div class="st-card-val">Sonnet 4.6</div>
+      </div>
     </div>
   </div>
 </section>
