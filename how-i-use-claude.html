@@ -329,6 +329,34 @@
       margin-bottom: .25rem; display: block;
     }
 
+    /* ── ORIGIN STORY ───────────────────────────────────── */
+    .origin {
+      background: var(--navy-mid);
+      padding: 52px 2.5rem 60px;
+      border-bottom: 1px solid rgba(1,118,211,.12);
+    }
+    .origin-inner { max-width: 780px; margin: 0 auto; }
+    .origin-thread {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 3.5rem;
+    }
+    .ot-entry { border-top: 1px solid rgba(255,255,255,.08); padding-top: .9rem; }
+    .ot-entry.ot-pivot { border-top-color: var(--claude); }
+    .ot-label {
+      font-size: .57rem; font-weight: 800; letter-spacing: .13em;
+      text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: .55rem;
+    }
+    .ot-entry p { font-size: .875rem; color: rgba(255,255,255,.55); line-height: 1.82; }
+    .ot-entry em { color: rgba(255,255,255,.85); font-style: italic; }
+    .ot-entry strong { color: var(--claude-lt); font-weight: 600; font-style: italic; }
+    .ot-tail {
+      grid-column: 1 / -1; margin-top: .75rem; padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+      font-size: .8rem; color: rgba(255,255,255,.22); font-style: italic; text-align: right;
+    }
+    @media (max-width: 600px) { .origin-thread { grid-template-columns: 1fr; } }
+
     /* ── GET STARTED ─────────────────────────────────── */
     .start-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
     .start-card {
@@ -361,6 +389,12 @@
     .making-hero h2 { font-size: 2rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .75rem; }
     .making-hero h2 em { font-style: normal; background: linear-gradient(135deg, var(--claude-lt), var(--claude)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .making-hero p { font-size: 1rem; color: var(--text-muted); max-width: 620px; line-height: 1.75; }
+    .collab-stats { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin: 1.6rem 0 .5rem; }
+    .cs-stat { display: flex; flex-direction: column; }
+    .cs-num { font-size: 1.75rem; font-weight: 900; color: var(--claude); letter-spacing: -.03em; line-height: 1; }
+    .cs-label { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-top: .25rem; }
+    .cs-footer { font-size: .75rem; color: var(--text-muted); font-style: italic; margin-top: .7rem; border-left: 2px solid var(--claude); padding-left: .65rem; display: inline-block; }
+    .cs-as-of { font-size: .6rem; color: rgba(0,0,0,.22); margin-top: .5rem; letter-spacing: .04em; }
     .collab-thread { max-width: 760px; }
     .prompt-entry { margin-bottom: .5rem; }
     .prompt-bubble { background: #f0f7ff; border: 1px solid rgba(1,118,211,.15); border-radius: 12px 12px 12px 3px; padding: 1.1rem 1.35rem; }
@@ -537,6 +571,36 @@
       <div class="stat"><div class="stat-num">6</div><div class="stat-label">Thinking Sessions</div></div>
       <div class="stat"><div class="stat-num">4</div><div class="stat-label">Live Demos Built</div></div>
       <div class="stat"><div class="stat-num">3</div><div class="stat-label">Months In</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="origin">
+  <div class="origin-inner">
+    <div class="origin-thread">
+
+      <div class="ot-entry">
+        <div class="ot-label">why it landed</div>
+        <p>lauryl's question is my favorite type. <em>"help me re-think this." "help me tell this story." "help me convey this idea."</em> the creative kind. not a spreadsheet request.</p>
+      </div>
+
+      <div class="ot-entry">
+        <div class="ot-label">the thinking</div>
+        <p>so i sat with it. <em>no tools. just my brain.</em> i had an idea. i assumed it was dumb. good thing i work on a team where dumb ideas are safe to post.</p>
+      </div>
+
+      <div class="ot-entry ot-pivot">
+        <div class="ot-label">the brb</div>
+        <p>i said "brb while i put this into claude" — <em>half joking.</em> i had just installed desktop the day before. only i actually did it. posted my reply to lauryl as the entire prompt.</p>
+      </div>
+
+      <div class="ot-entry ot-pivot">
+        <div class="ot-label">what happened next</div>
+        <p>what i got back <strong>blew my mind.</strong> lauryl shared it with the hertz team. so i kept trying more and more ideas...</p>
+      </div>
+
+      <div class="ot-tail">six of those ideas are below ↓</div>
+
     </div>
   </div>
 </section>
@@ -1328,6 +1392,16 @@
 
     <div class="making-hero">
       <p>This site is itself a Claude collaboration. Below are the verbatim prompts and pivots that built what you're looking at right now.</p>
+      <div class="collab-stats">
+        <div class="cs-stat"><span class="cs-num">12</span><span class="cs-label">Sessions</span></div>
+        <div class="cs-stat"><span class="cs-num">2,997</span><span class="cs-label">Messages</span></div>
+        <div class="cs-stat"><span class="cs-num">2.5M</span><span class="cs-label">Tokens</span></div>
+        <div class="cs-stat"><span class="cs-num">6</span><span class="cs-label">Active days</span></div>
+        <div class="cs-stat"><span class="cs-num">10 PM</span><span class="cs-label">Peak hour</span></div>
+        <div class="cs-stat"><span class="cs-num">Sonnet 4.6</span><span class="cs-label">Favorite model</span></div>
+      </div>
+      <p class="cs-footer">~63× more tokens than <em>Animal Farm.</em></p>
+      <p class="cs-as-of">as of June 20, 2026</p>
     </div>
 
     <div class="collab-thread">
