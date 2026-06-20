@@ -545,7 +545,9 @@
 
     /* ── SLACK ARC + QUOTE ──────────────────────────────────── */
     .slack-arc { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .65rem; }
-    .arc-step { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); }
+    .arc-step { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); position: relative; cursor: help; border-bottom: 1px dotted rgba(255,255,255,.2); }
+    .arc-step::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #2c2c2c; border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.8); font-size: .68rem; font-weight: 400; letter-spacing: 0; text-transform: none; padding: .4rem .65rem; border-radius: 6px; white-space: nowrap; z-index: 20; pointer-events: none; opacity: 0; transition: opacity .15s; }
+    .arc-step:hover::after { opacity: 1; }
     .arc-sep { color: rgba(255,255,255,.2); font-size: .65rem; }
     .slack-prompt-quote {
       background: rgba(54,197,240,.07);
@@ -963,11 +965,11 @@
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step">orientation</span><span class="arc-sep"> → </span>
-              <span class="arc-step">deep research</span><span class="arc-sep"> → </span>
-              <span class="arc-step">data extraction</span><span class="arc-sep"> → </span>
-              <span class="arc-step">visual hunt</span><span class="arc-sep"> → </span>
-              <span class="arc-step">claude handoff</span>
+              <span class="arc-step" data-tip="Getting Claude up to speed on the account, context, and goal">orientation</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Asking Claude to surface insights and angles I hadn't thought to ask for">deep research</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Pulling structured information out of raw docs, notes, and screenshots">data extraction</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Searching for brand assets, color palettes, and reference materials">visual hunt</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Handing the full context to Claude to build the final deliverable">claude handoff</span>
             </div>
             <div class="slack-prompt-quote">"The CBRE TransAct demo storyboarding feels like a mess — there were starts and stops and then more information from the customer. Review the channel and files diligently… come back with an end-to-end storyboard."</div>
             <div class="slack-callout-text">Started by mapping every user role across all CBRE channels (brokers, TMs, analysts). Then pushed Slackbot to reconcile fractured notes into a clean storyboard — <strong>that storyboard was the brief I handed to Claude.</strong></div>
@@ -1060,10 +1062,10 @@
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step">strategic framing</span><span class="arc-sep"> → </span>
-              <span class="arc-step">persona-led build</span><span class="arc-sep"> → </span>
-              <span class="arc-step">constraint-first</span><span class="arc-sep"> → </span>
-              <span class="arc-step">SIC validation</span>
+              <span class="arc-step" data-tip="Defining the strategic angle and narrative before any content is written">strategic framing</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Writing content as if speaking directly to a specific person in the room">persona-led build</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Establish what you can't do before deciding what you will — limits sharpen thinking">constraint-first</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Pressure-testing the narrative against the actual ask before calling it done">SIC validation</span>
             </div>
             <div class="slack-prompt-quote">"Act as a distinguished SE and wear your best hat. Review all Equinox intel in channels, DMs, Google Drive. Build me an agenda, deck outline, and supporting talk tracks. Be specific because I am going to give this to Claude."</div>
             <div class="slack-callout-text">The constraint that shaped the entire SIC came from this session: <strong>not a new vision — unlock the HOW.</strong> Slackbot established the strategic angle before Claude saw a word.</div>
@@ -1156,10 +1158,10 @@
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step">cold read</span><span class="arc-sep"> → </span>
-              <span class="arc-step">strategic advisor</span><span class="arc-sep"> → </span>
-              <span class="arc-step">structured deliverable</span><span class="arc-sep"> → </span>
-              <span class="arc-step">polish</span>
+              <span class="arc-step" data-tip="Ask Claude to analyze with zero framing first — see what it finds on its own">cold read</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Ask Claude to challenge your assumptions, not just answer your questions">strategic advisor</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Turning analysis into a formatted, ready-to-share output">structured deliverable</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Refining tone and tightening language until it's presentable">polish</span>
             </div>
             <div class="slack-prompt-quote">"Read the RFP in its entirety as if you are a distinguished SE with an eye for strategic questions, 'gotchas,' and overall guidance for how we can ensure we win — act as a consultative advisor."</div>
             <div class="slack-callout-text">Dropped a 90-page RFP, response template, Google folder, and Slack channel. Slackbot read it all before Claude did — <strong>the strategic framing, what to win on, and what to watch for came from this pass.</strong></div>
@@ -1253,9 +1255,9 @@
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step">targeted research</span><span class="arc-sep"> → </span>
-              <span class="arc-step">asset build</span><span class="arc-sep"> → </span>
-              <span class="arc-step">talk track</span>
+              <span class="arc-step" data-tip="Focused deep-dive on a specific account, person, or pain point">targeted research</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Creating the actual deliverable — deck, demo, document, or script">asset build</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Scripting the exact words to say in the room, not just the slide content">talk track</span>
             </div>
             <div class="slack-prompt-quote">"Find the best relevant use case success stories for GSA — CBRE, Lennar, RBC — with the heaviest hitting stats or quotes featured for each."</div>
             <div class="slack-callout-text">Named the accounts, asked for the proof points that would land hardest in a federal room. <strong>The stats and quotes Slackbot surfaced went directly into the deck and talk track points.</strong></div>
@@ -1348,11 +1350,11 @@
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step">story dreaming</span><span class="arc-sep"> → </span>
-              <span class="arc-step">time-boxing</span><span class="arc-sep"> → </span>
-              <span class="arc-step">editorial</span><span class="arc-sep"> → </span>
-              <span class="arc-step">promise check</span><span class="arc-sep"> → </span>
-              <span class="arc-step">rescue</span>
+              <span class="arc-step" data-tip="Exploring what the ideal version of the story could be before constraining it">story dreaming</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Scoping the content to fit a specific time slot, page count, or format">time-boxing</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Tightening the narrative — cutting what doesn't earn its place">editorial</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Does the output actually deliver what the reader was promised? Verify before shipping.">promise check</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="When the output missed — go back in, reframe the prompt, rebuild from scratch">rescue</span>
             </div>
             <div class="slack-prompt-quote">"Act as a distinguished SE who might need to be a hero and save a demo tomorrow — give me an output I can share with Claude."</div>
             <div class="slack-callout-text">Six Slackbot sessions on this one — from story dreaming to time-boxing to a night-before rescue pass. <strong>The handoff was explicit: "give me something I can hand to Claude."</strong></div>
@@ -1446,10 +1448,10 @@
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step">discovery intel</span><span class="arc-sep"> → </span>
-              <span class="arc-step">demo story</span><span class="arc-sep"> → </span>
-              <span class="arc-step">use case mapping</span><span class="arc-sep"> → </span>
-              <span class="arc-step">claude handoff</span>
+              <span class="arc-step" data-tip="Synthesizing discovery call notes into context Claude can actually use">discovery intel</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Building the narrative arc of the demo before touching a single screen">demo story</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Mapping Salesforce capabilities to their specific pain points and language">use case mapping</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Handing the full context to Claude to build the final deliverable">claude handoff</span>
             </div>
             <div class="slack-prompt-quote">"Be my storyteller and demo dreamer. Review the following notes and this demo video — outline a clear, compelling story for how Agentforce can help that we can demo."</div>
             <div class="slack-callout-text">Pulled Lauryl's account context, prior touchpoints, and positioning threads. <strong>The "AI in the flow of work, not a separate tool" framing came directly from this research pass.</strong></div>
