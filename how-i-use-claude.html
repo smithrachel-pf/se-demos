@@ -384,6 +384,40 @@
     .meta-end p { color: rgba(255,255,255,.55); font-size: .9rem; line-height: 1.75; }
     .meta-end strong { color: var(--claude-lt); }
 
+    /* ── META-PATTERN PIPELINE ─────────────────────────────── */
+    .meta-pattern {
+      background: linear-gradient(135deg, #f0f7ff 0%, #f5f0ff 100%);
+      border: 1px solid rgba(1,118,211,.1);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2.75rem;
+    }
+    .mp-header { font-size: .6rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.25rem; }
+    .mp-phases { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .mp-phase { flex: 1; min-width: 150px; }
+    .mp-phase-num { font-size: .58rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: .3rem; }
+    .mp-phase-name { font-size: .9rem; font-weight: 800; letter-spacing: -.01em; color: var(--text); margin-bottom: .3rem; }
+    .mp-phase-eg { font-size: .75rem; color: var(--text-muted); line-height: 1.55; font-style: italic; }
+    .mp-arrow { color: var(--text-faint); font-size: 1.1rem; display: flex; align-items: center; padding-top: 1.35rem; flex-shrink: 0; }
+    .mp-sep { height: 1px; background: var(--border); margin: 1.25rem 0; }
+    .mp-tech-row { display: flex; align-items: center; gap: .45rem; flex-wrap: wrap; }
+    .mp-tech-label { font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint); white-space: nowrap; margin-right: .2rem; }
+    .mp-tech { font-size: .68rem; font-weight: 600; padding: .2rem .65rem; background: rgba(1,118,211,.07); border: 1px solid rgba(1,118,211,.15); border-radius: 100px; color: #0057a8; white-space: nowrap; }
+
+    /* ── SLACK ARC + QUOTE ──────────────────────────────────── */
+    .slack-arc { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .65rem; }
+    .arc-step { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); }
+    .arc-sep { color: rgba(255,255,255,.2); font-size: .65rem; }
+    .slack-prompt-quote {
+      background: rgba(54,197,240,.07);
+      border-left: 2px solid rgba(54,197,240,.45);
+      border-radius: 0 4px 4px 0;
+      padding: .55rem .85rem;
+      margin: .5rem 0 .6rem;
+      font-size: .8rem; color: rgba(255,255,255,.75);
+      font-style: italic; line-height: 1.6;
+    }
+
     /* ── SLACKBOT CALLOUT ────────────────────────────────── */
     .slack-callout {
       background: #130820;
@@ -434,6 +468,10 @@
       .dp-grid { grid-template-columns: 1fr 1fr; }
       .honest-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .start-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .mp-arrow { display: none; }
+      .mp-phases { flex-direction: column; gap: 1.25rem; }
     }
     @media (max-width: 600px) {
       .fw-grid { grid-template-columns: 1fr; }
@@ -519,6 +557,39 @@
       <div class="section-label">The Thinking</div>
       <h2 class="section-title">Six thinking sessions.</h2>
       <p class="section-sub">Click any to see the inputs, the thinking, and what came out.</p>
+    </div>
+
+    <div class="meta-pattern">
+      <div class="mp-header">The pipeline I run for every account · Slackbot first, Claude second</div>
+      <div class="mp-phases">
+        <div class="mp-phase">
+          <div class="mp-phase-num">Phase 01</div>
+          <div class="mp-phase-name">Intel Gathering</div>
+          <div class="mp-phase-eg">"Review all channels, DMs, Drive for X" — always named, scoped, and specific. Never generic.</div>
+        </div>
+        <div class="mp-arrow">→</div>
+        <div class="mp-phase">
+          <div class="mp-phase-num">Phase 02</div>
+          <div class="mp-phase-name">Persona + Constraint Framing</div>
+          <div class="mp-phase-eg">"Act as a Distinguished SE" / "not reinventing — need the HOW" — tells the AI how to think, not just what to find.</div>
+        </div>
+        <div class="mp-arrow">→</div>
+        <div class="mp-phase">
+          <div class="mp-phase-num">Phase 03</div>
+          <div class="mp-phase-name">Explicit Claude Handoff</div>
+          <div class="mp-phase-eg">"Be specific because I'm giving this to Claude" — the handoff is deliberate, intentional, never automatic.</div>
+        </div>
+      </div>
+      <div class="mp-sep"></div>
+      <div class="mp-tech-row">
+        <span class="mp-tech-label">Techniques:</span>
+        <span class="mp-tech">Role / persona prompting</span>
+        <span class="mp-tech">Constraint-first framing</span>
+        <span class="mp-tech">Time-boxing</span>
+        <span class="mp-tech">Promise-check</span>
+        <span class="mp-tech">Prior canvas as template</span>
+        <span class="mp-tech">Contamination flagging</span>
+      </div>
     </div>
 
     <div class="case-grid" id="caseGrid">
@@ -631,7 +702,15 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
-            <div class="slack-callout-text">Before opening Claude, I queried Slackbot for <strong>[CBRE: what intel did you pull here?]</strong> — that context grounded the entire prompt and made the demo feel like it was built specifically for them.</div>
+            <div class="slack-arc">
+              <span class="arc-step">orientation</span><span class="arc-sep"> → </span>
+              <span class="arc-step">deep research</span><span class="arc-sep"> → </span>
+              <span class="arc-step">data extraction</span><span class="arc-sep"> → </span>
+              <span class="arc-step">visual hunt</span><span class="arc-sep"> → </span>
+              <span class="arc-step">claude handoff</span>
+            </div>
+            <div class="slack-prompt-quote">"The CBRE TransAct demo storyboarding feels like a mess — there were starts and stops and then more information from the customer. Review the channel and files diligently… come back with an end-to-end storyboard."</div>
+            <div class="slack-callout-text">Started by mapping every user role across all CBRE channels (brokers, TMs, analysts). Then pushed Slackbot to reconcile fractured notes into a clean storyboard — <strong>that storyboard was the brief I handed to Claude.</strong></div>
           </div>
         </div>
         <div class="dp-body">
@@ -733,7 +812,14 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
-            <div class="slack-callout-text">Before touching Claude, I used Slackbot to pull <strong>[Equinox: what did you search — deal history, SIC examples, leadership notes?]</strong> — that intel shaped how I framed the narrative arc before writing a single prompt.</div>
+            <div class="slack-arc">
+              <span class="arc-step">strategic framing</span><span class="arc-sep"> → </span>
+              <span class="arc-step">persona-led build</span><span class="arc-sep"> → </span>
+              <span class="arc-step">constraint-first</span><span class="arc-sep"> → </span>
+              <span class="arc-step">SIC validation</span>
+            </div>
+            <div class="slack-prompt-quote">"Act as a distinguished SE and wear your best hat. Review all Equinox intel in channels, DMs, Google Drive. Build me an agenda, deck outline, and supporting talk tracks. Be specific because I am going to give this to Claude."</div>
+            <div class="slack-callout-text">The constraint that shaped the entire SIC came from this session: <strong>not a new vision — unlock the HOW.</strong> Slackbot established the strategic angle before Claude saw a word.</div>
           </div>
         </div>
         <div class="dp-body">
@@ -835,7 +921,14 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
-            <div class="slack-callout-text">Before feeding the 100-page RFP to Claude, I queried Slackbot for <strong>[Service Logic: prior FSM deal threads, ServiceMax competitive intel, ASC 606 references?]</strong> — knowing WHY they rejected ServiceMax made the prompt far more targeted.</div>
+            <div class="slack-arc">
+              <span class="arc-step">cold read</span><span class="arc-sep"> → </span>
+              <span class="arc-step">strategic advisor</span><span class="arc-sep"> → </span>
+              <span class="arc-step">structured deliverable</span><span class="arc-sep"> → </span>
+              <span class="arc-step">polish</span>
+            </div>
+            <div class="slack-prompt-quote">"Read the RFP in its entirety as if you are a distinguished SE with an eye for strategic questions, 'gotchas,' and overall guidance for how we can ensure we win — act as a consultative advisor."</div>
+            <div class="slack-callout-text">Dropped a 90-page RFP, response template, Google folder, and Slack channel. Slackbot read it all before Claude did — <strong>the strategic framing, what to win on, and what to watch for came from this pass.</strong></div>
           </div>
         </div>
         <div class="dp-body">
@@ -938,7 +1031,13 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
-            <div class="slack-callout-text">Before building the talk track, I pulled <strong>[GSA PBS: attendee context, prior meeting notes, what had resonated before?]</strong> from Slackbot — walking into a federal room knowing who the real decision-makers are changes everything.</div>
+            <div class="slack-arc">
+              <span class="arc-step">targeted research</span><span class="arc-sep"> → </span>
+              <span class="arc-step">asset build</span><span class="arc-sep"> → </span>
+              <span class="arc-step">talk track</span>
+            </div>
+            <div class="slack-prompt-quote">"Find the best relevant use case success stories for GSA — CBRE, Lennar, RBC — with the heaviest hitting stats or quotes featured for each."</div>
+            <div class="slack-callout-text">Named the accounts, asked for the proof points that would land hardest in a federal room. <strong>The stats and quotes Slackbot surfaced went directly into the deck and talk track points.</strong></div>
           </div>
         </div>
         <div class="dp-body">
@@ -1040,7 +1139,15 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
-            <div class="slack-callout-text">I searched Slackbot for <strong>[Related Rentals: deal history, conversation threads, property manager pain points that came up?]</strong> — the one-sentence anchor that drove both demos came from those threads.</div>
+            <div class="slack-arc">
+              <span class="arc-step">story dreaming</span><span class="arc-sep"> → </span>
+              <span class="arc-step">time-boxing</span><span class="arc-sep"> → </span>
+              <span class="arc-step">editorial</span><span class="arc-sep"> → </span>
+              <span class="arc-step">promise check</span><span class="arc-sep"> → </span>
+              <span class="arc-step">rescue</span>
+            </div>
+            <div class="slack-prompt-quote">"Act as a distinguished SE who might need to be a hero and save a demo tomorrow — give me an output I can share with Claude."</div>
+            <div class="slack-callout-text">Six Slackbot sessions on this one — from story dreaming to time-boxing to a night-before rescue pass. <strong>The handoff was explicit: "give me something I can hand to Claude."</strong></div>
           </div>
         </div>
         <div class="dp-body">
@@ -1143,7 +1250,14 @@
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">First stop, slackbot</div>
-            <div class="slack-callout-text">I queried Slackbot for <strong>[Hertz: Lauryl's account context, prior touchpoints, positioning that had clicked?]</strong> — the "AI in the flow of work, not a separate tool" framing came directly from that research.</div>
+            <div class="slack-arc">
+              <span class="arc-step">discovery intel</span><span class="arc-sep"> → </span>
+              <span class="arc-step">demo story</span><span class="arc-sep"> → </span>
+              <span class="arc-step">use case mapping</span><span class="arc-sep"> → </span>
+              <span class="arc-step">claude handoff</span>
+            </div>
+            <div class="slack-prompt-quote">"Be my storyteller and demo dreamer. Review the following notes and this demo video — outline a clear, compelling story for how Agentforce can help that we can demo."</div>
+            <div class="slack-callout-text">Pulled Lauryl's account context, prior touchpoints, and positioning threads. <strong>The "AI in the flow of work, not a separate tool" framing came directly from this research pass.</strong></div>
           </div>
         </div>
         <div class="dp-body">
