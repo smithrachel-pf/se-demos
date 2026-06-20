@@ -123,6 +123,15 @@
     .sl-muted { color: rgba(255,255,255,.42); font-style: italic; }
     .sl-spark { color: var(--claude-lt); font-style: italic; font-weight: 500; }
     .sl-love { font-size: .9rem; font-weight: 700; color: #fff; }
+    .sl-reactions { margin-top: .6rem; display: flex; gap: .5rem; }
+    .sl-reaction { font-size: .72rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: .2rem .55rem; color: rgba(255,255,255,.6); }
+    .sl-brb-moment {
+      margin-top: 1rem; padding: .75rem 1rem;
+      background: rgba(212,120,90,.1);
+      border-left: 3px solid var(--claude);
+      border-radius: 0 8px 8px 0;
+    }
+    .sl-brb-moment .sl-spark { font-size: 1rem; }
     .sl-attachment {
       margin-top: .85rem; background: #fff; border-radius: 6px;
       padding: .85rem 1rem; max-width: 320px;
@@ -355,30 +364,52 @@
     /* ── ORIGIN STORY ───────────────────────────────────── */
     .origin {
       background: var(--navy-mid);
-      padding: 52px 2.5rem 60px;
+      padding: 52px 2.5rem 64px;
       border-bottom: 1px solid rgba(212,120,90,.12);
     }
-    .origin-inner { max-width: 780px; margin: 0 auto; }
-    .origin-thread {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem 3.5rem;
+    .origin-inner { max-width: 680px; margin: 0 auto; }
+    .origin-flow { display: flex; flex-direction: column; gap: 0; }
+    .ot-entry {
+      display: flex; gap: 1.5rem; padding-bottom: 2rem; position: relative;
     }
-    .ot-entry { border-top: 1px solid rgba(255,255,255,.08); padding-top: .9rem; }
-    .ot-entry.ot-pivot { border-top-color: var(--claude); }
+    .ot-entry:not(:last-child)::before {
+      content: ''; position: absolute;
+      left: 10px; top: 24px; bottom: 0;
+      width: 1px; background: rgba(255,255,255,.07);
+    }
+    .ot-entry.ot-pivot::before { background: rgba(212,120,90,.2); }
+    .ot-dot {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      margin-top: .15rem; position: relative; z-index: 1;
+    }
+    .ot-entry.ot-pivot .ot-dot {
+      background: rgba(212,120,90,.25); border-color: var(--claude);
+    }
+    .ot-body { flex: 1; }
     .ot-label {
       font-size: .57rem; font-weight: 800; letter-spacing: .13em;
-      text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: .55rem;
+      text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: .5rem;
     }
-    .ot-entry p { font-size: .875rem; color: rgba(255,255,255,.55); line-height: 1.82; }
-    .ot-entry em { color: rgba(255,255,255,.85); font-style: italic; }
-    .ot-entry strong { color: var(--claude-lt); font-weight: 600; font-style: italic; }
+    .ot-entry.ot-pivot .ot-label { color: var(--claude); }
+    .ot-entry p { font-size: .9rem; color: rgba(255,255,255,.52); line-height: 1.82; }
+    .ot-entry em { color: rgba(255,255,255,.82); font-style: italic; }
+    .ot-entry strong { color: var(--claude-lt); font-weight: 600; }
+    .ot-output-box {
+      margin-top: .7rem; background: rgba(212,120,90,.07);
+      border: 1px solid rgba(212,120,90,.2); border-radius: 8px;
+      padding: .85rem 1.1rem;
+    }
+    .ot-output-box p { font-size: .82rem; color: rgba(255,255,255,.6); line-height: 1.7; margin: 0; }
+    .ot-output-label {
+      font-size: .55rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--claude); margin-bottom: .4rem; display: block;
+    }
     .ot-tail {
-      grid-column: 1 / -1; margin-top: .75rem; padding-top: 1.25rem;
+      margin-top: .5rem; padding-top: 1.5rem;
       border-top: 1px solid rgba(255,255,255,.06);
       font-size: .8rem; color: rgba(255,255,255,.22); font-style: italic; text-align: right;
     }
-    @media (max-width: 600px) { .origin-thread { grid-template-columns: 1fr; } }
 
     /* ── GET STARTED ─────────────────────────────────── */
     .start-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
@@ -558,8 +589,7 @@
   <div class="hero-glow2"></div>
   <div class="hero-inner">
     <h1>Me and Mr. <em>Claude</em></h1>
-    <p class="hero-sub">a few weeks ago in the midst of an existential crisis*, still overwhelmed by 1,989 AI acronyms and tools, this happened:</p>
-    <p class="hero-footnote">*side effects included wondering if i'm being paid to dj</p>
+    <p class="hero-sub">a few weeks ago in the midst of an existential crisis, still overwhelmed by 1,989 AI acronyms and tools, this happened:</p>
     <div class="slack-exchange">
       <div class="sl-msg">
         <div class="sl-av sl-av-l">L</div>
@@ -604,7 +634,9 @@
           <div class="sl-body">
             <span class="sl-mention">@Lauryl Denega</span> at risk of seeming dumb but i like you enough so just go with me here:<br><br>
             what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!<br><br>
-            <span class="sl-spark">...brb while i put this into claude and see what cartoon i get?</span>
+            <div class="sl-brb-moment">
+              <span class="sl-spark">...brb while i put this into claude and see what cartoon i get?</span>
+            </div>
           </div>
         </div>
       </div>
@@ -616,6 +648,7 @@
             <span class="sl-time">Jun 3rd at 7:14 PM</span>
           </div>
           <div class="sl-body sl-love">I....love it.</div>
+          <div class="sl-reactions"><span class="sl-reaction">❤️ 5</span></div>
         </div>
       </div>
     </div>
@@ -632,31 +665,54 @@
 
 <section class="origin">
   <div class="origin-inner">
-    <div class="origin-thread">
+    <div class="origin-flow">
 
       <div class="ot-entry">
-        <div class="ot-label">why it landed</div>
-        <p>lauryl's question is my favorite type. <em>"help me re-think this." "help me tell this story." "help me convey this idea."</em> the creative kind. not a spreadsheet request.</p>
+        <div class="ot-dot"></div>
+        <div class="ot-body">
+          <div class="ot-label">why it landed</div>
+          <p>these are my favorite types of questions. <em>"help me re-think this." "help me tell this story." "help me convey this idea."</em> the creative kind. not a task. not a spreadsheet.</p>
+        </div>
       </div>
 
       <div class="ot-entry">
-        <div class="ot-label">the thinking</div>
-        <p>so i sat with it. <em>no tools. just my brain.</em> i had an idea. i assumed it was dumb. good thing i work on a team where dumb ideas are safe to post.</p>
+        <div class="ot-dot"></div>
+        <div class="ot-body">
+          <div class="ot-label">the thinking</div>
+          <p>so i sat with it. <em>no tools. just my brain.</em> i had an idea. figured it was dumb — but per the crisis, everything felt dumb. good thing we have a team where it's safe to post dumb things. so i went with it.</p>
+        </div>
+      </div>
+
+      <div class="ot-entry">
+        <div class="ot-dot"></div>
+        <div class="ot-body">
+          <div class="ot-label">she loved it</div>
+          <p>lauryl's "i....love it" was proof enough. but i had already typed the brb. <em>half joking.</em> i had just installed claude desktop the day before — a much preferred experience. i put my slack reply in as the entire prompt.</p>
+        </div>
       </div>
 
       <div class="ot-entry ot-pivot">
-        <div class="ot-label">the brb</div>
-        <p>i said "brb while i put this into claude" — <em>half joking.</em> i had just installed desktop the day before. only i actually did it. posted my reply to lauryl as the entire prompt.</p>
+        <div class="ot-dot"></div>
+        <div class="ot-body">
+          <div class="ot-label">the output</div>
+          <p>what came back <strong>blew my mind.</strong> from one unformatted slack reply, claude produced a full interactive visualization — the three-stage illuminating screens concept, built and rendered. what i thought was going to be a cartoon turned into a real deliverable.</p>
+          <div class="ot-output-box">
+            <span class="ot-output-label">the hertz prototype</span>
+            <p>screens start black &amp; white → come to life in full color → agentforce layered over with the "neon 3D art stars." the exact concept from the slack message, fully realized. lauryl shared it with the hertz team.</p>
+          </div>
+        </div>
       </div>
 
       <div class="ot-entry ot-pivot">
-        <div class="ot-label">what happened next</div>
-        <p>what i got back <strong>blew my mind.</strong> lauryl shared it with the hertz team. so i kept trying more and more ideas...</p>
+        <div class="ot-dot"></div>
+        <div class="ot-body">
+          <div class="ot-label">the launchpad</div>
+          <p>that "cartoon" became the starting point for everything below. not a one-off. a method. <strong>so i kept trying more and more ideas.</strong></p>
+        </div>
       </div>
-
-      <div class="ot-tail">six of those ideas are below ↓</div>
 
     </div>
+    <div class="ot-tail">five more of those ideas are below ↓</div>
   </div>
 </section>
 
