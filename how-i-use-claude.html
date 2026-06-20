@@ -396,6 +396,9 @@
     .ot-entry em { color: rgba(255,255,255,.82); font-style: italic; }
     .ot-entry strong { color: var(--claude-lt); font-weight: 600; }
     .ot-icon { font-size: 1.1rem; margin-bottom: .45rem; display: block; line-height: 1; }
+    .ot-body-inline { display: flex; align-items: flex-start; gap: .65rem; }
+    .ot-body-inline .ot-icon { display: inline-block; margin-bottom: 0; flex-shrink: 0; margin-top: .1rem; }
+    .ot-body-inline p { margin: 0; }
     .sl-mini {
       display: flex; gap: .75rem; align-items: flex-start;
       background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
@@ -687,17 +690,6 @@
           </div>
         </div>
       </div>
-      <div class="sl-msg">
-        <div class="sl-av sl-av-l">L</div>
-        <div class="sl-right">
-          <div class="sl-meta">
-            <span class="sl-name">Lauryl Denega</span>
-            <span class="sl-time">Jun 3rd at 7:14 PM</span>
-          </div>
-          <div class="sl-body sl-love">I....love it.</div>
-          <div class="sl-reactions"><span class="sl-reaction">❤️ 5</span></div>
-        </div>
-      </div>
     </div>
     <div class="hero-btns">
       <a href="#work" class="btn btn-fill">See the cartoon I got →</a>
@@ -711,16 +703,16 @@
 
       <div class="ot-entry">
         <div class="ot-dot"></div>
-        <div class="ot-body">
-          <div class="ot-icon">💡</div>
-          <p>spoiler alert: lauryl asking for re-think help meant i could use my brain and stop worrying about showing up on a no tokens consumed dashboard. <em>(spoiler: which led to tokens being consumed)</em></p>
+        <div class="ot-body ot-body-inline">
+          <div class="ot-icon">🤫</div>
+          <p>lauryl asking for re-think help meant i could use my brain and stop worrying about showing up on a no tokens consumed dashboard. <em>(spoiler: which led to tokens being consumed)</em></p>
         </div>
       </div>
 
       <div class="ot-entry">
         <div class="ot-dot"></div>
-        <div class="ot-body">
-          <div class="ot-icon">🤔</div>
+        <div class="ot-body ot-body-inline">
+          <div class="ot-icon">💡</div>
           <p>so i thought about it. had an idea. figured it was dumb, per the existential crisis. good thing we have a team where it's safe to post dumb things <em>so i went with it.</em></p>
         </div>
       </div>
