@@ -123,6 +123,29 @@
     .sl-muted { color: rgba(255,255,255,.42); font-style: italic; }
     .sl-spark { color: var(--claude-lt); font-style: italic; font-weight: 500; }
     .sl-love { font-size: .9rem; font-weight: 700; color: #fff; }
+    .sl-attachment {
+      margin-top: .85rem; background: #fff; border-radius: 6px;
+      padding: .85rem 1rem; max-width: 320px;
+      border-left: 3px solid #ECB22E;
+    }
+    .sl-att-title { font-size: .78rem; font-weight: 800; color: #1a1a1a; line-height: 1.35; margin-bottom: .3rem; }
+    .sl-att-sub { font-size: .65rem; color: #555; line-height: 1.4; margin-bottom: .7rem; }
+    .sl-att-steps { display: flex; align-items: center; gap: .3rem; margin-bottom: .65rem; flex-wrap: wrap; }
+    .sl-att-step { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+    .sl-att-n {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #ECB22E; color: #fff;
+      font-size: .6rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sl-att-label { font-size: .58rem; color: #444; text-align: center; max-width: 52px; line-height: 1.2; }
+    .sl-att-arrow { font-size: .65rem; color: #bbb; padding-bottom: .9rem; }
+    .sl-att-tags { display: flex; gap: .35rem; margin-bottom: .6rem; }
+    .sl-att-tag { font-size: .58rem; font-weight: 700; padding: .15rem .5rem; border-radius: 4px; }
+    .sl-att-tag-db  { background: #E8442A; color: #fff; }
+    .sl-att-tag-sf  { background: #0176D3; color: #fff; }
+    .sl-att-tag-aws { background: #FF9900; color: #fff; }
+    .sl-att-cta { font-size: .65rem; font-weight: 700; color: #b8860b; background: #fffbeb; border: 1px solid #ECB22E; border-radius: 4px; padding: .4rem .55rem; line-height: 1.4; text-align: center; }
     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4.5rem; }
     .btn {
       padding: .75rem 1.75rem; border-radius: 8px; font-weight: 600;
@@ -535,10 +558,42 @@
   <div class="hero-glow2"></div>
   <div class="hero-inner">
     <h1>Me and Mr. <em>Claude</em></h1>
-    <p class="hero-sub">a few weeks ago in the midst of an existential crisis*, still overwhelmed by 1,989 AI acronyms and tools, lauryl posted this:</p>
-    <p class="hero-lauryl">"Visually, how would you tell the story...."</p>
+    <p class="hero-sub">a few weeks ago in the midst of an existential crisis*, still overwhelmed by 1,989 AI acronyms and tools, this happened:</p>
     <p class="hero-footnote">*side effects included wondering if i'm being paid to dj</p>
     <div class="slack-exchange">
+      <div class="sl-msg">
+        <div class="sl-av sl-av-l">L</div>
+        <div class="sl-right">
+          <div class="sl-meta">
+            <span class="sl-name">Lauryl Denega</span>
+            <span class="sl-time">Jun 3rd at 4:14 PM</span>
+          </div>
+          <div class="sl-body">
+            🧠🤖 <strong>Brainstorm Request</strong> for a Why Salesforce for Operational AI at Hertz.<br><br>
+            Visually, how would you tell the story that Salesforce is uniquely equipped to power AI in the flow of work at Hertz because we provide governance, security, and already power some of the most important "screens" that employees are already using to run their day. Bonus if we can communicate that Hertz is worried about <strong>fragmented AI systems</strong> and we can help solve that. Bonus if we can also show our value when they are a big Databricks shop.<br><br>
+            <span class="sl-muted">My brain hurts and I'm second guessing the maturity arrow.</span>
+            <div class="sl-attachment">
+              <div class="sl-att-title">Salesforce is Uniquely Equipped to Power AI in the Flow of Work at Hertz</div>
+              <div class="sl-att-sub">Salesforce is the partner that provides governance, scale, and security to power Operational AI, in the flow of work, at Hertz</div>
+              <div class="sl-att-steps">
+                <div class="sl-att-step"><span class="sl-att-n">1</span><span class="sl-att-label">Data Foundation</span></div>
+                <div class="sl-att-arrow">→</div>
+                <div class="sl-att-step"><span class="sl-att-n">2</span><span class="sl-att-label">Unify &amp; Harmonize</span></div>
+                <div class="sl-att-arrow">→</div>
+                <div class="sl-att-step"><span class="sl-att-n">3</span><span class="sl-att-label">Activate</span></div>
+                <div class="sl-att-arrow">→</div>
+                <div class="sl-att-step"><span class="sl-att-n">4</span><span class="sl-att-label">Scale</span></div>
+              </div>
+              <div class="sl-att-tags">
+                <span class="sl-att-tag sl-att-tag-db">databricks</span>
+                <span class="sl-att-tag sl-att-tag-sf">Salesforce</span>
+                <span class="sl-att-tag sl-att-tag-aws">aws</span>
+              </div>
+              <div class="sl-att-cta">The Salesforce Advantage — We help you bring together data to activate where your employees already are.</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="sl-msg">
         <div class="sl-av sl-av-r">R</div>
         <div class="sl-right">
