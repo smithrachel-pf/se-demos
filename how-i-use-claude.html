@@ -603,7 +603,27 @@
     .conv-quote { font-size: .74rem; font-style: italic; color: rgba(255,255,255,.6); line-height: 1.55; padding-left: .65rem; border-left: 2px solid rgba(212,120,90,.3); }
     .slack-callout-text strong { color: #36C5F0; font-weight: 700; }
 
+    /* ── EASTER EGGS ─────────────────────────────────── */
+    .egg { color: inherit; text-decoration: underline; text-decoration-style: dotted; text-decoration-color: rgba(212,120,90,.35); cursor: pointer; }
+    .egg:hover { text-decoration-color: var(--claude); }
+
+    /* ── LIVE STRIP ──────────────────────────────────── */
+    .live-strip {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 1.5rem 0 .25rem;
+      margin-top: 2rem;
+      display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--claude); display: inline-block; margin-right: .35rem; animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+    .live-label { font-size: .6rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--claude); }
+    .live-text { font-size: .8rem; color: rgba(255,255,255,.4); }
+    .live-note { font-size: .7rem; color: rgba(255,255,255,.25); font-style: italic; }
+
     /* ── FOOTER ──────────────────────────────────────── */
+    @keyframes vinyl-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .vinyl-record { display: inline-block; animation: vinyl-spin 3s linear infinite; }
+    .footer-ps { margin-bottom: .75rem; font-size: .75rem; color: rgba(255,255,255,.22); letter-spacing: .04em; }
     footer {
       background: var(--navy); color: rgba(255,255,255,.35);
       text-align: center; padding: 2.25rem 2rem; font-size: .8rem;
@@ -674,7 +694,7 @@
       <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
       <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
     </svg></h1>
-    <p class="hero-sub">a few weeks ago in the midst of an existential crisis, still overwhelmed by 1,989 AI acronyms and tools, this happened:</p>
+    <p class="hero-sub">a few weeks ago in the midst of an existential crisis, still overwhelmed by <a href="https://open.spotify.com/track/6qAcApH8obo8eqatCKUHd9?si=da8dc929726146b8" target="_blank" rel="noopener" class="egg">1,989</a> AI acronyms and tools, this happened:</p>
     <div class="slack-exchange">
       <div class="sl-msg">
         <div class="sl-av sl-av-l" style="padding:0;overflow:hidden;"><img src="https://smithrachel-pf.github.io/se-demos/rachel-smith.png" alt="Lauryl" style="width:100%;height:100%;object-fit:cover;object-position:center top;"></div>
@@ -758,7 +778,7 @@
             <span class="sl-mention">@Lauryl Denega</span> at risk of seeming dumb but i like you enough so just go with me here:<br><br>
             what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!<br><br>
             <div class="sl-brb-moment">
-              <span class="sl-spark">...brb while i put this into claude and see what cartoon i get?</span>
+              <span class="sl-spark">...brb while i put this into claude and <a href="https://open.spotify.com/track/3EsycJr8PYsS4Wca6zWRZ7?si=815923b037134a05" target="_blank" rel="noopener" class="egg" style="color:inherit;">see what cartoon i get?</a></span>
             </div>
           </div>
         </div>
@@ -823,7 +843,7 @@
 
       <div class="ot-entry ot-pivot">
         <div class="ot-emoji-dot">🤯</div>
-        <p>what came back blew my mind - stream-of-conscious thinking, art stars and all.</p>
+        <p>what came back <a href="https://open.spotify.com/track/3RmKpob8xzv1pzHEQrMJah?si=baa33b21ad104d95" target="_blank" rel="noopener" class="egg">blew my mind</a> - stream-of-conscious thinking, art stars and all.</p>
       </div>
 
     </div>
@@ -1034,8 +1054,8 @@
         <div class="dp-head">
           <div class="dp-head-glow"></div>
           <div class="dp-logo"><img src="https://logo.clearbit.com/cbre.com" alt="CBRE" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-          <div class="dp-company">CBRE / GWS</div>
-          <p class="dp-situation">mid-discovery session with CBRE Global Workplace Solutions, the customer said they wanted to see something real — not a slide, not a roadmap. i pulled up Claude and built it live, in the room, while we were still talking.</p>
+          <div class="dp-company">CBRE BOE</div>
+          <p class="dp-situation">CBRE BOE sales professionals respond to a constant volume of RFPs and get their hands around data from a lot of systems — meetings, emails, client records, bids. the biggest unlock: turning all of that data into a narrative that resonates with clients. i added screenshots from another industry as a reference point and asked Claude to build something real for their world.</p>
           <div class="tags">
             <span class="tag tag-demo">clickable demo prototype</span>
             <span class="tag tag-deck">deck</span>
@@ -1043,18 +1063,28 @@
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid" style="width:36px;height:36px;border-radius:6px;gap:4px;padding:5px;background:#fff;box-sizing:border-box;"><span class="sl-red"></span><span class="sl-yel"></span><span class="sl-grn"></span><span class="sl-teal"></span></div>
-            <div class="slack-dab-label">slack</div>
+            <svg viewBox="0 0 16 18" width="34" height="38" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+              <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
+              <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
+              <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
+              <rect x="4" y="4" width="3" height="3" fill="#111"/>
+              <rect x="9" y="4" width="3" height="3" fill="#111"/>
+              <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+              <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+              <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
+              <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
+            </svg>
+            <div class="slack-dab-label">claude</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">Skipped Slackbot. Went Straight to Claude.</div>
+            <div class="slack-callout-title">Skipped Slackbot. Straight to Claude.</div>
             <div class="slack-arc">
-              <span class="arc-step" data-tip="Customer said 'show me something real' — no time to prep">live context</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Screenshots taken during the meeting became the only inputs">screen snapshots</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Claude built the prototype while the discovery session was still running">live build</span>
+              <span class="arc-step" data-tip="Strategic context from the discovery session + reference screenshots">strategic context</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Prototype built for their world — BOE sales professionals, not account managers">live build</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Iterated based on real feedback about the pursuit page and BOE persona">feedback iteration</span>
             </div>
-            <div class="slack-prompt-quote">"you are a solution engineer for salesforce. we're in a live discovery session with CBRE GWS right now and the customer just asked to see what agentforce could look like in their environment. here are screenshots of their current system. build me something real i can show them."</div>
-            <div class="slack-callout-text">no storyboard. no brief. just screenshots i took in the meeting and a prompt i typed while the customer was still talking. <strong>the prototype was done before the session ended.</strong></div>
+            <div class="slack-prompt-quote">"Review the strategic context for CBRE's BOE/GWS practice. Create a prototype for me (i also added some screenshots of another industry for compare) of how Salesforce can add even more value to BOE's already strong business - the biggest unlock is turning ALL of their data into a narrative that resonates with their clients."</div>
+            <div class="slack-callout-text">no slackbot pass. just strategic context and reference screenshots handed directly to Claude — <strong>the prompt defined the vision. the iteration made it feel like their world.</strong></div>
           </div>
         </div>
         <div class="dp-body">
@@ -1062,22 +1092,22 @@
             <div>
               <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
-                <div class="input-chip"><span class="input-chip-icon">📸</span>screenshots taken live during the session</div>
-                <div class="input-chip"><span class="input-chip-icon">🗣️</span>what the customer said they needed, in the room</div>
-                <div class="input-chip"><span class="input-chip-icon">👁️</span>their current FM platform on screen</div>
-                <div class="input-chip"><span class="input-chip-icon">🏢</span>CBRE GWS context — scale, portfolio, personas</div>
+                <div class="input-chip"><span class="input-chip-icon">🏢</span>strategic context for CBRE BOE/GWS practice</div>
+                <div class="input-chip"><span class="input-chip-icon">📸</span>screenshots from another industry (for comparison)</div>
+                <div class="input-chip"><span class="input-chip-icon">💡</span>core unlock: data → narrative that resonates with clients</div>
+                <div class="input-chip"><span class="input-chip-icon">👤</span>BOE sales professional persona — RFP-heavy, multi-system</div>
               </div>
             </div>
             <div>
               <div class="dp-col-label">the conversation</div>
               <div class="conv-thread">
                 <div class="conv-item">
-                  <span class="conv-label">Claude — initial prompt</span>
-                  <div class="conv-quote">"you are a solution engineer for salesforce. we're in a live discovery session with CBRE GWS and the customer just asked to see what agentforce could look like in their environment. here are screenshots of their current system. build me something real i can show them."</div>
+                  <span class="conv-label">Claude — first prompt</span>
+                  <div class="conv-quote">"Review the strategic context for CBRE's BOE/GWS practice. Create a prototype for me (i also added some screenshots of another industry for compare) of how Salesforce can add even more value to BOE's already strong business - the biggest unlock is turning ALL of their data into a narrative that resonates with their clients."</div>
                 </div>
                 <div class="conv-item">
                   <span class="conv-label">Claude — iteration</span>
-                  <div class="conv-quote">iterated to tune terminology, portfolio scale, and facility management language until it felt like their system — not a demo built for someone else.</div>
+                  <div class="conv-quote">"now think through the pursuit page a bit more - some of the feedback is that the 360 view is more fit for like an account manager vs a BOE sales professional. remember that they are responding to a lot of RFPs and are trying to get their hands around a LOT of data from a LOT of systems, including meetings, emails, etc. They particularly liked the bid AI component in the engineering demo, but we need to think through it from their world not engineering."</div>
                 </div>
               </div>
             </div>
@@ -1085,11 +1115,11 @@
               <div class="dp-col-label">the output</div>
               <div class="output-box">
                 <div class="output-preview">
-                  <iframe src="https://smithrachel-pf.github.io/se-demos/cbre-gws-prototype.html" title="CBRE GWS Prototype" loading="lazy"></iframe>
+                  <iframe src="https://smithrachel-pf.github.io/se-demos/cbre-gws-prototype.html" title="CBRE BOE Prototype" loading="lazy"></iframe>
                 </div>
                 <div class="output-foot">
                   <div>
-                    <div class="output-name">CBRE GWS prototype</div>
+                    <div class="output-name">CBRE BOE prototype</div>
                     <div class="output-type">interactive HTML demo</div>
                   </div>
                   <a href="https://smithrachel-pf.github.io/se-demos/cbre-gws-prototype.html" target="_blank" class="output-cta">open live ↗</a>
@@ -1481,6 +1511,13 @@
       </div>
     </div><!-- /detail-hertz -->
 
+    <div class="live-strip">
+      <span class="live-dot"></span>
+      <span class="live-label">live</span>
+      <span class="live-text">this site updates as new work ships — every build gets added in real time.</span>
+      <span class="live-note">next up: more accounts, more sessions, more iterations.</span>
+    </div>
+
   </div><!-- /container -->
 </section>
 
@@ -1572,6 +1609,7 @@
 
 <!-- ───── FOOTER ───── -->
 <footer>
+  <p class="footer-ps"><span class="vinyl-record">💿</span> p.s. there are easter eggs.</p>
   <p>rachel smith · distinguished solution engineer · salesforce &nbsp;·&nbsp; <a href="mailto:smithrachel@salesforce.com">smithrachel@salesforce.com</a></p>
 </footer>
 
