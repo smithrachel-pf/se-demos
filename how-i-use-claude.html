@@ -481,12 +481,12 @@
     .ot-hertz-thumb iframe { width: 800px; height: 500px; transform: scale(0.3); transform-origin: top left; border: none; pointer-events: none; }
 
     /* ── THE MAKING OF ───────────────────────────────────── */
-    .making-hero { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.25rem 0 1.5rem; margin-bottom: 2rem; }
-    .making-hero-icon { flex-shrink: 0; margin-top: .1rem; }
+    .making-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .75rem; padding: 1.25rem 0 1.5rem; margin-bottom: 2rem; }
+    .making-hero-icon { flex-shrink: 0; }
     @keyframes robot-bob { 0%,100% { transform: translateY(0); } 40% { transform: translateY(-5px); } 60% { transform: translateY(-4px); } }
     @keyframes robot-blink { 0%,90%,100% { transform: scaleY(1); } 95% { transform: scaleY(0.15); } }
     .making-hero-icon svg { animation: robot-bob 2.4s ease-in-out infinite; transform-origin: bottom center; }
-    .making-hero-text { flex: 1; }
+    .making-hero-text { }
     .making-hero-eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--claude); margin-bottom: .4rem; }
     .making-hero p { font-size: 1rem; color: rgba(255,255,255,.65); line-height: 1.75; margin: 0; }
     .meta-end { margin-top: 3rem; padding: 2.5rem 2rem; text-align: center; }
@@ -726,10 +726,10 @@
                 <!-- Y-axis label -->
                 <text x="9" y="95" class="ct" font-size="7" fill="#aaa" text-anchor="middle" transform="rotate(-90,9,95)">Business Value</text>
                 <!-- Axes -->
-                <line x1="20" y1="8" x2="20" y2="165" stroke="#ddd" stroke-width="0.8"/>
-                <polygon points="20,6 18,13 22,13" fill="#ddd"/>
-                <line x1="20" y1="165" x2="432" y2="165" stroke="#ddd" stroke-width="0.8"/>
-                <polygon points="434,165 427,163 427,167" fill="#ddd"/>
+                <line x1="20" y1="8" x2="20" y2="165" stroke="#E8895C" stroke-width="0.8"/>
+                <polygon points="20,6 18,13 22,13" fill="#E8895C"/>
+                <line x1="20" y1="165" x2="432" y2="165" stroke="#E8895C" stroke-width="0.8"/>
+                <polygon points="434,165 427,163 427,167" fill="#E8895C"/>
                 <!-- Shaded region -->
                 <polygon points="116,161 148,113 255,73 335,43 425,43 425,161" fill="rgba(100,160,230,0.11)"/>
                 <!-- Ascending line -->
