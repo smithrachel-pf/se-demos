@@ -488,8 +488,11 @@
     .ot-hertz-thumb iframe { width: 800px; height: 500px; transform: scale(0.3); transform-origin: top left; border: none; pointer-events: none; }
 
     /* ── THE MAKING OF ───────────────────────────────────── */
-    .making-hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); margin-bottom: 3.5rem; }
-    .making-hero p { font-size: 1.15rem; color: rgba(255,255,255,.65); max-width: 620px; line-height: 1.8; font-style: italic; }
+    .making-hero { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.75rem 0 1.75rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+    .making-hero-icon { flex-shrink: 0; margin-top: .1rem; }
+    .making-hero-text { flex: 1; }
+    .making-hero-eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--claude); margin-bottom: .4rem; }
+    .making-hero p { font-size: 1rem; color: rgba(255,255,255,.65); max-width: 600px; line-height: 1.75; margin: 0; }
     .meta-end { margin-top: 3rem; padding: 2.5rem 2rem; background: linear-gradient(135deg, #110e0c, #1a1410); border: 1px solid rgba(212,120,90,.2); border-radius: var(--radius); text-align: center; }
     .meta-end-text { font-size: 1.4rem; font-weight: 900; color: var(--claude-lt); letter-spacing: -.01em; line-height: 1.3; }
     .collab-stats { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin: 1.6rem 0 .5rem; }
@@ -1565,7 +1568,23 @@
   <div class="container">
 
     <div class="making-hero">
-      <p>"this site is itself a claude collaboration. below are the verbatim prompts and pivots that built what you're looking at right now."</p>
+      <div class="making-hero-icon">
+        <svg viewBox="0 0 16 18" width="36" height="41" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+          <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
+          <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
+          <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
+          <rect x="4" y="4" width="3" height="3" fill="#111"/>
+          <rect x="9" y="4" width="3" height="3" fill="#111"/>
+          <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+          <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+          <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
+          <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
+        </svg>
+      </div>
+      <div class="making-hero-text">
+        <div class="making-hero-eyebrow">the making of</div>
+        <p>this site is itself a claude collaboration. below are the verbatim prompts and pivots that built what you're looking at right now.</p>
+      </div>
     </div>
 
     <div class="collab-thread">
