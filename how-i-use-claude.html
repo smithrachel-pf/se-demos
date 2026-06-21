@@ -1321,11 +1321,11 @@
             <div class="slack-callout-title">First Stop, Slackbot</div>
             <div class="slack-arc">
               <span class="arc-step" data-tip="Account context, Enterprise Architect's ask, existing stack (Databricks, Qualtrics, Kahua, Maximo, Yardi)">account brief</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="4 outcome stories mapped to CRE proof points — CBRE, JLL, Cresa, Cushman — each bridged to a GSA mirror">CRE proof mapping</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="6-slide content plan, full talk track, asset swap guide, and a net-new Customer Zero concept">slide + talk track build</span>
+              <span class="arc-step" data-tip="4 outcome stories mapped to CRE proof points — each bridged to a GSA mirror using a CRE proof → underlying principle → GSA translation pattern">CRE proof mapping</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Full content plan + talk track packaged and handed to Claude with the actual PPTX">claude handoff</span>
             </div>
             <div class="slack-prompt-quote">"Can you take these notes and help me craft the right slides, content, and talk track for the first 20 minutes of the Commercial Real Estate industry portion? You can view all my channels for assets"</div>
-            <div class="slack-callout-text">handed Slackbot the full account context and the 20-minute brief. <strong>It came back with 4 outcome stories, a CRE-to-GSA bridge pattern for each, a Customer Zero concept using Salesforce's own 10 towers, and an asset swap guide replacing generic slides with higher-impact sources.</strong></div>
+            <div class="slack-callout-text">slackbot did the strategy — 4 outcome stories, the CRE-to-GSA bridge pattern, a Customer Zero concept using Salesforce's own 10 towers. <strong>then claude got the PPTX and rewrote the deck from scratch — stat audit, story slides, new templates, all of it.</strong></div>
           </div>
         </div>
         <div class="dp-body">
@@ -1337,7 +1337,8 @@
                 <div class="input-chip"><span class="input-chip-icon">🔗</span>Enterprise Architect's ask: CRE integrations with Kahua, Maximo, Yardi</div>
                 <div class="input-chip"><span class="input-chip-icon">🏢</span>CRE proof points: CBRE, JLL, Cresa, Cushman & Wakefield</div>
                 <div class="input-chip"><span class="input-chip-icon">🎯</span>existing stack: Databricks + Qualtrics already in house</div>
-                <div class="input-chip"><span class="input-chip-icon">⏱️</span>20-minute segment brief for 6/24 executive presentation</div>
+                <div class="input-chip"><span class="input-chip-icon">📊</span>actual 8-slide PPTX deck — Claude updated it directly</div>
+                <div class="input-chip"><span class="input-chip-icon">📋</span>3 customer story briefs: CBRE Capital Markets AI Agents, Lennar, RBC</div>
               </div>
             </div>
             <div>
@@ -1349,7 +1350,15 @@
                 </div>
                 <div class="conv-item">
                   <span class="conv-label">Slackbot — output</span>
-                  <div class="conv-quote">6-slide content plan with 4 outcome stories (Agentforce, Slack, Tableau, IDP) — each paired with a CRE proof point and a GSA mirror. Bridge pattern: CRE proof → underlying principle → GSA translation. Plus a Customer Zero concept using Salesforce's own 10 towers, and an asset swap guide replacing generic slides with higher-impact sources.</div>
+                  <div class="conv-quote">Content plan with 4 outcome stories (Agentforce, Slack, Tableau, IDP) — each paired with a CRE proof point and a GSA mirror, using a bridge pattern: CRE proof → underlying principle → GSA translation. Included a Customer Zero concept and an asset swap guide.</div>
+                </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude — deck rewrite</span>
+                  <div class="conv-quote">"i am curious how you would update this presentation factoring in all of the below: [full content plan + account brief]"</div>
+                </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude — iteration</span>
+                  <div class="conv-quote">"can you take one of the story slides and create a new version that leaves room for an image or gif of the feature solution of the story?" — then gave Claude 3 customer story briefs (CBRE Capital Markets AI Agents, Lennar, RBC) to build out in "The Ask / The Proof" format</div>
                 </div>
               </div>
             </div>
