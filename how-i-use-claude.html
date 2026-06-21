@@ -527,17 +527,21 @@
       padding: 1.75rem 2rem;
       margin-bottom: 2.75rem;
     }
-    .mp-header { font-size: .6rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--claude); margin-bottom: 1.25rem; }
-    .mp-phases { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .mp-phase { flex: 1; min-width: 150px; }
-    .mp-phase-num { font-size: .58rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: .3rem; }
-    .mp-phase-name { font-size: .9rem; font-weight: 800; letter-spacing: -.01em; color: var(--text); margin-bottom: .3rem; }
-    .mp-phase-eg { font-size: .75rem; color: var(--text-muted); line-height: 1.55; font-style: italic; }
-    .mp-arrow { color: var(--text-faint); font-size: 1.1rem; display: flex; align-items: center; padding-top: 1.35rem; flex-shrink: 0; }
-    .mp-sep { height: 1px; background: var(--border); margin: 1.25rem 0; }
-    .mp-tech-row { display: flex; align-items: center; gap: .45rem; flex-wrap: wrap; }
-    .mp-tech-label { font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint); white-space: nowrap; margin-right: .2rem; }
-    .mp-tech { font-size: .68rem; font-weight: 600; padding: .2rem .65rem; background: rgba(212,120,90,.1); border: 1px solid rgba(212,120,90,.2); border-radius: 100px; color: var(--claude-lt); white-space: nowrap; }
+    .mp-phases { display: flex; align-items: flex-start; gap: 0; margin-bottom: 1.75rem; }
+    .mp-phase { flex: 1; padding-right: 1.5rem; }
+    .mp-phase + .mp-phase { padding-right: 1.5rem; padding-left: 1.5rem; border-left: 1px solid rgba(255,255,255,.07); }
+    .mp-phase:last-child { padding-right: 0; }
+    .mp-phase-num { font-size: .55rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: .3rem; }
+    .mp-phase-name { font-size: .88rem; font-weight: 800; letter-spacing: -.01em; color: var(--text); margin-bottom: .25rem; }
+    .mp-phase-what { font-size: .67rem; font-weight: 600; color: var(--claude); margin-bottom: .75rem; }
+    .mp-phase-quotes { display: flex; flex-direction: column; gap: .4rem; }
+    .mp-quote { font-size: .7rem; color: rgba(255,255,255,.42); font-style: italic; line-height: 1.45; padding-left: .55rem; border-left: 2px solid rgba(212,120,90,.22); }
+    .mp-sep { height: 1px; background: var(--border); margin: 0 0 1.5rem; }
+    .mp-tech-eyebrow { font-size: .55rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: .85rem; }
+    .mp-tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+    .mp-tech-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 8px; padding: .7rem .85rem; }
+    .mp-tech-name { font-size: .72rem; font-weight: 800; color: rgba(255,255,255,.72); margin-bottom: .2rem; }
+    .mp-tech-desc { font-size: .65rem; color: rgba(255,255,255,.36); line-height: 1.45; font-style: italic; }
 
     /* ── SLACK ARC + QUOTE ──────────────────────────────────── */
     .slack-arc { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .65rem; }
@@ -872,30 +876,60 @@
         <div class="mp-phase">
           <div class="mp-phase-num">phase 01</div>
           <div class="mp-phase-name">intel gathering</div>
-          <div class="mp-phase-eg">"Review all channels, DMs, Drive for X" — always named, scoped, and specific. Never generic.</div>
+          <div class="mp-phase-what">scoped and specific — never generic</div>
+          <div class="mp-phase-quotes">
+            <div class="mp-quote">"review all channels, DMs, and Drive for [account]"</div>
+            <div class="mp-quote">named the channel, the doc, the person — always told the AI <em>where</em> to look</div>
+          </div>
         </div>
-        <div class="mp-arrow">→</div>
         <div class="mp-phase">
           <div class="mp-phase-num">phase 02</div>
           <div class="mp-phase-name">persona + constraint framing</div>
-          <div class="mp-phase-eg">"Act as a Distinguished SE" / "not reinventing — need the HOW" — tells the AI how to think, not just what to find.</div>
+          <div class="mp-phase-what">tells the AI how to think, not just what to find</div>
+          <div class="mp-phase-quotes">
+            <div class="mp-quote">"you are a solution engineer for salesforce"</div>
+            <div class="mp-quote">"we are NOT reinventing — we need the HOW"</div>
+            <div class="mp-quote">"put yourself in the audience's shoes"</div>
+          </div>
         </div>
-        <div class="mp-arrow">→</div>
         <div class="mp-phase">
           <div class="mp-phase-num">phase 03</div>
           <div class="mp-phase-name">explicit claude handoff</div>
-          <div class="mp-phase-eg">"Be specific because I'm giving this to Claude" — the handoff is deliberate, intentional, never automatic.</div>
+          <div class="mp-phase-what">the output is designed to be portable</div>
+          <div class="mp-phase-quotes">
+            <div class="mp-quote">"be specific because i'm giving this to Claude"</div>
+            <div class="mp-quote">"give me an output i can share with Claude"</div>
+            <div class="mp-quote">the handoff was never accidental — it was deliberately named and structured</div>
+          </div>
         </div>
       </div>
       <div class="mp-sep"></div>
-      <div class="mp-tech-row">
-        <span class="mp-tech-label">Techniques:</span>
-        <span class="mp-tech">Role / persona prompting</span>
-        <span class="mp-tech">Constraint-first framing</span>
-        <span class="mp-tech">Time-boxing</span>
-        <span class="mp-tech">Promise-check</span>
-        <span class="mp-tech">Prior canvas as template</span>
-        <span class="mp-tech">Contamination flagging</span>
+      <div class="mp-tech-eyebrow">techniques</div>
+      <div class="mp-tech-grid">
+        <div class="mp-tech-card">
+          <div class="mp-tech-name">time-boxing</div>
+          <div class="mp-tech-desc">"i only have 10 minutes" — forces ruthless prioritization over comprehensiveness</div>
+        </div>
+        <div class="mp-tech-card">
+          <div class="mp-tech-name">promise-check</div>
+          <div class="mp-tech-desc">"what did we commit vs. what are we building?" — keeps the AI honest to the actual ask</div>
+        </div>
+        <div class="mp-tech-card">
+          <div class="mp-tech-name">prior work as template</div>
+          <div class="mp-tech-desc">"for inspiration, review my CBRE canvases" — teaches style, not just content</div>
+        </div>
+        <div class="mp-tech-card">
+          <div class="mp-tech-name">contamination flagging</div>
+          <div class="mp-tech-desc">"the visuals are from ANOTHER client — ensure none of that intel carries over"</div>
+        </div>
+        <div class="mp-tech-card">
+          <div class="mp-tech-name">iterative refinement</div>
+          <div class="mp-tech-desc">every canvas went through at least one correction pass — first draft is never final</div>
+        </div>
+        <div class="mp-tech-card">
+          <div class="mp-tech-name">cross-source synthesis</div>
+          <div class="mp-tech-desc">channels + DMs + Drive + PDFs + call notes — all pulled into one prompt</div>
+        </div>
       </div>
     </div>
 
