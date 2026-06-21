@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSA PBS CRE Presentation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #111; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .bar { height: 48px; background: #111; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; }
+    .back { color: #D4785A; font-size: .78rem; text-decoration: none; font-weight: 600; letter-spacing: .02em; }
+    .back:hover { opacity: .75; }
+    .title { color: rgba(255,255,255,.75); font-size: .78rem; font-weight: 600; }
+    .sub { color: rgba(255,255,255,.3); font-size: .72rem; margin-left: .25rem; }
+    .viewer { position: fixed; top: 48px; left: 0; right: 0; bottom: 0; }
+    iframe { width: 100%; height: 100%; border: none; background: #111; }
+    .fallback { display: none; padding: 3rem; text-align: center; color: rgba(255,255,255,.5); font-size: .85rem; }
+    .fallback a { color: #D4785A; }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="https://smithrachel-pf.github.io/se-demos/how-i-use-claude.html" class="back">← me and mr. claude</a>
+    <span class="title">GSA PBS CRE Presentation</span>
+    <span class="sub">· First 20 Minutes</span>
+  </div>
+  <div class="viewer">
+    <iframe src="gsa-pbs-cre-deck.pdf#toolbar=1&navpanes=0" title="GSA PBS CRE Presentation">
+      <div class="fallback">
+        <p>PDF preview not supported in this browser.</p>
+        <p style="margin-top:.75rem"><a href="gsa-pbs-cre-deck.pdf">Download PDF ↗</a></p>
+      </div>
+    </iframe>
+  </div>
+</body>
+</html>
