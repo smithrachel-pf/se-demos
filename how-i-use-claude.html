@@ -483,6 +483,9 @@
     /* ── THE MAKING OF ───────────────────────────────────── */
     .making-hero { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.25rem 0 1.5rem; margin-bottom: 2rem; }
     .making-hero-icon { flex-shrink: 0; margin-top: .1rem; }
+    @keyframes robot-bob { 0%,100% { transform: translateY(0); } 40% { transform: translateY(-5px); } 60% { transform: translateY(-4px); } }
+    @keyframes robot-blink { 0%,90%,100% { transform: scaleY(1); } 95% { transform: scaleY(0.15); } }
+    .making-hero-icon svg { animation: robot-bob 2.4s ease-in-out infinite; transform-origin: bottom center; }
     .making-hero-text { flex: 1; }
     .making-hero-eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--claude); margin-bottom: .4rem; }
     .making-hero p { font-size: 1rem; color: rgba(255,255,255,.65); line-height: 1.75; margin: 0; }
@@ -1542,7 +1545,7 @@
 
     <div class="making-hero">
       <div class="making-hero-icon">
-        <svg viewBox="0 0 16 18" width="36" height="41" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+        <svg viewBox="0 0 16 18" width="20" height="23" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
           <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
           <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
           <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
