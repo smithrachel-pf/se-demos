@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Logic FSM RFP Suite</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #111; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #fff; }
+    .bar { height: 48px; background: #111; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; flex-shrink: 0; }
+    .back { color: #D4785A; font-size: .78rem; text-decoration: none; font-weight: 600; }
+    .back:hover { opacity: .75; }
+    .title { color: rgba(255,255,255,.75); font-size: .78rem; font-weight: 600; }
+    .layout { display: flex; height: calc(100vh - 48px); }
+    .sidebar { width: 220px; flex-shrink: 0; border-right: 1px solid rgba(255,255,255,.08); padding: 1.25rem 1rem; display: flex; flex-direction: column; gap: .5rem; }
+    .doc-btn { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; padding: .6rem .85rem; cursor: pointer; text-align: left; color: rgba(255,255,255,.65); font-size: .75rem; font-family: inherit; transition: all .15s; }
+    .doc-btn:hover, .doc-btn.active { background: rgba(212,120,90,.1); border-color: rgba(212,120,90,.3); color: #fff; }
+    .doc-btn .label { font-weight: 700; margin-bottom: .2rem; }
+    .doc-btn .type { font-size: .65rem; color: rgba(255,255,255,.35); }
+    .doc-btn.active .type { color: rgba(212,120,90,.7); }
+    iframe { flex: 1; border: none; background: #111; }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="https://smithrachel-pf.github.io/se-demos/how-i-use-claude.html" class="back">← me and mr. claude</a>
+    <span class="title">Service Logic FSM RFP Response Suite</span>
+  </div>
+  <div class="layout">
+    <div class="sidebar">
+      <button class="doc-btn active" onclick="show('service-logic-se-playbook.pdf', this)">
+        <div class="label">SE Playbook</div>
+        <div class="type">strategy · win themes</div>
+      </button>
+      <button class="doc-btn" onclick="show('service-logic-solution-architecture.pdf', this)">
+        <div class="label">Solution Architecture</div>
+        <div class="type">platform design</div>
+      </button>
+    </div>
+    <iframe id="viewer" src="service-logic-se-playbook.pdf#toolbar=1&navpanes=0" title="SE Playbook"></iframe>
+  </div>
+  <script>
+    function show(pdf, btn) {
+      document.querySelectorAll('.doc-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('viewer').src = pdf + '#toolbar=1&navpanes=0';
+    }
+  </script>
+</body>
+</html>
