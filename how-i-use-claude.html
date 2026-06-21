@@ -661,6 +661,8 @@
 <!-- ───── NAV ───── -->
 <nav>
   <div class="nav-brand">
+    <span class="nav-brand-emoji">🧠</span>
+    <div class="slack-logo-grid" style="width:18px;height:18px;border-radius:3px;gap:2px;padding:2px;background:#fff;box-sizing:border-box;"><span class="sl-red"></span><span class="sl-yel"></span><span class="sl-grn"></span><span class="sl-teal"></span></div>
     <svg viewBox="0 0 16 18" width="22" height="25" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
       <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
       <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
@@ -672,7 +674,6 @@
       <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
       <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
     </svg>
-    <span style="font-size:.75rem;font-weight:700;color:rgba(255,255,255,.3);margin:0 .15rem;">+</span><span class="nav-brand-emoji">🧠</span>
   </div>
   <div class="nav-links">
   </div>
@@ -933,37 +934,37 @@
       <div class="mp-tech-eyebrow">techniques</div>
       <div class="mp-tech-grid">
         <div class="mp-tech-card">
-          <div class="mp-tech-name">time-boxing</div>
+          <div class="mp-tech-name"><span style="color:var(--claude);margin-right:.35rem">⏱</span>time-boxing</div>
           <div class="mp-tech-desc">artificially constraining scope to force the AI to prioritize ruthlessly</div>
           <div class="mp-tech-quote">"let's say i only have 10 minutes — what are the most compelling stories?"</div>
           <div class="mp-tech-why">removes the AI's default instinct to be comprehensive. forces a judgment call, not a list.</div>
         </div>
         <div class="mp-tech-card">
-          <div class="mp-tech-name">promise-check</div>
+          <div class="mp-tech-name"><span style="color:var(--claude);margin-right:.35rem">✓</span>promise-check</div>
           <div class="mp-tech-desc">auditing the AI's output against actual customer commitments before delivery</div>
           <div class="mp-tech-quote">"review these dry run notes against what we promised the customer — what are we missing?"</div>
           <div class="mp-tech-why">catches the gap between what was sold and what's being built — before the customer does.</div>
         </div>
         <div class="mp-tech-card">
-          <div class="mp-tech-name">prior work as template</div>
+          <div class="mp-tech-name"><span style="color:var(--claude);margin-right:.35rem">📐</span>prior work as template</div>
           <div class="mp-tech-desc">feeding your own best previous outputs as the creative and structural standard</div>
           <div class="mp-tech-quote">"for inspiration, review my CBRE Savannah canvases"</div>
           <div class="mp-tech-why">teaches style, not just content. the AI learns your standard — not a generic one.</div>
         </div>
         <div class="mp-tech-card">
-          <div class="mp-tech-name">contamination flagging</div>
+          <div class="mp-tech-name"><span style="color:var(--claude);margin-right:.35rem">⚠</span>contamination flagging</div>
           <div class="mp-tech-desc">explicitly naming what context should NOT bleed into the output</div>
           <div class="mp-tech-quote">"the visuals I included are from ANOTHER client — ensure none of that intel carries over"</div>
           <div class="mp-tech-why">AI context windows blend sources by default. naming the boundary prevents silent hallucination contamination.</div>
         </div>
         <div class="mp-tech-card">
-          <div class="mp-tech-name">iterative refinement</div>
+          <div class="mp-tech-name"><span style="color:var(--claude);margin-right:.35rem">↺</span>iterative refinement</div>
           <div class="mp-tech-desc">treating first output as a draft, not a deliverable — always planning a correction pass</div>
           <div class="mp-tech-quote">"review this canvas with an editorial eye" / "make suggestions for where i can strengthen this"</div>
           <div class="mp-tech-why">the first answer sets the floor. the second prompt raises the ceiling. first draft is never final.</div>
         </div>
         <div class="mp-tech-card">
-          <div class="mp-tech-name">cross-source synthesis</div>
+          <div class="mp-tech-name"><span style="color:var(--claude);margin-right:.35rem">⇌</span>cross-source synthesis</div>
           <div class="mp-tech-desc">pointing the AI at every relevant source simultaneously — channels, DMs, Drive, PDFs, call notes — in one prompt</div>
           <div class="mp-tech-quote">"review the channel, DMs with Jackie and Aida, the Google folder, and this RFP"</div>
           <div class="mp-tech-why">the AI's output quality is directly proportional to input surface area. narrow inputs produce narrow outputs.</div>
@@ -1453,8 +1454,18 @@
         </div>
         <div class="slack-callout">
           <div class="slack-callout-badge">
-            <div class="slack-logo-grid" style="width:36px;height:36px;border-radius:6px;gap:4px;padding:5px;background:#fff;box-sizing:border-box;"><span class="sl-red"></span><span class="sl-yel"></span><span class="sl-grn"></span><span class="sl-teal"></span></div>
-            <div class="slack-dab-label">slack</div>
+            <svg viewBox="0 0 16 18" width="34" height="38" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+              <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
+              <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
+              <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
+              <rect x="4" y="4" width="3" height="3" fill="#111"/>
+              <rect x="9" y="4" width="3" height="3" fill="#111"/>
+              <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+              <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+              <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
+              <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
+            </svg>
+            <div class="slack-dab-label">claude</div>
           </div>
           <div class="slack-callout-content">
             <div class="slack-callout-title">Lauryl to Rachel to Claude</div>
@@ -1486,8 +1497,8 @@
                   <div class="conv-quote">"what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!"</div>
                 </div>
                 <div class="conv-item">
-                  <span class="conv-label">Claude — Rachel's strategic framing added</span>
-                  <div class="conv-quote">"Visually, how would you tell the story that Salesforce is uniquely equipped to power AI in the flow of work at Hertz because we provide governance, security, and already power some of the most important 'screens' that employees are already using to run their day. Bonus if we can communicate that Hertz is worried about fragmented AI systems and we can help solve that."</div>
+                  <span class="conv-label">Claude — Hertz branding pass</span>
+                  <div class="conv-quote">"revise a bit based on this story we are trying to tell for Hertz - bonus for Hertz branding colors"</div>
                 </div>
               </div>
             </div>
