@@ -614,6 +614,9 @@
     /* ── EASTER EGGS ─────────────────────────────────── */
     .egg { color: inherit; text-decoration: underline; text-decoration-style: dotted; text-decoration-color: rgba(212,120,90,.35); cursor: pointer; }
     .egg:hover { text-decoration-color: var(--claude); }
+    .egg::after { content: ' 💿'; display: inline-block; opacity: 0; transition: opacity .15s; }
+    .egg:hover::after { opacity: 1; animation: vinyl-spin .6s linear infinite; }
+    .brain-spin { display: inline-block; animation: vinyl-spin 2.5s linear infinite; }
 
     /* ── LIVE STRIP ──────────────────────────────────── */
     .live-strip {
@@ -671,17 +674,19 @@
   <div class="nav-brand">
     <span class="nav-brand-emoji">🧠</span>
     <div class="slack-logo-grid" style="width:18px;height:18px;border-radius:3px;gap:2px;padding:2px;background:#fff;box-sizing:border-box;"><span class="sl-red"></span><span class="sl-yel"></span><span class="sl-grn"></span><span class="sl-teal"></span></div>
-    <svg viewBox="0 0 16 18" width="22" height="25" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
-      <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
-      <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
-      <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
-      <rect x="4" y="4" width="3" height="3" fill="#111"/>
-      <rect x="9" y="4" width="3" height="3" fill="#111"/>
-      <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
-      <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
-      <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
-      <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
-    </svg>
+    <a href="https://www.youtube.com/watch?v=AWM-6GYXSCI" target="_blank" rel="noopener" title="🎵" style="display:inline-flex;line-height:0;opacity:1;transition:opacity .2s;" onmouseenter="this.style.opacity='.7'" onmouseleave="this.style.opacity='1'">
+      <svg viewBox="0 0 16 18" width="22" height="25" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="image-rendering:pixelated">
+        <rect x="2" y="2" width="12" height="10" fill="#D4785A"/>
+        <rect x="0" y="4" width="2" height="5" fill="#C4603C"/>
+        <rect x="14" y="4" width="2" height="5" fill="#C4603C"/>
+        <rect x="4" y="4" width="3" height="3" fill="#111"/>
+        <rect x="9" y="4" width="3" height="3" fill="#111"/>
+        <rect x="4" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+        <rect x="9" y="4" width="1" height="1" fill="rgba(255,255,255,.55)"/>
+        <rect x="4" y="12" width="3" height="5" fill="#C4603C"/>
+        <rect x="9" y="12" width="3" height="5" fill="#C4603C"/>
+      </svg>
+    </a>
   </div>
   <div class="nav-links">
   </div>
@@ -855,11 +860,11 @@
         <p>what came back <a href="https://open.spotify.com/track/3RmKpob8xzv1pzHEQrMJah?si=baa33b21ad104d95" target="_blank" rel="noopener" class="egg">blew my mind</a> - stream-of-conscious thinking, art stars and all.</p>
       </div>
 
-    </div>
-    <div class="pbc">
-      <div class="pbc-rule"></div>
-      <span class="pbc-word">so i kept thinking.</span>
-      <div class="pbc-rule"></div>
+      <div class="ot-entry">
+        <div class="ot-emoji-dot"><span class="brain-spin">🧠</span></div>
+        <p>so i kept thinking.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1231,7 +1236,7 @@
           <div class="dp-head-glow"></div>
           <div class="dp-logo"><img src="https://logo.clearbit.com/servicelogic.com" alt="Service Logic" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
           <div class="dp-company">Service Logic</div>
-          <p class="dp-situation">service logic is a bain capital portfolio company — 60 operating companies, $1B+ in HVAC and mechanical services revenue, and heading toward an IPO. They issued a formal FSM RFP. They had already rejected ServiceMax. The bar was high and the stakes were real.</p>
+          <p class="dp-situation">service logic is a bain capital portfolio company — 60 operating companies, $1B+ in <a href="https://www.youtube.com/watch?v=CkfZQLOVA-M" target="_blank" rel="noopener" class="egg">HVAC</a> and mechanical services revenue, and heading toward an IPO. They issued a formal FSM RFP. They had already rejected ServiceMax. The bar was high and the stakes were real.</p>
           <div class="tags">
             <span class="tag tag-rfp">complex RFP</span>
             <span class="tag tag-strat">se playbook</span>
@@ -1517,7 +1522,7 @@
               <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
                 <div class="input-chip"><span class="input-chip-icon">💬</span>Rachel's illuminated screens concept from Slack</div>
-                <div class="input-chip"><span class="input-chip-icon">🟡</span>Hertz brand context — iconic yellow, black, 100-year legacy</div>
+                <div class="input-chip"><span class="input-chip-icon">🟡</span>Hertz brand context — iconic <a href="https://www.youtube.com/watch?v=yKNxeF4KMsY" target="_blank" rel="noopener" class="egg">yellow</a>, black, 100-year legacy</div>
                 <div class="input-chip"><span class="input-chip-icon">🔐</span>governance + security + flow of work framing</div>
                 <div class="input-chip"><span class="input-chip-icon">⚠️</span>Hertz concern: fragmented AI systems across the org</div>
               </div>
