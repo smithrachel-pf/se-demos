@@ -272,7 +272,7 @@
     .dp-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
 
     .dp-col-label {
-      font-size: .65rem; font-weight: 800; text-transform: uppercase;
+      font-size: .65rem; font-weight: 800; text-transform: capitalize;
       letter-spacing: .12em; color: var(--claude); margin-bottom: 1rem;
       display: flex; align-items: center; gap: .5rem;
     }
@@ -547,7 +547,7 @@
 
     /* ── SLACK ARC + QUOTE ──────────────────────────────────── */
     .slack-arc { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .65rem; }
-    .arc-step { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); position: relative; cursor: help; border-bottom: 1px dotted rgba(255,255,255,.2); }
+    .arc-step { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: capitalize; color: rgba(255,255,255,.45); position: relative; cursor: help; border-bottom: 1px dotted rgba(255,255,255,.2); }
     .arc-step::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #2c2c2c; border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.8); font-size: .68rem; font-weight: 400; letter-spacing: 0; text-transform: none; padding: .4rem .65rem; border-radius: 6px; white-space: nowrap; z-index: 20; pointer-events: none; opacity: 0; transition: opacity .15s; }
     .arc-step:hover::after { opacity: 1; }
     .arc-sep { color: rgba(255,255,255,.2); font-size: .65rem; }
@@ -589,12 +589,18 @@
     .slack-callout-content { flex: 1; }
     .slack-callout-title {
       font-size: .68rem; font-weight: 800; letter-spacing: .07em;
-      text-transform: uppercase; color: rgba(255,255,255,.4);
+      text-transform: none; color: rgba(255,255,255,.4);
       margin-bottom: .4rem;
     }
     .slack-callout-text {
       font-size: .875rem; color: rgba(255,255,255,.7); line-height: 1.65;
     }
+
+    /* ── CONVERSATION THREAD ─────────────────────────────── */
+    .conv-thread { display: flex; flex-direction: column; gap: .85rem; }
+    .conv-item { display: flex; flex-direction: column; gap: .3rem; }
+    .conv-label { font-size: .55rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.28); }
+    .conv-quote { font-size: .74rem; font-style: italic; color: rgba(255,255,255,.6); line-height: 1.55; padding-left: .65rem; border-left: 2px solid rgba(212,120,90,.3); }
     .slack-callout-text strong { color: #36C5F0; font-weight: 700; }
 
     /* ── FOOTER ──────────────────────────────────────── */
@@ -1041,7 +1047,7 @@
             <div class="slack-dab-label">slack</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">skipped slackbot. went straight to claude.</div>
+            <div class="slack-callout-title">Skipped Slackbot. Went Straight to Claude.</div>
             <div class="slack-arc">
               <span class="arc-step" data-tip="Customer said 'show me something real' — no time to prep">live context</span><span class="arc-sep"> → </span>
               <span class="arc-step" data-tip="Screenshots taken during the meeting became the only inputs">screen snapshots</span><span class="arc-sep"> → </span>
@@ -1054,47 +1060,24 @@
         <div class="dp-body">
           <div class="dp-grid">
             <div>
-              <div class="dp-col-label">what i fed claude</div>
+              <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
-                <div class="input-chip"><span class="input-chip-icon">📸</span>screenshots taken during the session</div>
-                <div class="input-chip"><span class="input-chip-icon">🗣️</span>what the customer said they needed, live in the room</div>
-                <div class="input-chip"><span class="input-chip-icon">👁️</span>what their current FM system looked like on screen</div>
-                <div class="input-chip"><span class="input-chip-icon">⏱️</span>about 10 minutes to show them something real</div>
+                <div class="input-chip"><span class="input-chip-icon">📸</span>screenshots taken live during the session</div>
+                <div class="input-chip"><span class="input-chip-icon">🗣️</span>what the customer said they needed, in the room</div>
+                <div class="input-chip"><span class="input-chip-icon">👁️</span>their current FM platform on screen</div>
+                <div class="input-chip"><span class="input-chip-icon">🏢</span>CBRE GWS context — scale, portfolio, personas</div>
               </div>
             </div>
             <div>
-              <div class="dp-col-label">the journey</div>
-              <div class="steps">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-text">
-                    <h5>screenshots instead of a spec</h5>
-                    <p>dropped in screenshots of their current FM platform and asked Claude to understand what the user was actually trying to do inside it.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Here's what their current system looks like. What story is this person trying to tell?" — no brief, no wireframe. Just context and an outcome question.</div>
-                  </div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">Claude — initial prompt</span>
+                  <div class="conv-quote">"you are a solution engineer for salesforce. we're in a live discovery session with CBRE GWS and the customer just asked to see what agentforce could look like in their environment. here are screenshots of their current system. build me something real i can show them."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-text">
-                    <h5>outcomes, not interfaces</h5>
-                    <p>redirected Claude away from building screens and toward the experience — what a great day looks like for a GWS facility manager.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Don't build me a UI. Tell me what a great day looks like for a GWS facility manager — the outcomes, not the screens." That reframe is what made the demo feel like theirs.</div>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-text">
-                    <h5>one redirect rebuilt the entire UX hierarchy</h5>
-                    <p>when the first version buried the most important signal, i pushed back — and Claude reorganized everything around it.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Lead with the maintenance alert. The FM manager shouldn't have to dig for it." One sentence. Claude rebuilt the information hierarchy from scratch.</div>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">4</div>
-                  <div class="step-text">
-                    <h5>made it feel unmistakably CBRE</h5>
-                    <p>asked Claude to tune every data point — terminology, portfolio scale, operational language — until it stopped feeling like a demo and started feeling like their system.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude — iteration</span>
+                  <div class="conv-quote">iterated to tune terminology, portfolio scale, and facility management language until it felt like their system — not a demo built for someone else.</div>
                 </div>
               </div>
             </div>
@@ -1136,12 +1119,11 @@
             <div class="slack-dab-label">slack</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">first stop, slackbot</div>
+            <div class="slack-callout-title">First Stop, Slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step" data-tip="Defining the strategic angle and narrative before any content is written">strategic framing</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Writing content as if speaking directly to a specific person in the room">persona-led build</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Establish what you can't do before deciding what you will — limits sharpen thinking">constraint-first</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Pressure-testing the narrative against the actual ask before calling it done">SIC validation</span>
+              <span class="arc-step" data-tip="Reviewing all Equinox channels, DMs, and Drive before writing a word">full account read</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Establishing what we are NOT doing — constraint-first to sharpen the angle">constraint framing</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Packaging the output specifically for Claude to consume">claude handoff</span>
             </div>
             <div class="slack-prompt-quote">"you are a solution engineer for salesforce. wear your best hat. Review all Equinox intel in channels, DMs, Google Drive. Build me an agenda, deck outline, and supporting talk tracks. Be specific because I am going to give this to Claude."</div>
             <div class="slack-callout-text">the constraint that shaped the entire SIC came from this session: <strong>not a new vision — unlock the HOW.</strong> Slackbot established the strategic angle before Claude saw a word.</div>
@@ -1150,46 +1132,28 @@
         <div class="dp-body">
           <div class="dp-grid">
             <div>
-              <div class="dp-col-label">what i fed claude</div>
+              <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
-                <div class="input-chip"><span class="input-chip-icon">🏋️</span>equinox brand and business context</div>
-                <div class="input-chip"><span class="input-chip-icon">💼</span>current deal status and stakeholder map</div>
-                <div class="input-chip"><span class="input-chip-icon">📋</span>SIC format and what leadership expects</div>
-                <div class="input-chip"><span class="input-chip-icon">🤖</span>agentforce capabilities relevant to fitness/luxury</div>
+                <div class="input-chip"><span class="input-chip-icon">📚</span>all Equinox channels, DMs, and Google Drive</div>
+                <div class="input-chip"><span class="input-chip-icon">🗺️</span>existing POV canvas + recent call notes</div>
+                <div class="input-chip"><span class="input-chip-icon">📋</span>SIC format and what Salesforce leadership expects</div>
+                <div class="input-chip"><span class="input-chip-icon">🎯</span>constraint: not reinventing — need to unlock the HOW</div>
               </div>
             </div>
             <div>
-              <div class="dp-col-label">the journey</div>
-              <div class="steps">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-text">
-                    <h5>asked claude to challenge my assumptions first</h5>
-                    <p>before building a single slide, i asked Claude to push back on my narrative — not confirm it. that changed everything that came after.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Before you build anything — challenge my assumptions about what Equinox actually needs from this investment." Claude came back with questions I hadn't thought to ask.</div>
-                  </div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot</span>
+                  <div class="conv-quote">"you are a solution engineer for salesforce. wear your best hat. Review all Equinox intel in channels, DMs, Google Drive. Build me an agenda, deck outline, and supporting talk tracks. Be specific because I am going to give this to Claude."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-text">
-                    <h5>built the arc: why now, why this, why inevitable</h5>
-                    <p>the transformation story had to feel like something Equinox was already moving toward — not a pitch we were making. Claude helped make the case feel like a conclusion, not an ask.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot — constraint pass</span>
+                  <div class="conv-quote">"Review the Equinox POV canvas with this context: we are being very mindful that there is not necessarily a NEW vision, but a need to unlock the vision with the HOW. Review the call notes for clarity on how we are thinking about this."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-text">
-                    <h5>wrote for the room, not the slide deck</h5>
-                    <p>not talking points to read — actual language for a Salesforce leadership audience mid-interruption. the recovery lines. the pauses. the proof points that land at this level.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Write this for someone who will be interrupted mid-slide by a CFO. Give me the recovery line for each transition." That level of specificity completely changed the output.</div>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">4</div>
-                  <div class="step-text">
-                    <h5>"can you make this interactive?" → shareable demo, same session</h5>
-                    <p>one question. Claude turned the key concepts into a live, clickable experience without needing a new brief or starting over.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude — handoff</span>
+                  <div class="conv-quote">Slackbot's full brief — strategic angle, HOW constraint, account context — handed to Claude to build the deck, interactive demo, and talk track.</div>
                 </div>
               </div>
             </div>
@@ -1232,12 +1196,11 @@
             <div class="slack-dab-label">slack</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">first stop, slackbot</div>
+            <div class="slack-callout-title">First Stop, Slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step" data-tip="Ask Claude to analyze with zero framing first — see what it finds on its own">cold read</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Ask Claude to challenge your assumptions, not just answer your questions">strategic advisor</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Turning analysis into a formatted, ready-to-share output">structured deliverable</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Refining tone and tightening language until it's presentable">polish</span>
+              <span class="arc-step" data-tip="Full read of the RFP + response template + Google folder + Slack channel">full document read</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Identifying strategic questions, gotchas, and win conditions">strategic advisor</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Packaging a brief Claude can act on">claude handoff</span>
             </div>
             <div class="slack-prompt-quote">"Read the RFP in its entirety as if you are a solution engineer for salesforce. have an eye for strategic questions, 'gotchas,' and overall guidance to ensure we win. act as a consultant not a seller. help us navigate this strategically and seamlessly, getting in front of what we need to early."</div>
             <div class="slack-callout-text">dropped a 90-page RFP, response template, Google folder, and Slack channel. Slackbot read it all before Claude did — <strong>the strategic framing, what to win on, and what to watch for came from this pass.</strong></div>
@@ -1246,46 +1209,24 @@
         <div class="dp-body">
           <div class="dp-grid">
             <div>
-              <div class="dp-col-label">what i fed claude</div>
+              <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
-                <div class="input-chip"><span class="input-chip-icon">📄</span>the full 100+ page RFP document</div>
-                <div class="input-chip"><span class="input-chip-icon">⚠️</span>why ServiceMax was previously rejected</div>
-                <div class="input-chip"><span class="input-chip-icon">🏗️</span>context on their 60-OpCo multi-entity structure</div>
-                <div class="input-chip"><span class="input-chip-icon">📊</span>ASC 606 / IPO readiness as a known must-have</div>
+                <div class="input-chip"><span class="input-chip-icon">📄</span>full 90-page RFP + response template</div>
+                <div class="input-chip"><span class="input-chip-icon">📂</span>Slack channel + Google Drive access</div>
+                <div class="input-chip"><span class="input-chip-icon">🏗️</span>60-OpCo multi-entity structure context</div>
+                <div class="input-chip"><span class="input-chip-icon">📊</span>ASC 606 / IPO readiness as a known requirement</div>
               </div>
             </div>
             <div>
-              <div class="dp-col-label">the journey</div>
-              <div class="steps">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-text">
-                    <h5>mapped every requirement as a deal risk, not a feature</h5>
-                    <p>instead of asking "do we cover this," i asked Claude to flag each gap in terms of whether it was the kind of thing that loses deals. different framing, completely different output.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Don't just tell me what we cover. For every gap, tell me how it reads as deal risk — and whether it's the kind of thing that loses RFPs." That instruction changed how Claude organized its entire analysis.</div>
-                  </div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot</span>
+                  <div class="conv-quote">"Read the RFP in its entirety as if you are a solution engineer for salesforce. have an eye for strategic questions, 'gotchas,' and overall guidance to ensure we win. act as a consultant not a seller. help us navigate this strategically and seamlessly, getting in front of what we need to early."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-text">
-                    <h5>pushed claude past the gap — and into the proof point</h5>
-                    <p>when Claude flagged ASC 606, i didn't stop there. i pushed: is this a product gap or a positioning gap? that follow-up is what surfaced RightRev and CBRE as the answer.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"You flagged ASC 606. But tell me — is this a product gap or a positioning gap? And if I lead with RightRev, what's my proof point?" Claude connected it to the CBRE deal.</div>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-text">
-                    <h5>built the se playbook: what to say and what to avoid</h5>
-                    <p>not just the solution — the positioning. asked Claude for the language that lands with a PE-backed leadership team heading toward an IPO. different audience, completely different register.</p>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">4</div>
-                  <div class="step-text">
-                    <h5>solution architecture mapped to their actual org model</h5>
-                    <p>60 OpCos, multi-entity structure, IPO readiness. asked Claude to map the solution to how Service Logic actually operates — not a generic architecture slide.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude — demo game plan</span>
+                  <div class="conv-quote">"Act as a Distinguished SE putting together a comprehensive game plan to tackle the demo scenarios laid out here. For previous RFP demo plans for inspiration, review my CBRE Savannah canvases."</div>
                 </div>
               </div>
             </div>
@@ -1329,11 +1270,11 @@
             <div class="slack-dab-label">slack</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">first stop, slackbot</div>
+            <div class="slack-callout-title">First Stop, Slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step" data-tip="Focused deep-dive on a specific account, person, or pain point">targeted research</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Creating the actual deliverable — deck, demo, document, or script">asset build</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Scripting the exact words to say in the room, not just the slide content">talk track</span>
+              <span class="arc-step" data-tip="Named the accounts — CBRE, Lennar, RBC — and asked for the proof points that land hardest in a federal room">targeted research</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Stats and quotes from Slackbot went directly into Claude as the source material">claude handoff</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Claude built the slide guide and talk track from the curated intel">talk track build</span>
             </div>
             <div class="slack-prompt-quote">"Find the best relevant use case success stories for GSA — CBRE, Lennar, RBC — with the heaviest hitting stats or quotes featured for each."</div>
             <div class="slack-callout-text">named the accounts, asked for the proof points that would land hardest in a federal room. <strong>The stats and quotes Slackbot surfaced went directly into the deck and talk track points.</strong></div>
@@ -1342,46 +1283,24 @@
         <div class="dp-body">
           <div class="dp-grid">
             <div>
-              <div class="dp-col-label">what i fed claude</div>
+              <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">📊</span>Slackbot-curated use case stats (CBRE, Lennar, RBC)</div>
                 <div class="input-chip"><span class="input-chip-icon">🏛️</span>GSA PBS account context and mission</div>
                 <div class="input-chip"><span class="input-chip-icon">👥</span>attendee list with roles and seniority</div>
-                <div class="input-chip"><span class="input-chip-icon">📐</span>meeting agenda structure and time constraints</div>
-                <div class="input-chip"><span class="input-chip-icon">💡</span>notes on what had resonated in prior meetings</div>
+                <div class="input-chip"><span class="input-chip-icon">📐</span>slides framework — the deck structure to talk track against</div>
               </div>
             </div>
             <div>
-              <div class="dp-col-label">the journey</div>
-              <div class="steps">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-text">
-                    <h5>asked what should happen — not what to present</h5>
-                    <p>that framing shift caused Claude to push back before building anything. it came back with questions about who was in the room and what each person needed to walk out believing.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"What should actually happen in the first 20 minutes?" — not "what should I say." The outcome framing changed the entire response. Claude interrogated the room before it touched the slides.</div>
-                  </div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot</span>
+                  <div class="conv-quote">"Find the best relevant use case success stories for GSA — CBRE, Lennar, RBC — with the heaviest hitting stats or quotes featured for each."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-text">
-                    <h5>federal framing without having to explain it</h5>
-                    <p>mission impact first. not product features. i told Claude this was a federal room — and it adjusted the language, proof points, and ROI framing without needing a primer on government selling.</p>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-text">
-                    <h5>precision prompting produced precision output</h5>
-                    <p>the more specific i got about the format, the more useful the output became. asking for exact transitions and recovery lines — not just bullets — is what turned this from a prep doc into a real guide.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Give me the exact words for the transition between slides 4 and 5. And tell me where to pause for the procurement person's question." That precision completely changed what came back.</div>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">4</div>
-                  <div class="step-text">
-                    <h5>a printed guide that went into the room</h5>
-                    <p>not to read verbatim. to walk in knowing exactly what i was going to say — and how to handle the moment it went off script.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude</span>
+                  <div class="conv-quote">"Can I get a talk track for slides 6–11?"</div>
                 </div>
               </div>
             </div>
@@ -1424,61 +1343,46 @@
             <div class="slack-dab-label">slack</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">first stop, slackbot</div>
+            <div class="slack-callout-title">First Stop, Slackbot</div>
             <div class="slack-arc">
-              <span class="arc-step" data-tip="Exploring what the ideal version of the story could be before constraining it">story dreaming</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Scoping the content to fit a specific time slot, page count, or format">time-boxing</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Tightening the narrative — cutting what doesn't earn its place">editorial</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Does the output actually deliver what the reader was promised? Verify before shipping.">promise check</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="When the output missed — go back in, reframe the prompt, rebuild from scratch">rescue</span>
+              <span class="arc-step" data-tip="Slackbot outlined the story and use cases from discovery notes and demo video">story dreaming</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="'Only 10 minutes' — forced ruthless prioritization of what to show">time-boxing</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Slackbot reviewed dry run notes against customer promises — caught the gaps">promise check</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Final handoff packaged explicitly for Claude to build from">claude handoff</span>
             </div>
             <div class="slack-prompt-quote">"you are a solution engineer for salesforce who might need to be a hero and save a demo tomorrow — give me an output I can share with Claude."</div>
-            <div class="slack-callout-text">six slackbot sessions on this one — from story dreaming to time-boxing to a night-before rescue pass. <strong>The handoff was explicit: "give me something I can hand to Claude."</strong></div>
+            <div class="slack-callout-text">six Slackbot sessions on this one — story dreaming, time-boxing, editorial, promise check, and a night-before rescue pass. <strong>The handoff was explicit: "give me something I can hand to Claude."</strong></div>
           </div>
         </div>
         <div class="dp-body">
           <div class="dp-grid">
             <div>
-              <div class="dp-col-label">what i fed claude</div>
+              <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
-                <div class="input-chip"><span class="input-chip-icon">🏘️</span>related rentals company profile and portfolio</div>
-                <div class="input-chip"><span class="input-chip-icon">😤</span>core pain points: tenant comms, vendor mgmt, leases</div>
-                <div class="input-chip"><span class="input-chip-icon">👤</span>day-in-the-life of a property manager persona</div>
-                <div class="input-chip"><span class="input-chip-icon">🎯</span>where AI should visibly improve the workflow</div>
+                <div class="input-chip"><span class="input-chip-icon">📋</span>Slackbot canvas — story outline, use cases, key moments</div>
+                <div class="input-chip"><span class="input-chip-icon">🎥</span>discovery call notes + demo video</div>
+                <div class="input-chip"><span class="input-chip-icon">📝</span>dry run feedback and gap analysis</div>
+                <div class="input-chip"><span class="input-chip-icon">✅</span>customer promise checklist vs. what was being built</div>
               </div>
             </div>
             <div>
-              <div class="dp-col-label">the journey</div>
-              <div class="steps">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-text">
-                    <h5>the anchor sentence came before anything else</h5>
-                    <p>before asking for a demo, i asked Claude for the one sentence a property manager would say on a Monday morning that describes exactly why their job is hard. that sentence became the entire narrative hook.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Give me one sentence that a property manager would say to their manager on a Monday morning about why their job is hard." That sentence built both demos.</div>
-                  </div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot — story dreaming</span>
+                  <div class="conv-quote">"Be my storyteller and demo dreamer. Review the following notes and this demo video — outline a clear, compelling story for how Agentforce can help Related Companies that we can demo to them."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-text">
-                    <h5>built the baseline first — the world as it is today</h5>
-                    <p>showed the fragmented workflow before any AI. a realistic baseline they'd recognize. the contrast only works if you earn it.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot — time-boxing</span>
+                  <div class="conv-quote">"Let's say I only have 10 minutes — what are the most compelling stories and assets to show to Related given all of the intel? Review my DMs with the team too."</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-text">
-                    <h5>one sentence. second demo. no new brief.</h5>
-                    <p>the context was already established. the second demo didn't need a new conversation — just one follow-up that redirected Claude into building the AI-powered version of everything it had just built.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Now show what happens when AI touches this." That was the entire prompt for the second demo. Claude built it from one sentence because the foundation was already there.</div>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot — promise check</span>
+                  <div class="conv-quote">"Review these dry run notes against what we promised the customer — what are we missing? What is critical for ensuring we show up well?"</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">4</div>
-                  <div class="step-text">
-                    <h5>team reviewed both before the meeting — same session</h5>
-                    <p>shared the live demos with the AE for feedback. made tweaks in real time. no handoffs, no 2-week dev request, no waiting.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Slackbot — Claude handoff</span>
+                  <div class="conv-quote">"you are a solution engineer for salesforce who might need to be a hero and save a demo tomorrow — give me an output I can share with Claude."</div>
                 </div>
               </div>
             </div>
@@ -1486,15 +1390,16 @@
               <div class="dp-col-label">the output</div>
               <div class="output-box">
                 <div class="output-preview">
-                  <div class="output-placeholder">
-                    <div class="output-placeholder-icon">🏘️</div>
-                    <p>clickable demo prototype</p>
-                  </div>
+                  <iframe src="https://smithrachel-pf.github.io/se-demos/related-agentforce-demo.html" title="Related Rentals Agentforce Demo" loading="lazy"></iframe>
                 </div>
                 <div class="output-foot">
                   <div>
-                    <div class="output-name">related rentals demo suite</div>
-                    <div class="output-type">CRM console demo · Agentforce demo</div>
+                    <div class="output-name">Related Rentals demo suite</div>
+                    <div class="output-type">Agentforce demo · CRM Console demo</div>
+                  </div>
+                  <div style="display:flex;gap:.5rem;">
+                    <a href="https://smithrachel-pf.github.io/se-demos/related-agentforce-demo.html" target="_blank" class="output-cta">Agentforce ↗</a>
+                    <a href="https://smithrachel-pf.github.io/se-demos/related-crm-console.html" target="_blank" class="output-cta">CRM Console ↗</a>
                   </div>
                 </div>
               </div>
@@ -1522,61 +1427,37 @@
             <div class="slack-dab-label">slack</div>
           </div>
           <div class="slack-callout-content">
-            <div class="slack-callout-title">first stop, slackbot</div>
+            <div class="slack-callout-title">Lauryl to Rachel to Claude</div>
             <div class="slack-arc">
-              <span class="arc-step" data-tip="Synthesizing discovery call notes into context Claude can actually use">discovery intel</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Building the narrative arc of the demo before touching a single screen">demo story</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Mapping Salesforce capabilities to their specific pain points and language">use case mapping</span><span class="arc-sep"> → </span>
-              <span class="arc-step" data-tip="Handing the full context to Claude to build the final deliverable">claude handoff</span>
+              <span class="arc-step" data-tip="Lauryl asked Rachel to brainstorm a demo concept for Hertz">Lauryl's brainstorm ask</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="Rachel replied with the illuminated screens concept — greyscale → color → neon AI stars">Rachel's idea</span><span class="arc-sep"> → </span>
+              <span class="arc-step" data-tip="That Slack message was pasted directly into Claude — no Slackbot step">straight to Claude</span>
             </div>
             <div class="slack-prompt-quote">"what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!"</div>
-            <div class="slack-callout-text">this was rachel's reply to lauryl's brainstorm request — pasted directly into claude. <strong>the three-act demo structure (greyscale → color → agentforce) came entirely from this one slack message.</strong></div>
+            <div class="slack-callout-text">Lauryl asked Rachel to brainstorm. Rachel replied with this — and pasted it directly into Claude. <strong>No Slackbot. The three-act structure (greyscale → color → Agentforce) came entirely from this one Slack message.</strong></div>
           </div>
         </div>
         <div class="dp-body">
           <div class="dp-grid">
             <div>
-              <div class="dp-col-label">what i fed claude</div>
+              <div class="dp-col-label">intelligence provided</div>
               <div class="input-chips">
-                <div class="input-chip"><span class="input-chip-icon">🟡</span>hertz brand colors (iconic yellow #FFD100, black)</div>
-                <div class="input-chip"><span class="input-chip-icon">🎫</span>service agent workflow context and case types</div>
-                <div class="input-chip"><span class="input-chip-icon">🚗</span>real use case: damage dispute, rental return scenario</div>
-                <div class="input-chip"><span class="input-chip-icon">🎯</span>the story — AI in the flow of work, not a separate tool</div>
-                <div class="input-chip"><span class="input-chip-icon">👤</span>specific stakeholder context (Lauryl)</div>
+                <div class="input-chip"><span class="input-chip-icon">💬</span>Rachel's illuminated screens concept from Slack</div>
+                <div class="input-chip"><span class="input-chip-icon">🟡</span>Hertz brand context — iconic yellow, black, 100-year legacy</div>
+                <div class="input-chip"><span class="input-chip-icon">🔐</span>governance + security + flow of work framing</div>
+                <div class="input-chip"><span class="input-chip-icon">⚠️</span>Hertz concern: fragmented AI systems across the org</div>
               </div>
             </div>
             <div>
-              <div class="dp-col-label">the journey</div>
-              <div class="steps">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-text">
-                    <h5>told claude to start in the problem, not the solution</h5>
-                    <p>instead of jumping straight to AI, i asked Claude to design a reveal that started where Hertz already was. the contrast only lands if you earn the before.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Don't start with AI. Start where Hertz is today — let the room feel the problem before they see the answer." That instruction built the entire three-act structure.</div>
-                  </div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">Slack — Rachel's reply to Lauryl's brainstorm request</span>
+                  <div class="conv-quote">"what if it's like one of those key screens that gets... more illuminated? like maybe it starts out black and white or greyscale with just fields of data with lil 🔒 icons to indicate field-level security, then it's full color same screen but a closer look at the flow of the work (thinking service console omni queue), then it's same screen but agentforce layered with obnoxious but appropriate AI neon 3D art stars!"</div>
                 </div>
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-text">
-                    <h5>named the three acts before building any of them</h5>
-                    <p>"governed foundation → AI in the flow → one platform." i gave Claude the arc first. once the narrative had names, every UI decision had a reason.</p>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-text">
-                    <h5>specificity made it real: a tesla dispute at LAX</h5>
-                    <p>not a generic service case — a real scenario. real case type, real priority queue, real data fields. the more specific the scenario i gave, the more recognizable the output became.</p>
-                    <div class="prompt-moment"><span class="pm-label">the prompt that mattered</span>"Use a Tesla damage dispute at LAX return. Real fields. Real priority." Swapping generic for specific completely changed how the demo felt in the room.</div>
-                  </div>
-                </div>
-                <div class="step-row">
-                  <div class="step-n">4</div>
-                  <div class="step-text">
-                    <h5>"revise based on the story — and make it unmistakably hertz"</h5>
-                    <p>that was the entire final direction. Claude dialed the Hertz yellow into every detail — the nav, the glow, the accents — until it felt like their product, not a mockup of it.</p>
-                  </div>
+                <div class="conv-item">
+                  <span class="conv-label">Claude — Rachel's strategic framing added</span>
+                  <div class="conv-quote">"Visually, how would you tell the story that Salesforce is uniquely equipped to power AI in the flow of work at Hertz because we provide governance, security, and already power some of the most important 'screens' that employees are already using to run their day. Bonus if we can communicate that Hertz is worried about fragmented AI systems and we can help solve that."</div>
                 </div>
               </div>
             </div>
