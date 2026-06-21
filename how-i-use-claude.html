@@ -614,8 +614,8 @@
     /* ── EASTER EGGS ─────────────────────────────────── */
     .egg { color: inherit; text-decoration: underline; text-decoration-style: dotted; text-decoration-color: rgba(212,120,90,.35); cursor: pointer; }
     .egg:hover { text-decoration-color: var(--claude); }
-    .egg::after { content: ' 💿'; display: inline-block; opacity: 0; transition: opacity .15s; }
-    .egg:hover::after { opacity: 1; animation: vinyl-spin .6s linear infinite; }
+    .egg::after { content: ' 💿'; display: inline-block; font-size: .65em; opacity: .22; animation: vinyl-spin 2.5s linear infinite; transition: opacity .15s; }
+    .egg:hover::after { opacity: 1; animation-duration: .6s; }
     .brain-spin { display: inline-block; animation: vinyl-spin 2.5s linear infinite; }
 
     /* ── LIVE STRIP ──────────────────────────────────── */
