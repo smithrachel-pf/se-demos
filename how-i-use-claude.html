@@ -541,7 +541,9 @@
     .mp-tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
     .mp-tech-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 8px; padding: .7rem .85rem; }
     .mp-tech-name { font-size: .72rem; font-weight: 800; color: rgba(255,255,255,.72); margin-bottom: .2rem; }
-    .mp-tech-desc { font-size: .65rem; color: rgba(255,255,255,.36); line-height: 1.45; font-style: italic; }
+    .mp-tech-desc { font-size: .65rem; color: rgba(255,255,255,.42); line-height: 1.45; margin-bottom: .5rem; }
+    .mp-tech-quote { font-size: .64rem; font-style: italic; color: rgba(212,120,90,.7); line-height: 1.45; padding-left: .5rem; border-left: 2px solid rgba(212,120,90,.25); margin-bottom: .4rem; }
+    .mp-tech-why { font-size: .63rem; color: rgba(255,255,255,.3); line-height: 1.45; }
 
     /* ── SLACK ARC + QUOTE ──────────────────────────────────── */
     .slack-arc { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .65rem; }
@@ -896,11 +898,11 @@
         <div class="mp-phase">
           <div class="mp-phase-num">phase 03</div>
           <div class="mp-phase-name">explicit claude handoff</div>
-          <div class="mp-phase-what">the output is designed to be portable</div>
+          <div class="mp-phase-what">the handoff prompt is its own skill</div>
           <div class="mp-phase-quotes">
-            <div class="mp-quote">"be specific because i'm giving this to Claude"</div>
-            <div class="mp-quote">"give me an output i can share with Claude"</div>
-            <div class="mp-quote">the handoff was never accidental — it was deliberately named and structured</div>
+            <div class="mp-quote">"i'm giving this to Claude" tells Slackbot to write for the reader, not just respond to the request.</div>
+            <div class="mp-quote">"give me an output i can share with Claude" — the handoff was never accidental. it was deliberately named and structured.</div>
+            <div class="mp-quote" style="color:rgba(212,120,90,.7);border-left-color:rgba(212,120,90,.5);font-style:normal;font-weight:700;">slackbot primes the context. claude executes on it. two different tools, one continuous thought.</div>
           </div>
         </div>
       </div>
@@ -909,27 +911,39 @@
       <div class="mp-tech-grid">
         <div class="mp-tech-card">
           <div class="mp-tech-name">time-boxing</div>
-          <div class="mp-tech-desc">"i only have 10 minutes" — forces ruthless prioritization over comprehensiveness</div>
+          <div class="mp-tech-desc">artificially constraining scope to force the AI to prioritize ruthlessly</div>
+          <div class="mp-tech-quote">"let's say i only have 10 minutes — what are the most compelling stories?"</div>
+          <div class="mp-tech-why">removes the AI's default instinct to be comprehensive. forces a judgment call, not a list.</div>
         </div>
         <div class="mp-tech-card">
           <div class="mp-tech-name">promise-check</div>
-          <div class="mp-tech-desc">"what did we commit vs. what are we building?" — keeps the AI honest to the actual ask</div>
+          <div class="mp-tech-desc">auditing the AI's output against actual customer commitments before delivery</div>
+          <div class="mp-tech-quote">"review these dry run notes against what we promised the customer — what are we missing?"</div>
+          <div class="mp-tech-why">catches the gap between what was sold and what's being built — before the customer does.</div>
         </div>
         <div class="mp-tech-card">
           <div class="mp-tech-name">prior work as template</div>
-          <div class="mp-tech-desc">"for inspiration, review my CBRE canvases" — teaches style, not just content</div>
+          <div class="mp-tech-desc">feeding your own best previous outputs as the creative and structural standard</div>
+          <div class="mp-tech-quote">"for inspiration, review my CBRE Savannah canvases"</div>
+          <div class="mp-tech-why">teaches style, not just content. the AI learns your standard — not a generic one.</div>
         </div>
         <div class="mp-tech-card">
           <div class="mp-tech-name">contamination flagging</div>
-          <div class="mp-tech-desc">"the visuals are from ANOTHER client — ensure none of that intel carries over"</div>
+          <div class="mp-tech-desc">explicitly naming what context should NOT bleed into the output</div>
+          <div class="mp-tech-quote">"the visuals I included are from ANOTHER client — ensure none of that intel carries over"</div>
+          <div class="mp-tech-why">AI context windows blend sources by default. naming the boundary prevents silent hallucination contamination.</div>
         </div>
         <div class="mp-tech-card">
           <div class="mp-tech-name">iterative refinement</div>
-          <div class="mp-tech-desc">every canvas went through at least one correction pass — first draft is never final</div>
+          <div class="mp-tech-desc">treating first output as a draft, not a deliverable — always planning a correction pass</div>
+          <div class="mp-tech-quote">"review this canvas with an editorial eye" / "make suggestions for where i can strengthen this"</div>
+          <div class="mp-tech-why">the first answer sets the floor. the second prompt raises the ceiling. first draft is never final.</div>
         </div>
         <div class="mp-tech-card">
           <div class="mp-tech-name">cross-source synthesis</div>
-          <div class="mp-tech-desc">channels + DMs + Drive + PDFs + call notes — all pulled into one prompt</div>
+          <div class="mp-tech-desc">pointing the AI at every relevant source simultaneously — channels, DMs, Drive, PDFs, call notes — in one prompt</div>
+          <div class="mp-tech-quote">"review the channel, DMs with Jackie and Aida, the Google folder, and this RFP"</div>
+          <div class="mp-tech-why">the AI's output quality is directly proportional to input surface area. narrow inputs produce narrow outputs.</div>
         </div>
       </div>
     </div>
