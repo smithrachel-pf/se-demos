@@ -316,6 +316,11 @@
       display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
     .output-preview iframe { width: 100%; height: 100%; border: none; }
+    .op-card { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .55rem; padding: 1.25rem; box-sizing: border-box; }
+    .op-card-icon { font-size: 2rem; line-height: 1; }
+    .op-card-label { font-size: .82rem; font-weight: 700; color: rgba(255,255,255,.88); letter-spacing: .02em; text-align: center; }
+    .op-card-sub { font-size: .6rem; color: rgba(255,255,255,.38); text-align: center; letter-spacing: .06em; text-transform: uppercase; }
+    .op-card-divider { width: 28px; height: 2px; background: var(--claude); border-radius: 2px; margin-top: .1rem; }
     .output-placeholder { text-align: center; color: rgba(255,255,255,.25); }
     .output-placeholder-icon { font-size: 2.75rem; margin-bottom: .5rem; }
     .output-placeholder p { font-size: .75rem; }
@@ -1115,8 +1120,13 @@
             <div>
               <div class="dp-col-label">the output</div>
               <div class="output-box">
-                <div class="output-preview">
-                  <iframe src="https://smithrachel-pf.github.io/se-demos/cbre-gws-prototype.html" title="CBRE BOE Prototype" loading="lazy"></iframe>
+                <div class="output-preview" style="background: linear-gradient(135deg, #001a10, #003d1a);">
+                  <div class="op-card">
+                    <div class="op-card-icon">🏢</div>
+                    <div class="op-card-label">CBRE BOE Prototype</div>
+                    <div class="op-card-divider"></div>
+                    <div class="op-card-sub">interactive HTML demo</div>
+                  </div>
                 </div>
                 <div class="output-foot">
                   <div>
@@ -1156,7 +1166,7 @@
               <span class="arc-step" data-tip="Establishing what we are NOT doing — constraint-first to sharpen the angle">constraint framing</span><span class="arc-sep"> → </span>
               <span class="arc-step" data-tip="Packaging the output specifically for Claude to consume">claude handoff</span>
             </div>
-            <div class="slack-prompt-quote">"you are a solution engineer for salesforce. wear your best hat. Review all Equinox intel in channels, DMs, Google Drive. Build me an agenda, deck outline, and supporting talk tracks. Be specific because I am going to give this to Claude."</div>
+            <div class="slack-prompt-quote">"you are a solution engineer for salesforce preparing for an upcoming executive meeting that marc b is likely to join. Review all Equinox intel in channels, DMs, Google Drive. Build an agenda, deck outline, and supporting talk tracks that would pass the marc test. Be specific because I am going to give this to Claude to take the first pass at the deck structure."</div>
             <div class="slack-callout-text">the constraint that shaped the entire SIC came from this session: <strong>not a new vision — unlock the HOW.</strong> Slackbot established the strategic angle before Claude saw a word.</div>
           </div>
         </div>
@@ -1176,7 +1186,7 @@
               <div class="conv-thread">
                 <div class="conv-item">
                   <span class="conv-label">Slackbot</span>
-                  <div class="conv-quote">"you are a solution engineer for salesforce. wear your best hat. Review all Equinox intel in channels, DMs, Google Drive. Build me an agenda, deck outline, and supporting talk tracks. Be specific because I am going to give this to Claude."</div>
+                  <div class="conv-quote">"you are a solution engineer for salesforce preparing for an upcoming executive meeting that marc b is likely to join. Review all Equinox intel in channels, DMs, Google Drive. Build an agenda, deck outline, and supporting talk tracks that would pass the marc test. Be specific because I am going to give this to Claude to take the first pass at the deck structure."</div>
                 </div>
                 <div class="conv-item">
                   <span class="conv-label">Slackbot — constraint pass</span>
@@ -1191,8 +1201,13 @@
             <div>
               <div class="dp-col-label">the output</div>
               <div class="output-box">
-                <div class="output-preview">
-                  <iframe src="https://smithrachel-pf.github.io/se-demos/equinox-sic-deck.html" title="Equinox SIC Demo" loading="lazy"></iframe>
+                <div class="output-preview" style="background: linear-gradient(135deg, #0a0a14, #151530);">
+                  <div class="op-card">
+                    <div class="op-card-icon">⚡</div>
+                    <div class="op-card-label">Equinox SIC Suite</div>
+                    <div class="op-card-divider"></div>
+                    <div class="op-card-sub">SIC deck · talk tracks · 2 PDF decks</div>
+                  </div>
                 </div>
                 <div class="output-foot">
                   <div>
@@ -1381,7 +1396,7 @@
               <span class="arc-step" data-tip="Slackbot reviewed dry run notes against customer promises — caught the gaps">promise check</span><span class="arc-sep"> → </span>
               <span class="arc-step" data-tip="Final handoff packaged explicitly for Claude to build from">claude handoff</span>
             </div>
-            <div class="slack-prompt-quote">"you are a solution engineer for salesforce who might need to be a hero and save a demo tomorrow — give me an output I can share with Claude."</div>
+            <div class="slack-prompt-quote">"I want to show Related how an SDR agent by Salesforce would help them capture and nurture leads from their website. It can answer questions for anyone looking for their next property and nurture them until they are ready to book an appointment. Can you build a prototype showing how an agent would interact and then pass the lead to a human agent for closing? Review these notes first."</div>
             <div class="slack-callout-text">six Slackbot sessions on this one — story dreaming, time-boxing, editorial, promise check, and a night-before rescue pass. <strong>The handoff was explicit: "give me something I can hand to Claude."</strong></div>
           </div>
         </div>
@@ -1412,16 +1427,21 @@
                   <div class="conv-quote">"Review these dry run notes against what we promised the customer — what are we missing? What is critical for ensuring we show up well?"</div>
                 </div>
                 <div class="conv-item">
-                  <span class="conv-label">Slackbot — Claude handoff</span>
-                  <div class="conv-quote">"you are a solution engineer for salesforce who might need to be a hero and save a demo tomorrow — give me an output I can share with Claude."</div>
+                  <span class="conv-label">Claude — the ask</span>
+                  <div class="conv-quote">"our demo org is having issues. we are fixing, but in the event the org is not working tomorrow, i need a working prototype ready to go."</div>
                 </div>
               </div>
             </div>
             <div>
               <div class="dp-col-label">the output</div>
               <div class="output-box">
-                <div class="output-preview">
-                  <iframe src="https://smithrachel-pf.github.io/se-demos/related-agentforce-demo.html" title="Related Rentals Agentforce Demo" loading="lazy"></iframe>
+                <div class="output-preview" style="background: linear-gradient(135deg, #200808, #4a0f0f);">
+                  <div class="op-card">
+                    <div class="op-card-icon">🏘️</div>
+                    <div class="op-card-label">Related Rentals Demo Suite</div>
+                    <div class="op-card-divider"></div>
+                    <div class="op-card-sub">Agentforce demo · CRM Console demo</div>
+                  </div>
                 </div>
                 <div class="output-foot">
                   <div>
@@ -1505,8 +1525,13 @@
             <div>
               <div class="dp-col-label">the output</div>
               <div class="output-box">
-                <div class="output-preview">
-                  <iframe src="https://smithrachel-pf.github.io/se-demos/lauryl-hertz.html" title="Hertz Agentforce Demo" loading="lazy"></iframe>
+                <div class="output-preview" style="background: linear-gradient(135deg, #0a0800, #1c1400);">
+                  <div class="op-card">
+                    <div class="op-card-icon">🚗</div>
+                    <div class="op-card-label" style="color:#FFD100;">hertz × salesforce</div>
+                    <div class="op-card-divider" style="background:#FFD100;"></div>
+                    <div class="op-card-sub">AI in the flow of work · 3-stage demo</div>
+                  </div>
                 </div>
                 <div class="output-foot">
                   <div>
