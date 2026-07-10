@@ -1069,7 +1069,7 @@ function checkPassword() {
 }
 
 function autoLoadDashboard() {
-  fetch('BizServ%20-%20%20FY27%20CBS%20Pod%20Tracker%20-%20Engagement%20Tracker.csv')
+  fetch('pod-data.csv')
     .then(r => {
       if (!r.ok) throw new Error('CSV not found');
       return r.text();
