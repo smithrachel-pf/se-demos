@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMT Tech & Tools Initiatives — CBRE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#003F2D;--green:#006747;--mint:#17E88F;
+  --live:#15803D;--live-bg:#DCFCE7;--live-border:#86EFAC;
+  --dev:#1D4ED8;--dev-bg:#DBEAFE;--dev-border:#93C5FD;
+  --plan:#B45309;--plan-bg:#FEF3C7;--plan-border:#FCD34D;
+  --done:#4B5563;--done-bg:#F3F4F6;--done-border:#D1D5DB;
+  --warn:#C2410C;--warn-bg:#FFF7ED;--warn-border:#FDBA74;
+  --bg:#F0F4F2;--card:#FFFFFF;--border:#E2E8E4;
+  --text:#1A2E1A;--muted:#6B7A6B;--faint:#F7FAF8
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+
+/* ── HEADER ── */
+.hdr{background:var(--dark);color:#fff;padding:28px 36px 24px}
+.hdr-eyebrow{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:6px}
+.hdr-title{font-size:24px;font-weight:800;letter-spacing:.3px}
+.hdr-sub{font-size:13px;color:rgba(255,255,255,.65);margin-top:4px}
+.hdr-stats{display:flex;gap:32px;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12)}
+.stat-val{font-size:26px;font-weight:900;color:var(--mint)}
+.stat-lbl{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── PIPELINE ── */
+.wrap{max-width:1360px;margin:0 auto;padding:28px 28px 48px}
+.section-hdr{display:flex;align-items:center;gap:12px;margin:28px 0 14px}
+.section-hdr h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--green);white-space:nowrap}
+.section-hdr .line{flex:1;height:1px;background:var(--border)}
+.section-hdr .cnt{background:var(--green);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:2px 9px}
+
+.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.p-col{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;border-top:4px solid}
+.p-col.p-plan{border-top-color:var(--plan)}
+.p-col.p-dev{border-top-color:var(--dev)}
+.p-col.p-live{border-top-color:var(--live)}
+.p-col.p-done{border-top-color:var(--done)}
+.p-col-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.p-col.p-plan .p-col-title{color:var(--plan)}
+.p-col.p-dev .p-col-title{color:var(--dev)}
+.p-col.p-live .p-col-title{color:var(--live)}
+.p-col.p-done .p-col-title{color:var(--done)}
+.p-chip{font-size:11px;color:var(--text);padding:5px 0;border-bottom:1px solid var(--faint);line-height:1.35}
+.p-chip:last-child{border-bottom:none;padding-bottom:0}
+.p-chip-sub{font-size:10px;color:var(--muted)}
+
+/* ── CARDS ── */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;border-left:5px solid}
+.card.c-live{border-left-color:var(--live)}
+.card.c-dev{border-left-color:var(--dev)}
+.card.c-plan{border-left-color:var(--plan)}
+.card.c-done{border-left-color:var(--done);background:var(--faint)}
+.card-head{padding:14px 16px 10px;border-bottom:1px solid var(--border)}
+.card-name{font-size:14px;font-weight:800;line-height:1.25;margin-bottom:7px}
+.badges{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;border:1px solid}
+.b-live{background:var(--live-bg);color:var(--live);border-color:var(--live-border)}
+.b-dev{background:var(--dev-bg);color:var(--dev);border-color:var(--dev-border)}
+.b-plan{background:var(--plan-bg);color:var(--plan);border-color:var(--plan-border)}
+.b-done{background:var(--done-bg);color:var(--done);border-color:var(--done-border)}
+.b-plat{background:#F0FDF4;color:#166534;border-color:#BBF7D0}
+
+.card-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card-body.single{grid-template-columns:1fr}
+.field{}
+.field-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.field-val{font-size:12px;color:var(--text);line-height:1.6}
+.field-val ul{padding-left:14px}
+.field-val li{margin-bottom:2px}
+.field-val.full{grid-column:1/-1}
+.span2{grid-column:1/-1}
+
+.outcome-box{padding:8px 10px;background:#F0FDF4;border-left:3px solid #22C55E;border-radius:0 5px 5px 0;font-size:11px;line-height:1.6;margin-top:4px}
+.pain-box{padding:8px 10px;background:var(--warn-bg);border-left:3px solid #F97316;border-radius:0 5px 5px 0;font-size:11px;line-height:1.6;margin-top:4px}
+.note-box{padding:8px 10px;background:#F5F3FF;border-left:3px solid #8B5CF6;border-radius:0 5px 5px 0;font-size:11px;line-height:1.6;margin-top:4px}
+.card-foot{padding:10px 16px;background:var(--faint);border-top:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.target{display:inline-flex;align-items:center;gap:5px;background:var(--plan-bg);border:1px solid var(--plan-border);border-radius:5px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--plan)}
+.target-done{background:var(--done-bg);border-color:var(--done-border);color:var(--done)}
+.foot-note{font-size:11px;color:var(--muted)}
+
+/* ── ANNOTATIONS ── */
+.annotations{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 16px}
+.ann{background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:14px;border-top:3px solid #D97706;position:relative}
+.ann-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#92400E;margin-bottom:6px}
+.ann-text{font-size:12.5px;color:#1A1A1A;line-height:1.65;font-style:italic}
+.ann-source{font-size:9px;color:#92400E;margin-top:6px;opacity:.7}
+.pen-icon{font-size:18px;position:absolute;top:12px;right:12px;opacity:.35}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:20px;font-size:10px;color:var(--muted);border-top:1px solid var(--border);margin-top:12px;background:var(--card)}
+
+/* ── FLOW INDICATOR ── */
+.flow-strip{display:flex;align-items:center;gap:0;margin-top:8px}
+.flow-step{font-size:9px;padding:3px 7px;border-radius:3px;font-weight:600;color:rgba(255,255,255,.6);background:rgba(255,255,255,.08)}
+.flow-step.active{color:#fff;background:rgba(255,255,255,.2)}
+.flow-arrow{font-size:9px;color:rgba(255,255,255,.25);margin:0 2px}
+
+/* ── COMPLETED CARD OVERRIDE ── */
+.card.c-done .card-name{color:var(--done)}
+.card.c-done .field-val{color:#4B5563}
+.done-check{display:inline-block;width:22px;height:22px;background:#22C55E;border-radius:50%;color:#fff;font-size:13px;text-align:center;line-height:22px;font-weight:700;margin-right:6px}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     HEADER
+═════════════════════════════════════════════════════════ -->
+<div class="hdr">
+  <div class="hdr-eyebrow">CBRE · Proprietary & Confidential Information · ©2026 CBRE, Inc.</div>
+  <div class="hdr-title">PMT Tech &amp; Tools Initiatives</div>
+  <div class="hdr-sub">Next Steps Tracker — Proposal Management Team</div>
+  <div class="hdr-stats">
+    <div><div class="stat-val">10</div><div class="stat-lbl">Total Initiatives</div></div>
+    <div><div class="stat-val">5</div><div class="stat-lbl">Active / In Progress</div></div>
+    <div><div class="stat-val">5</div><div class="stat-lbl">Completed</div></div>
+    <div><div class="stat-val">Q2 2026</div><div class="stat-lbl">Nearest Target</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ════════════════════════════════════════════════════════
+     PIPELINE OVERVIEW
+═════════════════════════════════════════════════════════ -->
+<div class="section-hdr">
+  <h2>Initiative Pipeline</h2>
+  <div class="line"></div>
+</div>
+
+<div class="pipeline">
+  <div class="p-col p-plan">
+    <div class="p-col-title">📋 Planning / Investigating</div>
+    <div class="p-chip">Org Chart Tool<br><span class="p-chip-sub">Target: Q2 2026</span></div>
+    <div class="p-chip">Proposal Automation Workspace<br><span class="p-chip-sub">TBD — larger project</span></div>
+    <div class="p-chip">Client / Account Library<br><span class="p-chip-sub">TBD — larger project</span></div>
+  </div>
+  <div class="p-col p-dev">
+    <div class="p-col-title">🔧 In Development</div>
+    <div class="p-chip">Sales / Mapping Solution<br><span class="p-chip-sub">"Zilker" — Prototype stage</span></div>
+  </div>
+  <div class="p-col p-live">
+    <div class="p-col-title">🟢 Deployed / Testing</div>
+    <div class="p-chip">Proposal Tool — Pitch Perfect<br><span class="p-chip-sub">Sandbox live; contract pending</span></div>
+    <div class="p-chip">Crystal Knows<br><span class="p-chip-sub">Testing underway</span></div>
+  </div>
+  <div class="p-col p-done">
+    <div class="p-col-title">✅ Completed</div>
+    <div class="p-chip">Pursuit Workload Tracker &amp; Dashboard</div>
+    <div class="p-chip">Templay</div>
+    <div class="p-chip">AI Agents in The Hub</div>
+    <div class="p-chip">Prompt Library</div>
+    <div class="p-chip">AI Integrated in Pursuit Process</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     REVIEW ANNOTATIONS (handwritten notes from document review)
+═════════════════════════════════════════════════════════ -->
+<div class="section-hdr">
+  <h2>Review Annotations</h2>
+  <div class="line"></div>
+  <span style="font-size:10px;color:var(--muted);white-space:nowrap">Handwritten notes from doc review</span>
+</div>
+
+<div class="annotations">
+  <div class="ann">
+    <div class="pen-icon">✏️</div>
+    <div class="ann-lbl">Scale Context</div>
+    <div class="ann-text">"not average — 40 Billion sqft"</div>
+    <div class="ann-source">Noted on pg. 1 · Mapping / Service Matrix section</div>
+  </div>
+  <div class="ann">
+    <div class="pen-icon">✏️</div>
+    <div class="ann-lbl">Strategic Insight</div>
+    <div class="ann-text">"Solution = The RFP Response"</div>
+    <div class="ann-source">Noted on pg. 1 · Proposal Tool / Pitch Perfect section</div>
+  </div>
+  <div class="ann">
+    <div class="pen-icon">✏️</div>
+    <div class="ann-lbl">Data Philosophy</div>
+    <div class="ann-text">"FM is the operating exhaust = data asset"</div>
+    <div class="ann-source">Noted on pg. 1 · Middle section</div>
+  </div>
+  <div class="ann">
+    <div class="pen-icon">✏️</div>
+    <div class="ann-lbl">Open Question</div>
+    <div class="ann-text">"Hallmark?" &nbsp;·&nbsp; "Vertical Industries?"</div>
+    <div class="ann-source">Noted on pg. 2 · Left &amp; right margins</div>
+  </div>
+  <div class="ann">
+    <div class="pen-icon">✏️</div>
+    <div class="ann-lbl">Opportunity</div>
+    <div class="ann-text">"Blog post addition? Field capabilities?"</div>
+    <div class="ann-source">Noted on pg. 2 · Bottom right</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     ACTIVE INITIATIVES
+═════════════════════════════════════════════════════════ -->
+<div class="section-hdr">
+  <h2>Active Initiatives</h2>
+  <div class="line"></div>
+  <span class="cnt">5</span>
+</div>
+
+<div class="cards">
+
+  <!-- ── CARD 1: Pitch Perfect / Crystal Knows ── -->
+  <div class="card c-live">
+    <div class="card-head">
+      <div class="card-name">Proposal Tool — Pitch Perfect &amp; Crystal Knows</div>
+      <div class="badges">
+        <span class="badge b-live">🟢 Deployed — Testing</span>
+        <span class="badge b-plat">Browser-based (Pitch Perfect 1.0 / Pitch AI / SBI)</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Challenge &amp; Goal</div>
+        <div class="field-val">Automate proposal formatting using Crystal/Claude as the base model. Parse RFP inputs, use internally bounded practices, and report outputs in the CBRE content library portal. Already used to generate AI-based proposals for potential clients.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources Needed</div>
+        <div class="field-val">Developer/development team established. Additional resources and testing available for deployment.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Current Status</div>
+        <div class="field-val">Successfully deployed sandbox. Being tested by PMT. Features being advanced as testing progresses.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val"><ul>
+          <li>Add 3 proposal workflow automations</li>
+          <li>Finalize CBRE next steps</li>
+          <li>Test v2.0</li>
+          <li>End-to-end redeployment</li>
+        </ul></div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">💰 Investment Outcomes</div>
+        <div class="outcome-box">
+          35% reduction in time creating Crystal Reports<br>
+          10% reduction in completing proposal first responses
+        </div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">Human tested sandbox version: Crystal report functioning from <strong>9 minutes → 30 seconds</strong> per report. Pitch Perfect already solves for most workflow needs. Discussion with KM &amp; L&amp;D about training; Templay also noted as solving for many of the same needs.</div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="target">📅 End of Q2 2026 &nbsp;/&nbsp; Finalize by CBRE Q&amp;T approaches</span>
+    </div>
+  </div>
+
+  <!-- ── CARD 2: Sales/Mapping Solution ── -->
+  <div class="card c-dev">
+    <div class="card-head">
+      <div class="card-name">Sales / Mapping Solution &nbsp;<span style="font-weight:400;font-size:12px;color:var(--muted)">("Zilker" / Valor)</span></div>
+      <div class="badges">
+        <span class="badge b-dev">🔧 In Development</span>
+        <span class="badge b-plat">CBRE Browser-based (established)</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Challenge &amp; Goal</div>
+        <div class="field-val">Streamline and ensure accuracy of the service matrix by automating production. Plan: Create a proposal for solutions to accurately map CBRE's FM services for bookbuild. PMT program to use the Mapping Center as a power user with quick turnaround times. Tracker managed through PP Notebook; feature for collaboration, assigning questions, etc.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources Needed</div>
+        <div class="field-val">Developer/platform established.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Current Status</div>
+        <div class="field-val">Hannah working on prototype. Team working on sandbox. Currently exploring and developing.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val">Prototype development — create environment to CBRE standard accessible to all.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">💰 Investment Outcomes</div>
+        <div class="outcome-box">
+          60–70% reduction in associate turnaround times<br>
+          Ability to support more concise/granular requests with fewer resources
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚠️ Pain Points</div>
+        <div class="pain-box">Not as simple as designing a workflow — addresses lack of data availability/reliability. Service matrices are incredibly granular. Data accuracy is a core concern that must be addressed before deployment.</div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box"><strong>Current tool: 2.5 hours to create a map → Target: 5 minutes.</strong> In absence of solution, PMT will continue to support by advancing reporting capability using a BI strategy.</div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="target">📅 Q1 2026 &nbsp;(dependent on CBRE D&amp;T schedule)</span>
+    </div>
+  </div>
+
+  <!-- ── CARD 3: Org Chart Tool ── -->
+  <div class="card c-plan">
+    <div class="card-head">
+      <div class="card-name">Org Chart Tool</div>
+      <div class="badges">
+        <span class="badge b-plan">📋 Investigating</span>
+        <span class="badge b-plat">TBD — Internal Development</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Challenge &amp; Goal</div>
+        <div class="field-val">Automate org chart creation. Currently no tool exists to automate org chart creation. PASA staffing from OrgSync — team currently builds directly from MS tools or creates org charts manually from materials provided.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources Needed</div>
+        <div class="field-val">Funding for development team.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Current Status</div>
+        <div class="field-val">In-progress investigation. OrgSync may <strong>not</strong> be a viable solution — does not account for multi-BOE pursuits. Team continues to create org charts manually.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val">Investigate other solutions in and outside of OrgSync.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">💰 Investment Outcomes</div>
+        <div class="outcome-box">
+          Time savings across multiple orgs<br>
+          Studies/edits only need to be made once; strategies accommodated faster
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">OrgSync is being tested on some opportunities but not performing as intended. A step-by-step solution has not yet been built.</div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="target">📅 Q2 2026</span>
+    </div>
+  </div>
+
+  <!-- ── CARD 4: Proposal Automation Workspace ── -->
+  <div class="card c-plan">
+    <div class="card-head">
+      <div class="card-name">Proposal Automation Workspace</div>
+      <div class="badges">
+        <span class="badge b-plan">📋 Planning / Exploratory</span>
+        <span class="badge b-plat">Ellis AI</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Challenge &amp; Goal</div>
+        <div class="field-val">Build centralized capabilities for the entire pursuit lifecycle. Visualized Pitch Perfect (VPP) capabilities to allow for tracking across all pursuit stages. Allow users to build custom repositories, track scope changes, and align CBRE responses to client requirements.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources Needed</div>
+        <div class="field-val">Funding for resources. Discussion underway around Brooke / Salesforce integration. Bill investigating extending Salesforce to accommodate this.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Current Status</div>
+        <div class="field-val">Biz investigating expanding Salesforce to accommodate multi-pursuit tracking. Connected to Account (Salesforce) — can then integrate auto functions.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val">Connect with Bill to gauge progress or updates.</div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">💰 Investment Outcomes</div>
+        <div class="outcome-box">
+          Shorter turnaround times · Higher-level collaboration across all service lines<br>
+          Better support for managers, sales, and leadership across the pursuit process
+        </div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">This is a vision that would streamline the quality of the overall pursuit process — make it easier for client evaluations, easier for sales to provide input, and connected to leadership. <strong>Not a top priority at this time</strong> — project is bigger than PMT alone.</div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="target">📅 TBD &nbsp;—&nbsp; project bigger than PMT</span>
+    </div>
+  </div>
+
+  <!-- ── CARD 5: Client/Account Library ── -->
+  <div class="card c-plan" style="grid-column:1/-1">
+    <div class="card-head">
+      <div class="card-name">Client / Account Library</div>
+      <div class="badges">
+        <span class="badge b-plan">📋 Planning</span>
+        <span class="badge b-plat">The Hub</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Challenge &amp; Goal</div>
+        <div class="field-val">Collect key client data and make it accessible on The Hub. Data to include: account KPIs, account milestones, account health, innovations, etc. <strong>NOT</strong> sensitive information such as personal projects or relationship details.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources Needed</div>
+        <div class="field-val">Account ID updates in progress. Portal will align to Account ID no. 10/2025.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Current Status</div>
+        <div class="field-val">Requires gathering information not readily available. Cross-referencing other CBRE solutions/strategies currently underway.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val">Connect with Bill to gauge progress or updates.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">💰 Investment Outcomes</div>
+        <div class="outcome-box">
+          High-quality client-centric content and tailored solutions<br>
+          Ability to provide more accurate and relevant client documents
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">TBD — project bigger than PMT. Connect with Bill for progress updates.</div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="target">📅 TBD &nbsp;—&nbsp; project bigger than PMT</span>
+    </div>
+  </div>
+
+</div><!-- /active cards -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     COMPLETED INITIATIVES
+═════════════════════════════════════════════════════════ -->
+<div class="section-hdr" style="margin-top:36px">
+  <h2>Completed Initiatives</h2>
+  <div class="line"></div>
+  <span class="cnt" style="background:var(--done)">5</span>
+</div>
+
+<div class="cards">
+
+  <!-- ── COMPLETED 1: Pursuit Workload Tracker ── -->
+  <div class="card c-done">
+    <div class="card-head">
+      <div class="card-name"><span class="done-check">✓</span>Pursuit Workload Tracker &amp; Dashboard</div>
+      <div class="badges">
+        <span class="badge b-done">✅ Live &amp; Accessible</span>
+        <span class="badge b-plat">Salesforce / Power BI</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Goal</div>
+        <div class="field-val">Track pursuit deliverable status and workload. Enhance analytics for resourcing and goal management, including gating.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources</div>
+        <div class="field-val">None required.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Ongoing</div>
+        <div class="field-val">Ongoing maintenance and ad hoc updates as needed.</div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">Will continue to update dashboards as needed for new metrics and reporting requirements.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPLETED 2: Templay ── -->
+  <div class="card c-done">
+    <div class="card-head">
+      <div class="card-name"><span class="done-check">✓</span>Templay</div>
+      <div class="badges">
+        <span class="badge b-done">✅ Live — Enterprise-wide</span>
+        <span class="badge b-plat">Templay</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Goal</div>
+        <div class="field-val">Automate and streamline PowerPoint slide search, retrieval, and editing. Implemented as a PowerPoint plug-in — users can select and input slides from the Content Library, as well as graphics, headshots, icons, and more. Also offers a Word plug-in for similar applications.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Status</div>
+        <div class="field-val">Live and deployed across PMT and Enterprise Sales. All new P&amp;T content is in Templay. Enterprise slide search strongly configured to folder that feeds Templay.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Ongoing</div>
+        <div class="field-val">Ongoing maintenance and ad hoc updates.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚠️ Pain Points</div>
+        <div class="pain-box">Discussion with KM &amp; L&amp;D about doing a short training to introduce it into the workflow. Note: Pitch Perfect already solves for most of the same needs.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">Will continue to update dashboards as needed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPLETED 3: AI Agents in The Hub ── -->
+  <div class="card c-done">
+    <div class="card-head">
+      <div class="card-name"><span class="done-check">✓</span>AI Agents Integrated in The Hub</div>
+      <div class="badges">
+        <span class="badge b-done">✅ Deployed (evolving)</span>
+        <span class="badge b-plat">The Hub</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Goal</div>
+        <div class="field-val">Enhance efficiency on The Hub and improve access to resources. Agents deployed to certain document libraries to improve retrieval and analysis.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources</div>
+        <div class="field-val">SharePoint developer team.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Status</div>
+        <div class="field-val">Agents deployed to certain document libraries, but <strong>functionality is not ideal</strong>.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val"><ul>
+          <li>Look into "Agents" — define what more is possible with existing agents</li>
+          <li>Look at "Clippy"-style access for Hub and SOB Intranet</li>
+          <li>Organize existing agents to appear where needed; research Hub page functions</li>
+          <li>Compare with CBRE SharePoint/D&amp;T — if appetite exists, support paired training with PSAs and FMSAs</li>
+        </ul></div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">⚠️ Pain Points</div>
+        <div class="pain-box">Possible duplication with other business units — need to confirm no overlap before expanding. Would need a 350–750 team to provide in-depth document capabilities. Avoid duplicating efforts already underway elsewhere in CBRE.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPLETED 4: Prompt Library ── -->
+  <div class="card c-done">
+    <div class="card-head">
+      <div class="card-name"><span class="done-check">✓</span>Prompt Library</div>
+      <div class="badges">
+        <span class="badge b-done">✅ Live on The Hub</span>
+        <span class="badge b-plat">The Hub (Microsoft Copilot)</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Goal</div>
+        <div class="field-val">Collect Copilot Prompts as a living tool. Goal: Learning and retention, ongoing use, improved prompt interaction practices.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources</div>
+        <div class="field-val">None required.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Status</div>
+        <div class="field-val">Live on The Hub — updating continuously as new ideas and prompts are received.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val"><ul>
+          <li>Share on upcoming L&amp;D call</li>
+          <li>Develop prompts tailored for PALs and PMs</li>
+        </ul></div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚠️ Pain Points</div>
+        <div class="pain-box">Content based on training developed for these groups. Feedback from Pal/LI will inform "day in the life" customized task prompts.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">Notebooks can now be shared across teams. Microsoft has optimized files — up to <strong>100+ files per Notebook</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPLETED 5: AI in Pursuit Process ── -->
+  <div class="card c-done" style="grid-column:1/-1">
+    <div class="card-head">
+      <div class="card-name"><span class="done-check">✓</span>AI Integrated in Pursuit Process</div>
+      <div class="badges">
+        <span class="badge b-done">✅ In Use — Expanding</span>
+        <span class="badge b-plat">Microsoft Copilot</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field span2">
+        <div class="field-lbl">🎯 Goal</div>
+        <div class="field-val">Integrate Copilot Notebooks strategically across the pursuit process. Align priorities to client goals using AI insights and analysis. Allow users to build custom repositories of documents, track requirements and scope changes, and align CBRE responses to client requirements. Build evaluation criteria for each tool.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">⚙️ Resources</div>
+        <div class="field-val">CBRE / Microsoft team. Funding for dedicated Copilot licensing.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">📍 Status</div>
+        <div class="field-val">PMT and Enterprise SCS actively using Copilot throughout the pursuit process. KM and L&amp;D continuing to show how pursuit process can automate tasks across all roles.</div>
+      </div>
+      <div class="field">
+        <div class="field-lbl">→ Next Steps</div>
+        <div class="field-val"><ul>
+          <li>Introduce <strong>"Pursuit Notebook"</strong> — proposal, KM selling, day-in-life, Sales Solutions flows</li>
+          <li>Understand limits and questions across Enterprise Sales and Solutions teams</li>
+          <li>Custom document repositories for evaluation criteria and scope changes</li>
+          <li>Align CBRE responses to client requirements using AI</li>
+        </ul></div>
+      </div>
+      <div class="field span2">
+        <div class="field-lbl">📝 Notes</div>
+        <div class="note-box">Notebooks are shareable across teams. Microsoft optimized to <strong>100+ files per Notebook</strong>. Supports evaluation criteria changes, custom document repositories, and alignment of CBRE responses to client requirements.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /completed cards -->
+
+</div><!-- /wrap -->
+
+<footer>
+  CBRE · Proprietary &amp; Confidential Information · ©2026 CBRE, Inc. &nbsp;|&nbsp; PMT Tech &amp; Tools Initiatives — Next Steps Tracker &nbsp;|&nbsp; Pages 1–3
+</footer>
+
+</body>
+</html>
