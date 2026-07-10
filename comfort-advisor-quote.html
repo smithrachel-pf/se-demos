@@ -946,17 +946,6 @@
         <button class="add-li-btn" onclick="addLineItem()">+ Add Line Item</button>
       </div>
 
-      <div class="quote-financing" id="q-financing">
-        <div>
-          <div class="fin-label">Financing available</div>
-          <div class="fin-label"><strong id="q-monthly">—</strong></div>
-          <div class="fin-detail">60-month term · 9.99% APR · Subject to credit approval</div>
-        </div>
-        <div class="fin-logo">
-          <strong>GreenSky® Financing</strong>
-          Apply at checkout — decision in seconds
-        </div>
-      </div>
 
       <div class="quote-validity">
         <div class="valid-dot"></div>
@@ -1160,7 +1149,6 @@ function populateQuote() {
   document.getElementById('q-systemName').textContent = p.name;
   document.getElementById('q-systemMeta').textContent = 'Model ' + p.model + ' · 3 Ton · ' + p.seer + ' SEER2';
   document.getElementById('q-tier').textContent = p.tier;
-  document.getElementById('q-monthly').textContent = '$' + p.monthly + '/mo';
 
   const exp = new Date(); exp.setDate(exp.getDate() + 30);
   document.getElementById('q-expiry').textContent = exp.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
