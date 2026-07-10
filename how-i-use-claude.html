@@ -5,28 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>me and mr. claude — rachel smith, salesforce</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 18' shape-rendering='crispEdges'%3E%3Crect x='2' y='2' width='12' height='10' fill='%23D4785A'/%3E%3Crect x='0' y='4' width='2' height='5' fill='%23C4603C'/%3E%3Crect x='14' y='4' width='2' height='5' fill='%23C4603C'/%3E%3Crect x='4' y='4' width='3' height='3' fill='%23111'/%3E%3Crect x='9' y='4' width='3' height='3' fill='%23111'/%3E%3Crect x='4' y='4' width='1' height='1' fill='rgba(255,255,255,.55)'/%3E%3Crect x='9' y='4' width='1' height='1' fill='rgba(255,255,255,.55)'/%3E%3Crect x='4' y='12' width='3' height='5' fill='%23C4603C'/%3E%3Crect x='9' y='12' width='3' height='5' fill='%23C4603C'/%3E%3C/svg%3E">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:       #0a0a0a;
-      --navy-mid:   #141414;
+      --navy:       #1C1A18;
+      --navy-mid:   #242220;
       --blue:       #0176D3;
       --blue-lt:    #1D9BD1;
       --cyan:       #06B6D4;
       --purple:     #8B5CF6;
       --green:      #10B981;
       --amber:      #F59E0B;
-      --claude:     #E8895C;
-      --claude-lt:  #F5B48A;
-      --claude-dim: #7a3e2e;
+      --claude:     #D4622E;
+      --claude-lt:  #E8784E;
+      --claude-dim: rgba(212,98,46,.18);
       --text:       rgba(255,255,255,.88);
       --text-muted: rgba(255,255,255,.6);
       --text-faint: rgba(255,255,255,.25);
       --border:     rgba(255,255,255,.09);
-      --bg:         #000000;
-      --white:      #1c1c1c;
+      --bg:         #1C1A18;
+      --white:      #2A2724;
       --radius:     12px;
       --shadow:     0 1px 4px rgba(0,0,0,.4), 0 4px 20px rgba(0,0,0,.5);
       --shadow-lg:  0 4px 8px rgba(0,0,0,.3), 0 12px 48px rgba(0,0,0,.65);
@@ -39,7 +39,7 @@
     /* ── NAV ─────────────────────────────────────────── */
     nav {
       position: sticky; top: 0; z-index: 200;
-      background: rgba(10,10,10,.97);
+      background: rgba(28,26,24,.97);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255,255,255,.07);
       height: 58px;
@@ -55,7 +55,7 @@
 
     /* ── HERO ─────────────────────────────────────────── */
     .hero {
-      background: #000000;
+      background: var(--bg);
       color: #fff;
       padding: 68px 2rem 52px;
       text-align: center;
@@ -75,8 +75,9 @@
     .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--claude-lt); }
     .hero h1 {
       font-size: clamp(2.4rem, 6vw, 4.8rem);
-      font-weight: 900; line-height: 1.03; letter-spacing: -.035em;
+      font-weight: 600; line-height: 1.08; letter-spacing: -.025em;
       max-width: 820px; margin: 0 auto 1.5rem;
+      font-family: 'Lora', Georgia, serif;
     }
     .hero h1 em {
       font-style: normal;
@@ -98,7 +99,7 @@
     .hero-connector { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.35); margin: 0 auto 1.25rem; text-align: center; }
 
     .slack-exchange {
-      background: #1a1d21; border: 1px solid rgba(255,255,255,.09); border-radius: 12px;
+      background: #21201E; border: 1px solid rgba(255,255,255,.08); border-radius: 12px;
       padding: 1.35rem 1.5rem; max-width: 560px; margin: 0 auto 2.75rem; text-align: left;
     }
     .sl-msg { display: flex; gap: .75rem; }
@@ -441,7 +442,7 @@
 
     /* ── SINCE THEN ─────────────────────────────────────── */
     .since-then {
-      background: #0f0f0f;
+      background: #161412;
       padding: 60px 2.5rem 68px;
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
@@ -456,7 +457,7 @@
       gap: .65rem;
     }
     .st-card {
-      background: #1c1c1c;
+      background: #2A2724;
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 10px;
       padding: 1rem 1.25rem;
@@ -501,8 +502,8 @@
     .cs-as-of { font-size: .6rem; color: rgba(255,255,255,.2); margin-top: .5rem; letter-spacing: .04em; }
     .collab-thread { max-width: 760px; margin: 0 auto; }
     .prompt-entry { margin-bottom: .5rem; }
-    .prompt-bubble { background: #1e1e1e; border: 1px solid rgba(255,255,255,.1); border-radius: 12px 12px 12px 3px; padding: 1.1rem 1.35rem; }
-    .prompt-bubble.is-pivot { background: #1e1918; border-color: rgba(212,120,90,.3); border-radius: 12px 12px 12px 3px; }
+    .prompt-bubble { background: #2A2724; border: 1px solid rgba(255,255,255,.08); border-radius: 12px 12px 12px 3px; padding: 1.1rem 1.35rem; }
+    .prompt-bubble.is-pivot { background: #2A201C; border-color: rgba(212,120,90,.3); border-radius: 12px 12px 12px 3px; }
     .prompt-who { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--claude); margin-bottom: .4rem; display: flex; align-items: center; gap: .45rem; }
     .prompt-who.claude-who { color: var(--claude); }
     .prompt-who-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--claude); flex-shrink: 0; }
@@ -519,7 +520,7 @@
 
     /* ── META-PATTERN PIPELINE ─────────────────────────────── */
     .meta-pattern {
-      background: linear-gradient(135deg, #1a1a1a 0%, #1c1a1e 100%);
+      background: linear-gradient(135deg, #242220 0%, #2A2724 100%);
       border: 1px solid rgba(212,120,90,.15);
       border-radius: var(--radius);
       padding: 1.75rem 2rem;
@@ -546,7 +547,7 @@
     /* ── SLACK ARC + QUOTE ──────────────────────────────────── */
     .slack-arc { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .65rem; }
     .arc-step { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: capitalize; color: rgba(255,255,255,.45); position: relative; cursor: help; border-bottom: 1px dotted rgba(255,255,255,.2); }
-    .arc-step::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #2c2c2c; border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.8); font-size: .68rem; font-weight: 400; letter-spacing: 0; text-transform: none; padding: .4rem .65rem; border-radius: 6px; white-space: nowrap; z-index: 20; pointer-events: none; opacity: 0; transition: opacity .15s; }
+    .arc-step::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #2A2724; border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.8); font-size: .68rem; font-weight: 400; letter-spacing: 0; text-transform: none; padding: .4rem .65rem; border-radius: 6px; white-space: nowrap; z-index: 20; pointer-events: none; opacity: 0; transition: opacity .15s; }
     .arc-step:hover::after { opacity: 1; }
     .arc-sep { color: rgba(255,255,255,.2); font-size: .65rem; }
     .slack-prompt-quote {
