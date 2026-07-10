@@ -216,6 +216,7 @@
     .case-accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
     .card-co { font-size: 1.15rem; font-weight: 800; letter-spacing: -.015em; margin-bottom: .2rem; }
     .card-div { font-size: .8rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .card-date { font-size: .6rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.22); margin-top: .6rem; }
     .tags { display: flex; gap: .45rem; flex-wrap: wrap; }
     .tag { font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: .2rem .65rem; border-radius: 100px; }
     .tag-demo { background: rgba(212,120,90,.18); color: var(--claude-lt); }
@@ -952,29 +953,6 @@
 
     <div class="case-grid" id="caseGrid">
 
-      <div class="case-card" data-case="cbre">
-        <div class="case-accent" style="background: linear-gradient(90deg, #006341, #00a651);"></div>
-        <div class="card-logo"><img src="https://logo.clearbit.com/cbre.com" alt="CBRE" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="card-co">CBRE</div>
-        <div class="card-div">global workplace solutions</div>
-        <div class="tags">
-          <span class="tag tag-demo">clickable demo prototype</span>
-        </div>
-        <div class="card-chevron">↓</div>
-      </div>
-
-      <div class="case-card" data-case="equinox">
-        <div class="case-accent" style="background: linear-gradient(90deg, #111111, #444444);"></div>
-        <div class="card-logo"><img src="https://logo.clearbit.com/equinox.com" alt="Equinox" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="card-co">Equinox</div>
-        <div class="card-div">fitness &amp; luxury lifestyle</div>
-        <div class="tags">
-          <span class="tag tag-deck">deck</span>
-          <span class="tag tag-strat">strategy</span>
-        </div>
-        <div class="card-chevron">↓</div>
-      </div>
-
       <div class="case-card" data-case="servicelogic">
         <div class="case-accent" style="background: linear-gradient(90deg, #1a5fa8, #2e7dd4);"></div>
         <div class="card-logo"><img src="https://logo.clearbit.com/servicelogic.com" alt="Service Logic" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
@@ -986,6 +964,7 @@
           <span class="tag tag-demo">portal demo</span>
           <span class="tag tag-demo">LWC</span>
         </div>
+        <div class="card-date">updated jul 9</div>
         <div class="card-chevron">↓</div>
       </div>
 
@@ -998,18 +977,7 @@
           <span class="tag tag-deck">deck</span>
           <span class="tag tag-ttkr">talk track points</span>
         </div>
-        <div class="card-chevron">↓</div>
-      </div>
-
-      <div class="case-card" data-case="relatedrentals">
-        <div class="case-accent" style="background: linear-gradient(90deg, #9b1d1d, #c0392b);"></div>
-        <div class="card-logo"><img src="https://logo.clearbit.com/related.com" alt="Related" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-        <div class="card-co">Related Rentals</div>
-        <div class="card-div">residential real estate</div>
-        <div class="tags">
-          <span class="tag tag-demo">clickable demo prototype</span>
-
-        </div>
+        <div class="card-date">updated jul 7</div>
         <div class="card-chevron">↓</div>
       </div>
 
@@ -1020,8 +988,45 @@
         <div class="card-div">vehicle rental &amp; mobility</div>
         <div class="tags">
           <span class="tag tag-demo">clickable demo prototype</span>
-
         </div>
+        <div class="card-date">updated jul 7</div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="relatedrentals">
+        <div class="case-accent" style="background: linear-gradient(90deg, #9b1d1d, #c0392b);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/related.com" alt="Related" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="card-co">Related Rentals</div>
+        <div class="card-div">residential real estate</div>
+        <div class="tags">
+          <span class="tag tag-demo">clickable demo prototype</span>
+        </div>
+        <div class="card-date">updated jun 16</div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="equinox">
+        <div class="case-accent" style="background: linear-gradient(90deg, #111111, #444444);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/equinox.com" alt="Equinox" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="card-co">Equinox</div>
+        <div class="card-div">fitness &amp; luxury lifestyle</div>
+        <div class="tags">
+          <span class="tag tag-deck">deck</span>
+          <span class="tag tag-strat">strategy</span>
+        </div>
+        <div class="card-date">updated jun 11</div>
+        <div class="card-chevron">↓</div>
+      </div>
+
+      <div class="case-card" data-case="cbre">
+        <div class="case-accent" style="background: linear-gradient(90deg, #006341, #00a651);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/cbre.com" alt="CBRE" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="card-co">CBRE</div>
+        <div class="card-div">global workplace solutions</div>
+        <div class="tags">
+          <span class="tag tag-demo">clickable demo prototype</span>
+        </div>
+        <div class="card-date">updated jun 9</div>
         <div class="card-chevron">↓</div>
       </div>
 
