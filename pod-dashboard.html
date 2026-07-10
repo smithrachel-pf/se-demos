@@ -6,6 +6,29 @@
 <title>CBS BizServ POD Insights</title>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <style>
+@font-face {
+  font-family: 'Salesforce Sans';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://c1.sfdcstatic.com/etc.clientlibs/sfdc-www/clientlibs/clientlib-base/resources/fonts/SalesforceSans-Regular.woff2') format('woff2'),
+       url('https://c1.sfdcstatic.com/etc.clientlibs/sfdc-www/clientlibs/clientlib-base/resources/fonts/SalesforceSans-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Salesforce Sans';
+  font-weight: 700;
+  font-style: normal;
+  src: url('https://c1.sfdcstatic.com/etc.clientlibs/sfdc-www/clientlibs/clientlib-base/resources/fonts/SalesforceSans-Bold.woff2') format('woff2'),
+       url('https://c1.sfdcstatic.com/etc.clientlibs/sfdc-www/clientlibs/clientlib-base/resources/fonts/SalesforceSans-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Salesforce Sans';
+  font-weight: 300;
+  font-style: normal;
+  src: url('https://c1.sfdcstatic.com/etc.clientlibs/sfdc-www/clientlibs/clientlib-base/resources/fonts/SalesforceSans-Light.woff2') format('woff2'),
+       url('https://c1.sfdcstatic.com/etc.clientlibs/sfdc-www/clientlibs/clientlib-base/resources/fonts/SalesforceSans-Light.woff') format('woff');
+}
+</style>
+<style>
 :root {
   --blue: #3B9EFF;
   --blue-dim: #1B6CC8;
@@ -39,7 +62,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Salesforce Sans', Arial, sans-serif;
   background: var(--bg);
   color: var(--text-1);
   min-height: 100vh;
@@ -1905,7 +1928,8 @@ function renderPatterns(rows, statuses, currentCol) {
     { label: 'Renewal',      re: /renew|attrition|churn/i },
     { label: 'Revenue',      re: /revenue|ARR|deal|close|pipeline/i },
   ];
-  const updateText = active.map(r => currentCol ? (r[currentCol.header] || '') : '').join(' ');
+  const allTextCols = [...Q1_WEEKLY_COLS, ...Q2_WEEKLY_COLS];
+  const updateText = rows.map(r => allTextCols.map(c => r[c] || '').join(' ')).join(' ');
   const themeCounts = THEMES.map(t => ({ label: t.label, count: (updateText.match(new RegExp(t.re.source, 'gi')) || []).length }))
     .filter(t => t.count > 0).sort((a,b) => b.count - a.count);
 
@@ -1925,30 +1949,27 @@ function renderPatterns(rows, statuses, currentCol) {
   // Motion depth
   const motions = Object.keys({...motionActive,...motionDone});
   if (motions.length) {
+    const maxCount = Math.max(1, ...motions.map(m => (motionActive[m]||0) + (motionDone[m]||0)));
     const rows2 = motions.map(m => {
       const a = motionActive[m]||0, d = motionDone[m]||0, tot = a+d;
-      const pctD = tot ? Math.round(d/tot*100) : 0;
+      const pctA = Math.round(a / maxCount * 100);
+      const pctD = Math.round(d / maxCount * 100);
       return `<div class="pat-bar-row">
         <span class="pat-bar-label">${esc(m)}</span>
-        <div class="pat-bar-track"><div class="pat-bar-fill" style="width:${pctD}%"></div></div>
-        <span class="pat-bar-meta">${d} done · ${a} active</span>
+        <div class="pat-bar-track">
+          <div style="width:${pctA}%;background:var(--blue);height:100%;display:inline-block"></div><div style="width:${pctD}%;background:var(--green);height:100%;display:inline-block"></div>
+        </div>
+        <span class="pat-bar-meta"><span style="color:var(--blue)">${a} active</span> · <span style="color:var(--green)">${d} done</span></span>
       </div>`;
     }).join('');
-    patterns.push({ icon: '🔄', title: 'Motion Completion Rate', body: `<div class="pat-bars">${rows2}</div>` });
+    patterns.push({ icon: '🔄', title: 'Active Cycle Rate', body: `<div class="pat-bars">${rows2}</div>` });
   }
 
   // Theme keywords
   if (themeCounts.length) {
     const chips = themeCounts.map(t =>
       `<span class="pat-chip">${esc(t.label)} <span class="pat-chip-n">${t.count}</span></span>`).join('');
-    patterns.push({ icon: '💡', title: 'Recurring Themes This Week', body: `<div class="pat-chips">${chips}</div>` });
-  }
-
-  // Multi-engagement accounts
-  if (multiAccts.length) {
-    const chips = multiAccts.map(([a, n]) =>
-      `<span class="pat-chip">${esc(a)} <span class="pat-chip-n">${n} eng</span></span>`).join('');
-    patterns.push({ icon: '🏢', title: 'Accounts with Multiple Active Engagements', body: `<div class="pat-chips">${chips}</div>` });
+    patterns.push({ icon: '💡', title: 'Recurring Themes Across All Engagements', body: `<div class="pat-chips">${chips}</div>` });
   }
 
   // RED accounts
