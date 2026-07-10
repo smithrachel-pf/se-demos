@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comfort Advisor Quote — Cirrus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sl-green: #377E51; --sl-dark: #223D32; --sl-blue: #98BFE1;
+      --sl-success: #AAD3C6; --sl-error: #F6BD73; --sl-alert: #FFE973;
+      --sl-green-light: #EAF2ED; --sl-blue-light: #EBF4FB;
+      --sl-dark-text: #1A2E26; --sl-mid-text: #4A5E54; --sl-subtle: #8A9E94;
+      --sl-border: #D6E0DB; --sl-bg: #F4F7F5; --sl-white: #FFFFFF;
+      --font-h: 'Outfit', system-ui, sans-serif;
+      --font-b: 'Onest', system-ui, sans-serif;
+      --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+      --shadow: 0 1px 4px rgba(34,61,50,.08), 0 4px 16px rgba(34,61,50,.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Base ── */
+    body {
+      font-family: var(--font-b);
+      background: var(--sl-bg);
+      color: var(--sl-dark-text);
+      min-height: 100vh;
+    }
+
+    /* ── Experience Cloud Header ── */
+    .ec-header {
+      background: var(--sl-dark);
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .ec-header .brand {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .ec-header .portal-label {
+      font-size: .65rem;
+      color: rgba(255,255,255,.45);
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-top: .15rem;
+    }
+    .ec-header .user-pill {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px;
+      padding: .35rem .85rem .35rem .4rem;
+      font-size: .78rem;
+      color: rgba(255,255,255,.85);
+    }
+    .ec-header .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--sl-green);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      font-weight: 700;
+    }
+
+    /* ── Main layout ── */
+    .page-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── Page title area ── */
+    .page-title {
+      margin-bottom: 1.75rem;
+    }
+    .page-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+    }
+    .page-title p {
+      font-size: .875rem;
+      color: #706E6B;
+      margin-top: .3rem;
+    }
+
+    /* ── Progress Steps ── */
+    .progress-bar {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      height: 2px;
+      background: #DDDBDA;
+      z-index: 0;
+    }
+    .prog-fill {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      height: 2px;
+      background: var(--sl-green);
+      z-index: 1;
+      transition: width .4s ease;
+    }
+    .step-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .45rem;
+      position: relative;
+      z-index: 2;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #DDDBDA;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #706E6B;
+      transition: all .25s;
+    }
+    .step-item.active .step-circle {
+      background: var(--sl-green);
+      border-color: var(--sl-green);
+      color: #fff;
+    }
+    .step-item.done .step-circle {
+      background: var(--sl-green);
+      border-color: var(--sl-green);
+      color: #fff;
+    }
+    .step-item.done .step-circle::before { content: '✓'; }
+    .step-item.done .step-circle span { display: none; }
+    .step-label {
+      font-size: .72rem;
+      font-weight: 600;
+      color: #706E6B;
+      text-align: center;
+      max-width: 90px;
+      line-height: 1.3;
+    }
+    .step-item.active .step-label { color: var(--sl-green); }
+    .step-item.done .step-label { color: var(--sl-green); }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border: 1px solid #DDDBDA;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+    }
+    .card-subtitle {
+      font-size: .8rem;
+      color: #706E6B;
+      margin-top: .15rem;
+    }
+
+    /* ── Step screens ── */
+    .step-screen { display: none; }
+    .step-screen.visible { display: block; }
+
+    /* ── Product grid ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .product-card {
+      background: #fff;
+      border: 2px solid #DDDBDA;
+      border-radius: 8px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      border-color: var(--sl-green);
+      box-shadow: 0 4px 12px rgba(1,118,211,.12);
+    }
+    .product-card.selected {
+      border-color: var(--sl-green);
+      background: #F0F8FF;
+      box-shadow: 0 4px 16px rgba(1,118,211,.18);
+    }
+    .product-card.recommended {
+      border-color: var(--sl-green);
+    }
+    .product-card.recommended.selected {
+      border-color: var(--sl-green);
+    }
+
+    .tier-badge {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: .2rem .5rem;
+      margin-bottom: .75rem;
+    }
+    .tier-good { background: #F3F2F1; color: #706E6B; }
+    .tier-better { background: #EAF5F2; color: var(--sl-green); }
+    .tier-best { background: #EBF5FF; color: var(--sl-green); }
+
+    .rec-badge {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      background: var(--sl-green);
+      color: #fff;
+      font-size: .62rem;
+      font-weight: 700;
+      padding: .3rem .65rem;
+      border-radius: 0 6px 0 6px;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    .product-name {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+      margin-bottom: .2rem;
+      line-height: 1.2;
+    }
+    .product-model {
+      font-size: .72rem;
+      color: #706E6B;
+      margin-bottom: 1rem;
+    }
+
+    .seer-display {
+      display: flex;
+      align-items: baseline;
+      gap: .25rem;
+      margin-bottom: 1rem;
+    }
+    .seer-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--sl-green);
+      line-height: 1;
+    }
+    .seer-label {
+      font-size: .72rem;
+      font-weight: 600;
+      color: #706E6B;
+    }
+
+    .feature-list {
+      list-style: none;
+      font-size: .78rem;
+      color: #444;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+      flex: 1;
+      margin-bottom: 1.25rem;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: .4rem;
+      line-height: 1.3;
+    }
+    .feature-list li::before {
+      content: '✓';
+      color: var(--sl-green);
+      font-weight: 700;
+      font-size: .7rem;
+      margin-top: .05rem;
+      flex-shrink: 0;
+    }
+
+    .noise-bar {
+      margin-bottom: 1rem;
+    }
+    .noise-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .7rem;
+      color: #706E6B;
+      margin-bottom: .3rem;
+    }
+    .noise-track {
+      height: 5px;
+      background: #EEEEEE;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .noise-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--sl-green), var(--sl-green));
+    }
+
+    .price-area {
+      border-top: 1px solid #EEEEEE;
+      padding-top: 1rem;
+      margin-top: auto;
+    }
+    .price-installed {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--sl-dark-text);
+    }
+    .price-monthly {
+      font-size: .75rem;
+      color: #706E6B;
+      margin-top: .2rem;
+    }
+    .price-note {
+      font-size: .68rem;
+      color: #A8A8A8;
+    }
+
+    .select-btn {
+      display: block;
+      width: 100%;
+      margin-top: 1rem;
+      padding: .6rem;
+      border-radius: 6px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      border: 2px solid var(--sl-green);
+      background: #fff;
+      color: var(--sl-green);
+      transition: all .15s;
+    }
+    .product-card.selected .select-btn {
+      background: var(--sl-green);
+      color: #fff;
+    }
+    .select-btn:hover { background: var(--sl-green); color: #fff; }
+
+    .comfort-note {
+      margin-top: 1.25rem;
+      background: #FEF9EE;
+      border: 1px solid #FFB75D;
+      border-radius: 6px;
+      padding: .9rem 1rem;
+      font-size: .8rem;
+      color: #4A3700;
+      display: flex;
+      gap: .65rem;
+      align-items: flex-start;
+    }
+    .comfort-note .icon { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
+
+    /* ── Quote summary ── */
+    .quote-header {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+    .quote-system-icon {
+      width: 56px;
+      height: 56px;
+      background: #EBF5FF;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .quote-system-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .quote-system-meta {
+      font-size: .78rem;
+      color: #706E6B;
+      margin-top: .2rem;
+    }
+    .quote-badge {
+      margin-left: auto;
+      background: #EBF5FF;
+      color: var(--sl-green);
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .3rem .7rem;
+      border-radius: 20px;
+    }
+
+    .line-items {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .83rem;
+    }
+    .line-items th {
+      text-align: left;
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #706E6B;
+      border-bottom: 2px solid #EEEEEE;
+      padding: .5rem .75rem;
+    }
+    .line-items th:last-child { text-align: right; }
+    .line-items td {
+      padding: .65rem .75rem;
+      border-bottom: 1px solid #F3F2F1;
+      color: #444;
+    }
+    .line-items td:last-child { text-align: right; font-weight: 600; color: var(--sl-dark-text); }
+    .line-items tr:last-child td { border-bottom: none; }
+    .line-items .subtotal td {
+      border-top: 2px solid #EEEEEE;
+      border-bottom: none;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+      padding-top: .85rem;
+    }
+    .line-items .total-row td {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--sl-green);
+      padding-top: .75rem;
+    }
+    .line-items .desc {
+      font-size: .72rem;
+      color: #A8A8A8;
+      display: block;
+      margin-top: .1rem;
+    }
+
+    .quote-financing {
+      margin-top: 1.25rem;
+      background: #F0F8FF;
+      border: 1px solid #C9E3F5;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .fin-label { font-size: .8rem; color: #444; }
+    .fin-label strong { display: block; font-size: 1.1rem; color: var(--sl-green); font-weight: 800; }
+    .fin-detail { font-size: .7rem; color: #706E6B; }
+    .fin-logo { font-size: .72rem; color: #706E6B; text-align: right; }
+    .fin-logo strong { display: block; font-size: .8rem; color: var(--sl-dark-text); }
+
+    .quote-validity {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .78rem;
+      color: #706E6B;
+      margin-top: 1rem;
+    }
+    .valid-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--sl-green);
+      flex-shrink: 0;
+    }
+
+    /* ── Signature step ── */
+    .sig-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .sig-summary-box {
+      background: #F8F7F6;
+      border: 1px solid #DDDBDA;
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .sig-summary-box h3 {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+      margin-bottom: .85rem;
+    }
+    .sig-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      color: #444;
+      padding: .4rem 0;
+      border-bottom: 1px solid #EEEEEE;
+    }
+    .sig-row:last-child { border-bottom: none; }
+    .sig-row .val { font-weight: 700; color: var(--sl-dark-text); }
+    .sig-row .val.blue { color: var(--sl-green); }
+
+    .sig-panel h3 {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+      margin-bottom: .35rem;
+    }
+    .sig-panel p {
+      font-size: .75rem;
+      color: #706E6B;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .sig-canvas-wrap {
+      border: 2px dashed #DDDBDA;
+      border-radius: 6px;
+      background: #FAFAFA;
+      position: relative;
+      height: 140px;
+      margin-bottom: .75rem;
+      overflow: hidden;
+      cursor: crosshair;
+      transition: border-color .2s;
+    }
+    .sig-canvas-wrap:hover { border-color: var(--sl-green); }
+    .sig-canvas-wrap.has-sig { border-style: solid; border-color: var(--sl-green); background: #fff; }
+    #sigCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .sig-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: .8rem;
+      color: #BBBBBB;
+      pointer-events: none;
+      text-align: center;
+    }
+    .sig-placeholder.hidden { display: none; }
+    .sig-actions {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 1rem;
+    }
+    .sig-clear {
+      font-size: .75rem;
+      color: #706E6B;
+      background: none;
+      border: 1px solid #DDDBDA;
+      border-radius: 4px;
+      padding: .3rem .7rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .sig-clear:hover { border-color: #C00; color: #C00; }
+
+    .consent-check {
+      display: flex;
+      gap: .6rem;
+      align-items: flex-start;
+      font-size: .77rem;
+      color: #444;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+    .consent-check input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: .1rem;
+      accent-color: var(--sl-green);
+      flex-shrink: 0;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: .75rem;
+      margin-top: 1.75rem;
+    }
+    .btn {
+      padding: .65rem 1.5rem;
+      border-radius: 6px;
+      font-size: .875rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all .15s;
+    }
+    .btn-primary {
+      background: var(--sl-green);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #014486; }
+    .btn-primary:disabled { background: #BBBBBB; cursor: not-allowed; }
+    .btn-neutral {
+      background: #fff;
+      color: var(--sl-green);
+      border: 1px solid var(--sl-green);
+    }
+    .btn-neutral:hover { background: #EBF5FF; }
+    .btn-success {
+      background: var(--sl-green);
+      color: #fff;
+    }
+    .btn-success:hover { background: #0A5651; }
+    .btn-success:disabled { background: #BBBBBB; cursor: not-allowed; }
+
+    /* ── Success screen ── */
+    .success-screen {
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: #EAF5F2;
+      border-radius: 50%;
+      margin: 0 auto 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    .success-screen h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .success-screen p {
+      font-size: .875rem;
+      color: #706E6B;
+      max-width: 380px;
+      margin: 0 auto .5rem;
+      line-height: 1.6;
+    }
+    .success-ref {
+      display: inline-block;
+      background: #F3F2F1;
+      border: 1px solid #DDDBDA;
+      border-radius: 6px;
+      padding: .5rem 1.25rem;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--sl-dark-text);
+      margin: 1rem auto .5rem;
+    }
+    .success-next {
+      margin-top: 1.5rem;
+      font-size: .78rem;
+      color: #706E6B;
+    }
+    .success-next li {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      justify-content: center;
+      margin-bottom: .4rem;
+    }
+    .success-next li::before { content: '→'; color: var(--sl-green); font-weight: 700; }
+
+    /* ── Editable line items ── */
+    .qty-input, .unit-input {
+      width: 100%;
+      border: 1px solid var(--sl-border);
+      border-radius: var(--r-sm);
+      padding: .3rem .4rem;
+      font-family: var(--font-b);
+      font-size: .8rem;
+      color: var(--sl-dark-text);
+      background: #fff;
+      text-align: right;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .qty-input { text-align: center; max-width: 60px; }
+    .qty-input:focus, .unit-input:focus {
+      border-color: var(--sl-green);
+      box-shadow: 0 0 0 2px rgba(55,126,81,.15);
+      outline: none;
+    }
+    .del-btn {
+      background: none;
+      border: 1px solid transparent;
+      border-radius: var(--r-sm);
+      color: var(--sl-subtle);
+      cursor: pointer;
+      font-size: .85rem;
+      padding: .25rem .4rem;
+      transition: color .15s, border-color .15s;
+      line-height: 1;
+    }
+    .del-btn:hover { color: #C0392B; border-color: #C0392B; }
+    .add-li-row {
+      padding: .5rem .75rem .75rem;
+    }
+    .add-li-btn {
+      background: none;
+      border: 1.5px dashed var(--sl-border);
+      border-radius: var(--r-md);
+      color: var(--sl-mid-text);
+      font-family: var(--font-b);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .5rem 1.25rem;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .add-li-btn:hover {
+      border-color: var(--sl-green);
+      color: var(--sl-green);
+      background: var(--sl-green-light);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .sig-split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Experience Cloud Header -->
+<header class="ec-header">
+  <div class="brand">
+    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40" aria-label="Cirrus">
+      <rect x="1" y="2" width="36" height="36" rx="9" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.16)" stroke-width="1"/>
+      <path d="M9 13 C12 10, 16 10, 20 13 C24 16, 27 16, 29 13" stroke="white" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+      <path d="M7 20 C11 17, 16 17, 20 20 C24 23, 28 23, 31 20" stroke="rgba(255,255,255,0.65)" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      <path d="M9 27 C12 24, 16 24, 20 27 C24 30, 27 30, 29 27" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <text x="48" y="26" font-family="Outfit, -apple-system, system-ui, sans-serif" font-size="20" font-weight="800" fill="white" letter-spacing="-0.6">Cirrus</text>
+    </svg>
+    <div class="portal-label">Customer Portal</div>
+  </div>
+  <div class="user-pill">
+    <div class="avatar">MH</div>
+    Mike Henderson
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <h1>New System Replacement Quote</h1>
+    <p>3-ton residential cooling system · 123 Maple Creek Drive, Charlotte NC 28205</p>
+  </div>
+
+  <!-- Progress Steps -->
+  <div class="progress-bar" id="progressBar">
+    <div class="prog-fill" id="progFill" style="width: 0%"></div>
+    <div class="step-item active" id="si-1">
+      <div class="step-circle"><span>1</span></div>
+      <div class="step-label">Choose System</div>
+    </div>
+    <div class="step-item" id="si-2">
+      <div class="step-circle"><span>2</span></div>
+      <div class="step-label">Review Quote</div>
+    </div>
+    <div class="step-item" id="si-3">
+      <div class="step-circle"><span>3</span></div>
+      <div class="step-label">Sign & Submit</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- STEP 1: Choose System                  -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="step-screen visible" id="step1">
+    <div class="products-grid">
+
+      <!-- Good -->
+      <div class="product-card" id="pc-1" onclick="selectProduct(1)">
+        <div class="tier-badge tier-good">Good</div>
+        <div class="product-name">Trane Priority 17</div>
+        <div class="product-model">Model: 4TTM5036A1000AA · 3 Ton</div>
+        <div class="seer-display">
+          <div class="seer-num">17</div>
+          <div class="seer-label">SEER2<br>efficiency</div>
+        </div>
+        <ul class="feature-list">
+          <li>Single-stage scroll compressor</li>
+          <li>WeatherGuard™ II top cover</li>
+          <li>Spine Fin™ all-aluminum coil</li>
+          <li>5-year limited warranty</li>
+          <li>Standard thermostat included</li>
+        </ul>
+        <div class="noise-bar">
+          <div class="noise-label"><span>Sound level</span><span>76 dB</span></div>
+          <div class="noise-track"><div class="noise-fill" style="width: 55%"></div></div>
+        </div>
+        <div class="price-area">
+          <div class="price-installed">$7,200</div>
+          <div class="price-monthly">or ~$153/mo for 60 months</div>
+          <div class="price-note">Installed · includes permit & disposal</div>
+        </div>
+        <button class="select-btn" id="sb-1">Select This System</button>
+      </div>
+
+      <!-- Better / Recommended -->
+      <div class="product-card recommended" id="pc-2" onclick="selectProduct(2)">
+        <div class="rec-badge">Recommended</div>
+        <div class="tier-badge tier-better">Better</div>
+        <div class="product-name">Trane Premier 18</div>
+        <div class="product-model">Model: 4TWR8036A1000AA · 3 Ton</div>
+        <div class="seer-display">
+          <div class="seer-num">18</div>
+          <div class="seer-label">SEER2<br>efficiency</div>
+        </div>
+        <ul class="feature-list">
+          <li>Variable-speed compressor</li>
+          <li>Two-stage cooling operation</li>
+          <li>Quieter — 72 dB operation</li>
+          <li>Smart thermostat included</li>
+          <li>10-year limited warranty</li>
+          <li>Eligible for $400 Trane rebate</li>
+        </ul>
+        <div class="noise-bar">
+          <div class="noise-label"><span>Sound level</span><span>72 dB</span></div>
+          <div class="noise-track"><div class="noise-fill" style="width: 38%"></div></div>
+        </div>
+        <div class="price-area">
+          <div class="price-installed">$9,400</div>
+          <div class="price-monthly">or ~$200/mo for 60 months</div>
+          <div class="price-note">Installed · includes permit & disposal</div>
+        </div>
+        <button class="select-btn" id="sb-2">Select This System</button>
+      </div>
+
+      <!-- Best -->
+      <div class="product-card" id="pc-3" onclick="selectProduct(3)">
+        <div class="tier-badge tier-best">Best</div>
+        <div class="product-name">Trane Premier 20 TC-WG</div>
+        <div class="product-model">Model: 4TWV0036B1000AA · 3 Ton</div>
+        <div class="seer-display">
+          <div class="seer-num">20</div>
+          <div class="seer-label">SEER2<br>efficiency</div>
+        </div>
+        <ul class="feature-list">
+          <li>Variable-speed Climatuff® compressor</li>
+          <li>ComfortLink™ II WiFi thermostat</li>
+          <li>Up to 59 dB — near-silent</li>
+          <li>Humidity control (3-stage dehumidify)</li>
+          <li>10-year all-parts warranty</li>
+          <li>Eligible for $650 Trane rebate</li>
+        </ul>
+        <div class="noise-bar">
+          <div class="noise-label"><span>Sound level</span><span>59 dB</span></div>
+          <div class="noise-track"><div class="noise-fill" style="width: 22%"></div></div>
+        </div>
+        <div class="price-area">
+          <div class="price-installed">$11,800</div>
+          <div class="price-monthly">or ~$250/mo for 60 months</div>
+          <div class="price-note">Installed · includes permit & disposal</div>
+        </div>
+        <button class="select-btn" id="sb-3">Select This System</button>
+      </div>
+
+    </div><!-- /products-grid -->
+
+    <div class="comfort-note">
+      <span class="icon">💡</span>
+      <div><strong>Comfort Advisor note:</strong> Based on your 1,800 sq ft home, current attic insulation (R-19), and Charlotte's climate zone, the <strong>Trane Premier 18</strong> is the optimal balance of efficiency and upfront cost. At today's utility rates, you'll recoup the upgrade cost vs. the Priority 17 in approximately <strong>4.2 years</strong> through energy savings.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="step1Next" onclick="goStep(2)" disabled>Continue to Quote →</button>
+    </div>
+
+  </div><!-- /step1 -->
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- STEP 2: Review Quote                   -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="step-screen" id="step2">
+    <div class="card">
+
+      <div class="quote-header">
+        <div class="quote-system-icon">❄️</div>
+        <div>
+          <div class="quote-system-name" id="q-systemName">—</div>
+          <div class="quote-system-meta" id="q-systemMeta">—</div>
+        </div>
+        <div class="quote-badge" id="q-tier">—</div>
+      </div>
+
+      <table class="line-items">
+        <thead>
+          <tr>
+            <th style="width: 48%">Description</th>
+            <th style="width:7%">Qty</th>
+            <th style="width:14%">Unit Price</th>
+            <th style="width:14%">Total</th>
+            <th style="width:5%"></th>
+          </tr>
+        </thead>
+        <tbody id="lineItemsBody">
+        </tbody>
+      </table>
+
+      <div class="add-li-row">
+        <button class="add-li-btn" onclick="addLineItem()">+ Add Line Item</button>
+      </div>
+
+      <div class="quote-financing" id="q-financing">
+        <div>
+          <div class="fin-label">Financing available</div>
+          <div class="fin-label"><strong id="q-monthly">—</strong></div>
+          <div class="fin-detail">60-month term · 9.99% APR · Subject to credit approval</div>
+        </div>
+        <div class="fin-logo">
+          <strong>GreenSky® Financing</strong>
+          Apply at checkout — decision in seconds
+        </div>
+      </div>
+
+      <div class="quote-validity">
+        <div class="valid-dot"></div>
+        Quote valid through <strong style="margin-left:.25rem" id="q-expiry">—</strong> · Quote #<strong style="margin-left:.25rem">SL-2025-08471</strong>
+      </div>
+
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-neutral" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Review & Sign →</button>
+    </div>
+  </div><!-- /step2 -->
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- STEP 3: Sign & Submit                  -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="step-screen" id="step3">
+    <div class="sig-split">
+
+      <!-- Summary column -->
+      <div class="sig-summary-box">
+        <h3>Quote Summary</h3>
+        <div class="sig-row"><span>System</span><span class="val" id="ss-system">—</span></div>
+        <div class="sig-row"><span>Address</span><span class="val">123 Maple Creek Dr</span></div>
+        <div class="sig-row"><span>Install Date</span><span class="val">TBD — Scheduler will call</span></div>
+        <div class="sig-row"><span>Warranty</span><span class="val" id="ss-warranty">—</span></div>
+        <div class="sig-row"><span>Subtotal</span><span class="val" id="ss-subtotal">—</span></div>
+        <div class="sig-row" style="background:#EBF5FF; margin: .5rem -.1rem; padding: .5rem .1rem; border-radius:4px;">
+          <span style="font-weight:700">Total Due Today</span>
+          <span class="val blue" id="ss-total">—</span>
+        </div>
+        <div class="sig-row"><span>Financing (optional)</span><span class="val" id="ss-monthly">—</span></div>
+      </div>
+
+      <!-- Signature column -->
+      <div class="sig-panel">
+        <h3>Your Signature</h3>
+        <p>By signing, you authorize Cirrus to install the selected system and agree to the terms and pricing on this quote.</p>
+
+        <div class="sig-canvas-wrap" id="sigWrap">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-placeholder" id="sigPlaceholder">Sign here with your mouse or finger</div>
+        </div>
+
+        <div class="sig-actions">
+          <button class="sig-clear" onclick="clearSig()">Clear signature</button>
+        </div>
+
+        <div class="consent-check">
+          <input type="checkbox" id="consentBox" onchange="checkSubmitReady()">
+          <label for="consentBox">I have read and agree to the <a href="#" style="color:var(--sl-green)">Terms &amp; Conditions</a> and confirm I am the authorized property owner or agent at this address.</label>
+        </div>
+
+        <div class="consent-check">
+          <input type="checkbox" id="emailBox" checked>
+          <label for="emailBox">Email me a copy of the signed quote at <strong>mike.henderson@email.com</strong></label>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-neutral" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-success" id="submitBtn" onclick="submitQuote()" disabled>Submit Signed Quote ✓</button>
+    </div>
+  </div><!-- /step3 -->
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SUCCESS                                -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="step-screen" id="stepSuccess">
+    <div class="card success-screen">
+      <div class="success-icon">✅</div>
+      <h2>Quote Signed &amp; Submitted!</h2>
+      <p>Your signed quote has been sent to the Cirrus scheduling team. You'll receive a confirmation email within 15 minutes.</p>
+      <div class="success-ref">Quote #SL-2025-08471</div>
+      <p style="margin-top:.5rem">A PDF copy has been sent to <strong>mike.henderson@email.com</strong></p>
+      <ul class="success-next" style="list-style:none; margin-top:1.5rem;">
+        <li>Scheduling team will call within 1 business day to confirm install date</li>
+        <li>Permits submitted to Mecklenburg County automatically</li>
+        <li>Track your job status in this portal under <strong>My Appointments</strong></li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────
+const products = {
+  1: {
+    name: 'Trane Priority 17',
+    model: '4TTM5036A1000AA',
+    tier: 'Good',
+    seer: 17,
+    total: 7200,
+    monthly: 153,
+    warranty: '5-year limited',
+    lineItems: [
+      { desc: 'Trane Priority 17 Condenser Unit', sub: 'Model 4TTM5036A1000AA · 3 Ton', qty: 1, unit: 3800, total: 3800 },
+      { desc: 'Labor & Installation', sub: 'Includes startup and system commissioning', qty: 1, unit: 1800, total: 1800 },
+      { desc: 'New Evaporator Coil', sub: 'A/C coil matched for system', qty: 1, unit: 875, total: 875 },
+      { desc: 'Honeywell T6 Thermostat', sub: 'Programmable, included', qty: 1, unit: 225, total: 225 },
+      { desc: 'Refrigerant Line Set', sub: 'Up to 30 ft; additional footage billed at $12/ft', qty: 1, unit: 250, total: 250 },
+      { desc: 'Mecklenburg County Permit', sub: 'Filed by Cirrus', qty: 1, unit: 125, total: 125 },
+      { desc: 'Old Equipment Removal & Disposal', sub: 'EPA-compliant refrigerant recovery', qty: 1, unit: 125, total: 125 },
+    ]
+  },
+  2: {
+    name: 'Trane Premier 18',
+    model: '4TWR8036A1000AA',
+    tier: 'Better · Recommended',
+    seer: 18,
+    total: 9400,
+    monthly: 200,
+    warranty: '10-year limited',
+    lineItems: [
+      { desc: 'Trane Premier 18 Variable-Speed Condenser', sub: 'Model 4TWR8036A1000AA · 3 Ton', qty: 1, unit: 5200, total: 5200 },
+      { desc: 'Labor & Installation', sub: 'Includes startup and system commissioning', qty: 1, unit: 1800, total: 1800 },
+      { desc: 'New Evaporator Coil (matched)', sub: 'Variable-speed A/C coil', qty: 1, unit: 1100, total: 1100 },
+      { desc: 'Ecobee Smart Thermostat Premium', sub: 'WiFi, voice control, included', qty: 1, unit: 0, total: 0, note: 'Included' },
+      { desc: 'Refrigerant Line Set', sub: 'Up to 30 ft; additional footage billed at $12/ft', qty: 1, unit: 250, total: 250 },
+      { desc: 'Mecklenburg County Permit', sub: 'Filed by Cirrus', qty: 1, unit: 125, total: 125 },
+      { desc: 'Old Equipment Removal & Disposal', sub: 'EPA-compliant refrigerant recovery', qty: 1, unit: 125, total: 125 },
+      { desc: 'Trane Residential Rebate', sub: 'Applied at time of registration', qty: 1, unit: -400, total: -400, credit: true },
+    ]
+  },
+  3: {
+    name: 'Trane Premier 20 TC-WG',
+    model: '4TWV0036B1000AA',
+    tier: 'Best',
+    seer: 20,
+    total: 11800,
+    monthly: 250,
+    warranty: '10-year all-parts',
+    lineItems: [
+      { desc: 'Trane Premier 20 TC-WG Variable-Speed', sub: 'Model 4TWV0036B1000AA · 3 Ton', qty: 1, unit: 7100, total: 7100 },
+      { desc: 'Labor & Installation', sub: 'Includes startup and system commissioning', qty: 1, unit: 1800, total: 1800 },
+      { desc: 'New Evaporator Coil (matched)', sub: 'Ultra-efficiency matched coil', qty: 1, unit: 1400, total: 1400 },
+      { desc: 'Trane ComfortLink™ II XL1050 Thermostat', sub: 'Color touchscreen, WiFi, included', qty: 1, unit: 0, total: 0, note: 'Included' },
+      { desc: 'Refrigerant Line Set', sub: 'Up to 30 ft; additional footage billed at $12/ft', qty: 1, unit: 250, total: 250 },
+      { desc: 'Mecklenburg County Permit', sub: 'Filed by Cirrus', qty: 1, unit: 125, total: 125 },
+      { desc: 'Old Equipment Removal & Disposal', sub: 'EPA-compliant refrigerant recovery', qty: 1, unit: 125, total: 125 },
+      { desc: 'Trane Residential Rebate', sub: 'Applied at time of registration', qty: 1, unit: -650, total: -650, credit: true },
+    ]
+  }
+};
+
+let selectedProduct = null;
+let sigHasContent = false;
+
+// ── Product selection ──────────────────────────────────────────────────────
+function selectProduct(id) {
+  [1,2,3].forEach(i => {
+    document.getElementById('pc-' + i).classList.remove('selected');
+    document.getElementById('sb-' + i).textContent = 'Select This System';
+  });
+  document.getElementById('pc-' + id).classList.add('selected');
+  document.getElementById('sb-' + id).textContent = '✓ Selected';
+  selectedProduct = id;
+  document.getElementById('step1Next').disabled = false;
+}
+
+// ── Step navigation ────────────────────────────────────────────────────────
+function goStep(n) {
+  document.querySelectorAll('.step-screen').forEach(s => s.classList.remove('visible'));
+  document.getElementById('step' + n).classList.add('visible');
+  updateProgress(n);
+  if (n === 2) populateQuote();
+  if (n === 3) populateSigSummary();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(n) {
+  const pct = { 1: 0, 2: 50, 3: 100 };
+  document.getElementById('progFill').style.width = pct[n] + '%';
+  [1, 2, 3].forEach(i => {
+    const el = document.getElementById('si-' + i);
+    el.classList.remove('active', 'done');
+    if (i < n) el.classList.add('done');
+    if (i === n) el.classList.add('active');
+  });
+}
+
+// ── Populate quote ─────────────────────────────────────────────────────────
+function fmt(n) {
+  if (n === 0) return '—';
+  return (n < 0 ? '-' : '') + '$' + Math.abs(n).toLocaleString();
+}
+function fmtNum(n) { return isNaN(n) ? 0 : +n; }
+
+// Mutable copy of line items for editing
+let currentLineItems = [];
+
+function populateQuote() {
+  const p = products[selectedProduct];
+  // Deep copy so edits don't mutate the source data
+  currentLineItems = p.lineItems.map(li => ({ ...li }));
+
+  document.getElementById('q-systemName').textContent = p.name;
+  document.getElementById('q-systemMeta').textContent = 'Model ' + p.model + ' · 3 Ton · ' + p.seer + ' SEER2';
+  document.getElementById('q-tier').textContent = p.tier;
+  document.getElementById('q-monthly').textContent = '$' + p.monthly + '/mo';
+
+  const exp = new Date(); exp.setDate(exp.getDate() + 30);
+  document.getElementById('q-expiry').textContent = exp.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  renderLineItems();
+}
+
+function renderLineItems() {
+  const tbody = document.getElementById('lineItemsBody');
+  // Preserve focused element info before rebuild
+  const active = document.activeElement;
+  const focusId = active ? active.id : null;
+
+  tbody.innerHTML = '';
+  currentLineItems.forEach((li, idx) => {
+    const rowTotal = li.qty * li.unit;
+    const creditCls = li.credit ? 'style="color:var(--sl-green)"' : '';
+    const totalDisplay = li.unit === 0 ? '—' : fmt(rowTotal);
+    const noteHtml = li.note ? ` <em style="color:var(--sl-green);font-style:normal;font-weight:700">(${li.note})</em>` : '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div>${li.desc}${noteHtml}</div>
+        <span class="desc">${li.sub}</span>
+      </td>
+      <td>
+        <input id="qty-${idx}" type="number" class="qty-input" min="0" step="1" value="${li.qty}"
+          oninput="updateField(${idx},'qty',+this.value)" aria-label="Quantity">
+      </td>
+      <td ${creditCls}>
+        <input id="unit-${idx}" type="number" class="unit-input" step="0.01" value="${li.unit}"
+          oninput="updateField(${idx},'unit',+this.value)" aria-label="Unit price">
+      </td>
+      <td id="total-${idx}" ${creditCls}>${totalDisplay}</td>
+      <td><button class="del-btn" onclick="removeLineItem(${idx})" title="Remove row" aria-label="Remove">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Subtotal / total rows
+  const subtotal = currentLineItems.reduce((s, li) => s + li.qty * li.unit, 0);
+  const subTr = document.createElement('tr');
+  subTr.className = 'subtotal';
+  subTr.innerHTML = `<td colspan="4">Subtotal</td><td></td><td id="subtotalAmt">${fmt(subtotal)}</td>`;
+
+  // Fix colspan — only 5 cols (desc, qty, unit, total, del)
+  subTr.innerHTML = `<td colspan="3">Subtotal</td><td id="subtotalAmt">${fmt(subtotal)}</td><td></td>`;
+  tbody.appendChild(subTr);
+
+  const totTr = document.createElement('tr');
+  totTr.className = 'total-row';
+  totTr.innerHTML = `<td colspan="3"><strong>Total Installed Price</strong></td><td id="grandTotalAmt">${fmt(subtotal)}</td><td></td>`;
+  tbody.appendChild(totTr);
+
+  // Restore focus
+  if (focusId) {
+    const el = document.getElementById(focusId);
+    if (el) { el.focus(); const v = el.value; el.value = ''; el.value = v; }
+  }
+}
+
+function updateField(idx, field, val) {
+  currentLineItems[idx][field] = fmtNum(val);
+  // Update just the total cell for this row — no full rebuild needed
+  const rowTotal = currentLineItems[idx].qty * currentLineItems[idx].unit;
+  const totalCell = document.getElementById('total-' + idx);
+  if (totalCell) totalCell.textContent = currentLineItems[idx].unit === 0 ? '—' : fmt(rowTotal);
+  // Update grand totals
+  const subtotal = currentLineItems.reduce((s, li) => s + li.qty * li.unit, 0);
+  const subEl = document.getElementById('subtotalAmt');
+  const totEl = document.getElementById('grandTotalAmt');
+  if (subEl) subEl.textContent = fmt(subtotal);
+  if (totEl) totEl.textContent = fmt(subtotal);
+}
+
+function removeLineItem(idx) {
+  currentLineItems.splice(idx, 1);
+  renderLineItems();
+}
+
+function addLineItem() {
+  currentLineItems.push({ desc: 'New Item', sub: 'Enter description', qty: 1, unit: 0, total: 0, note: null, credit: false });
+  renderLineItems();
+  // Focus the qty field of the new row
+  const newIdx = currentLineItems.length - 1;
+  const newInput = document.getElementById('qty-' + newIdx);
+  if (newInput) newInput.focus();
+}
+
+// ── Populate sig summary ───────────────────────────────────────────────────
+function populateSigSummary() {
+  const p = products[selectedProduct];
+  document.getElementById('ss-system').textContent = p.name;
+  document.getElementById('ss-warranty').textContent = p.warranty;
+  document.getElementById('ss-subtotal').textContent = '$' + p.total.toLocaleString();
+  document.getElementById('ss-total').textContent = '$' + p.total.toLocaleString();
+  document.getElementById('ss-monthly').textContent = '$' + p.monthly + '/mo for 60 mo';
+}
+
+// ── Signature canvas ───────────────────────────────────────────────────────
+const canvas = document.getElementById('sigCanvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+let lastX = 0, lastY = 0;
+
+function resizeCanvas() {
+  const wrap = document.getElementById('sigWrap');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = wrap.clientWidth * dpr;
+  canvas.height = wrap.clientHeight * dpr;
+  ctx.scale(dpr, dpr);
+  canvas.style.width = wrap.clientWidth + 'px';
+  canvas.style.height = wrap.clientHeight + 'px';
+  ctx.strokeStyle = '#181818';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return [src.clientX - rect.left, src.clientY - rect.top];
+}
+
+canvas.addEventListener('mousedown', e => { isDrawing = true; [lastX, lastY] = getPos(e); });
+canvas.addEventListener('mousemove', e => {
+  if (!isDrawing) return;
+  const [x, y] = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  [lastX, lastY] = [x, y];
+  markSig();
+});
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+canvas.addEventListener('touchstart', e => { e.preventDefault(); isDrawing = true; [lastX, lastY] = getPos(e); }, { passive: false });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!isDrawing) return;
+  const [x, y] = getPos(e);
+  ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+  [lastX, lastY] = [x, y];
+  markSig();
+}, { passive: false });
+canvas.addEventListener('touchend', () => isDrawing = false);
+
+function markSig() {
+  sigHasContent = true;
+  document.getElementById('sigPlaceholder').classList.add('hidden');
+  document.getElementById('sigWrap').classList.add('has-sig');
+  checkSubmitReady();
+}
+
+function clearSig() {
+  const dpr = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+  sigHasContent = false;
+  document.getElementById('sigPlaceholder').classList.remove('hidden');
+  document.getElementById('sigWrap').classList.remove('has-sig');
+  checkSubmitReady();
+}
+
+function checkSubmitReady() {
+  const consent = document.getElementById('consentBox').checked;
+  document.getElementById('submitBtn').disabled = !(sigHasContent && consent);
+}
+
+// ── Submit ─────────────────────────────────────────────────────────────────
+function submitQuote() {
+  document.querySelectorAll('.step-screen').forEach(s => s.classList.remove('visible'));
+  document.getElementById('stepSuccess').classList.add('visible');
+  // Mark all steps done
+  [1, 2, 3].forEach(i => {
+    const el = document.getElementById('si-' + i);
+    el.classList.remove('active');
+    el.classList.add('done');
+  });
+  document.getElementById('progFill').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  resizeCanvas();
+  // Pre-select recommended product for demo flow
+  // (leave unselected so user can experience the selection)
+});
+window.addEventListener('resize', resizeCanvas);
+</script>
+</body>
+</html>
