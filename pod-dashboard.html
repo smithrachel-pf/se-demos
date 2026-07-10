@@ -1813,6 +1813,9 @@ function renderEngList(containerId, rows, currentCol, showIntake) {
 const SKIP_VALS = new Set(['none','n/a','false','na','tbd','','premier - see tsui']);
 
 const ROLE_DEFS = [
+  { key: 'AE',            label: 'Account Executive',         col: 'AE',         color: '#60A5FA'       },
+  { key: 'SE',            label: 'Solutions Engineer',        col: 'SE',         color: '#34D399'       },
+  { key: 'CSM',           label: 'Customer Success Manager',  col: 'CSM',        color: '#FBBF24'       },
   { key: 'EA',            label: 'Engagement Architect',      col: 'EA',         color: 'var(--blue)'   },
   { key: 'BVS',          label: 'Business Value Specialist',  col: 'BVS',        color: 'var(--green)'  },
   { key: 'DSE',          label: 'DSE',                        col: 'DSE',        color: 'var(--amber)'  },
