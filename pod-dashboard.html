@@ -444,10 +444,6 @@ body {
 .badge-status-postponed  { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(227,163,67,0.2); }
 .badge-status-planning   { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(188,140,255,0.2); }
 
-.badge-type-solidify  { background: var(--teal-bg); color: var(--teal); border: 1px solid rgba(57,211,195,0.2); }
-.badge-type-transform { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(188,140,255,0.2); }
-.badge-type-preserve  { background: var(--green-bg); color: var(--green); border: 1px solid rgba(63,185,80,0.2); }
-.badge-type-activate  { background: rgba(255,107,0,0.1); color: #FF8C42; border: 1px solid rgba(255,107,0,0.2); }
 
 .badge-risk { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
 .badge-date { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
@@ -477,16 +473,10 @@ body {
   gap: 1rem;
 }
 
-.eng-type {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: 10px;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-  background: rgba(139,148,158,0.12);
-  color: var(--text-2);
-  border: 1px solid var(--border-2);
+.eng-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-1);
 }
 .eng-badges { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; }
 
@@ -906,72 +896,97 @@ body {
 .pat-bar-fill { height: 100%; background: var(--green); border-radius: 3px; }
 .pat-bar-meta { font-size: .68rem; color: var(--text-3); white-space: nowrap; }
 
-.pr-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem 2.5rem;
-  padding: 1.25rem 1.5rem 1.5rem;
+.pr-section { padding: 1.25rem 1.5rem 1.5rem; }
+
+.pr-role-group {
+  margin-bottom: 1.25rem;
+}
+.pr-role-group:last-child { margin-bottom: 0; }
+
+.pr-role-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .6rem;
+}
+
+.pr-role-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .pr-role-label {
-  font-size: .65rem;
+  font-size: .72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text-3);
-  margin-bottom: .75rem;
+  letter-spacing: .06em;
+  color: var(--text-2);
 }
 
-.pr-row {
+.pr-role-count {
+  font-size: .68rem;
+  color: var(--text-3);
+  margin-left: auto;
+}
+
+.pr-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.pr-person {
   display: flex;
   align-items: center;
-  gap: .65rem;
-  padding: .3rem 0;
+  gap: .4rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: .25rem .7rem .25rem .25rem;
+  transition: border-color .15s;
 }
 
+.pr-person:hover { border-color: var(--blue); }
+
 .pr-avatar {
-  width: 26px; height: 26px;
+  width: 22px; height: 22px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: .62rem;
+  font-size: .58rem;
   font-weight: 700;
   color: white;
   flex-shrink: 0;
 }
 
 .pr-name {
-  font-size: .8rem;
+  font-size: .78rem;
   color: var(--text-1);
-  width: 120px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex-shrink: 0;
+  font-weight: 500;
 }
 
-.pr-bar-wrap { flex: 1; }
+.pr-stat {
+  font-size: .68rem;
+  font-weight: 600;
+  margin-left: .25rem;
+}
 
-.pr-bar {
-  height: 5px;
-  background: var(--surface-2);
-  border-radius: 3px;
-  overflow: hidden;
+.pr-stat-active { color: var(--blue); }
+.pr-stat-done   { color: var(--text-3); }
+
+.pr-se-feature {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.pr-people-scroll {
   display: flex;
-  gap: 1px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: .5rem;
+  padding-bottom: .25rem;
 }
-
-.pr-bar div { border-radius: 2px; }
-
-.pr-counts {
-  display: flex;
-  gap: .3rem;
-  min-width: 90px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.pr-count-active { font-size: .7rem; font-weight: 600; }
-.pr-count-done   { font-size: .7rem; color: var(--text-3); }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
@@ -989,23 +1004,11 @@ body {
 </style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute">
-</svg>
 
 
 <!-- ── Password Screen ── -->
 <div id="password-screen" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 50% 0%,#0D2040 0%,#0D1117 60%)">
-  <svg style="height:80px;margin-bottom:2.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="49" fill="url(#plRing)"/>
-  <circle cx="50" cy="50" r="40" fill="#0D1117"/>
-  <text x="50" y="52" text-anchor="middle" dominant-baseline="middle"
-        font-size="27" font-weight="900" font-family="Arial Black,Arial,sans-serif"
-        fill="url(#plText)">POD</text>
-  <text x="50" y="67" text-anchor="middle"
-        font-size="7.5" font-weight="700" font-family="Arial,sans-serif"
-        fill="#6B7280" letter-spacing="2.5">SQUAD</text>
-  <path d="M 30 76 Q 50 70 70 76" fill="none" stroke="url(#plArc)" stroke-width="2" stroke-linecap="round"/>
-</svg>
+  <div style="width:120px;height:120px;border-radius:50%;overflow:hidden;margin-bottom:2.5rem;position:relative"><img src="pod-logo.png" style="position:absolute;top:-4%;left:-4%;width:108%;height:108%;object-fit:cover"></div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2.5rem 2rem;max-width:360px;width:100%;text-align:center">
     <div style="font-size:1rem;font-weight:700;color:var(--text-1);margin-bottom:.35rem">Nassiri POD SQUAD Insights</div>
     <div style="font-size:.82rem;color:var(--text-3);margin-bottom:1.75rem">Enter password to continue</div>
@@ -1022,17 +1025,7 @@ body {
 
 <!-- ── Upload Screen ── -->
 <div id="upload-screen" style="display:none">
-  <div class="upload-logo"><svg style="height:48px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="49" fill="url(#plRing)"/>
-  <circle cx="50" cy="50" r="40" fill="#0D1117"/>
-  <text x="50" y="52" text-anchor="middle" dominant-baseline="middle"
-        font-size="27" font-weight="900" font-family="Arial Black,Arial,sans-serif"
-        fill="url(#plText)">POD</text>
-  <text x="50" y="67" text-anchor="middle"
-        font-size="7.5" font-weight="700" font-family="Arial,sans-serif"
-        fill="#6B7280" letter-spacing="2.5">SQUAD</text>
-  <path d="M 30 76 Q 50 70 70 76" fill="none" stroke="url(#plArc)" stroke-width="2" stroke-linecap="round"/>
-</svg></div>
+  <div class="upload-logo"><div style="width:48px;height:48px;border-radius:50%;overflow:hidden;position:relative"><img src="pod-logo.png" style="position:absolute;top:-4%;left:-4%;width:108%;height:108%;object-fit:cover"></div></div>
   <div class="drop-zone" id="drop-zone">
     <div class="drop-icon">
       <svg viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
@@ -1048,17 +1041,7 @@ body {
 <div id="dashboard">
   <div class="topbar">
     <div class="topbar-left">
-      <svg class="topbar-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="49" fill="url(#plRing)"/>
-  <circle cx="50" cy="50" r="40" fill="#0D1117"/>
-  <text x="50" y="52" text-anchor="middle" dominant-baseline="middle"
-        font-size="27" font-weight="900" font-family="Arial Black,Arial,sans-serif"
-        fill="url(#plText)">POD</text>
-  <text x="50" y="67" text-anchor="middle"
-        font-size="7.5" font-weight="700" font-family="Arial,sans-serif"
-        fill="#6B7280" letter-spacing="2.5">SQUAD</text>
-  <path d="M 30 76 Q 50 70 70 76" fill="none" stroke="url(#plArc)" stroke-width="2" stroke-linecap="round"/>
-</svg>
+      <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;position:relative;flex-shrink:0"><img src="pod-logo.png" style="position:absolute;top:-4%;left:-4%;width:108%;height:108%;object-fit:cover"></div>
       <div class="topbar-divider"></div>
       <div class="topbar-label">Nassiri POD SQUAD Insights</div>
       <div class="topbar-week" id="week-label">—</div>
@@ -1323,8 +1306,7 @@ function colorForIndex(i) {
 }
 
 function typeBadgeClass(type) {
-  const map = { solidify: 'badge-type-solidify', transform: 'badge-type-transform', preserve: 'badge-type-preserve', activate: 'badge-type-activate' };
-  return map[(type||'').toLowerCase()] || '';
+  return '';
 }
 
 function statusBadgeClass(status) {
@@ -1411,20 +1393,24 @@ function renderStatCards({ done, active }) {
   const el = document.getElementById('stat-grid');
   const cards = [
     {
-      cls: 'done', n: done, label: 'Completed', sub: 'Delivered this fiscal',
+      cls: 'done', n: done, label: 'Projects Completed',
+      icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="var(--green)" stroke-width="1.5" opacity=".4"/></svg>',
       onclick: "showView('completed')", arrow: '→ View all'
     },
     {
-      cls: 'active', n: active, label: 'Projects Being Hustled', sub: 'In process & planned',
+      cls: 'active', n: active, label: 'Projects Being Hustled',
+      icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       onclick: "document.getElementById('active-trigger').scrollIntoView({behavior:'smooth',block:'start'})", arrow: '↓ See list'
     },
   ];
   el.innerHTML = cards.map(c => `
     <div class="stat-card ${c.cls}" onclick="${c.onclick}">
       <span class="stat-card-arrow">${c.arrow}</span>
-      <div class="stat-number">${c.n}</div>
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.25rem">
+        ${c.icon}
+        <div class="stat-number">${c.n}</div>
+      </div>
       <div class="stat-label">${c.label}</div>
-      <div class="stat-sub">${c.sub}</div>
     </div>
   `).join('');
 }
@@ -1434,7 +1420,6 @@ function renderWinsBanner(completed, allRows) {
   if (!completed.length) { el.innerHTML = ''; return; }
 
   const accts = [...new Set(completed.map(r => r['Account']).filter(Boolean))];
-  const types = [...new Set(completed.map(r => r['Type']).filter(Boolean))];
   const totalPeople = new Set();
   completed.forEach(r => {
     ['AE','SE','CSE','DSE','EA','AF','TA','BVS','Multiplier'].forEach(col => {
@@ -1455,7 +1440,7 @@ function renderWinsBanner(completed, allRows) {
             <div class="wins-number">${completed.length}</div>
             <div style="font-size:1.1rem;font-weight:700;color:var(--green);opacity:.7">engagements delivered</div>
           </div>
-          <div class="wins-sub">${completionPct}% of all tracked work · ${accts.length} account${accts.length>1?'s':''} · ${totalPeople.size} contributors · ${types.join(', ')} motions</div>
+          <div class="wins-sub">${completionPct}% of all tracked work · ${accts.length} account${accts.length>1?'s':''} · ${totalPeople.size} contributors</div>
         </div>
       </div>
       <div class="wins-accounts">
@@ -1479,7 +1464,6 @@ function renderCompletedWins(containerId, rows) {
   container.innerHTML = Object.entries(byAccount).map(([acct, engagements]) => {
     const rvp = engagements[0]['RVP'] || '';
     const cards = engagements.map(r => {
-      const type = (r['Type'] || '').trim();
       const description = (r['Intake'] || '').trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
       const team = ['AE','SE','CSM','DSE','EA','AF','TA','BVS','Multiplier']
         .map(col => ({ role: col, name: (r[col] || '').trim() }))
@@ -1496,7 +1480,6 @@ function renderCompletedWins(containerId, rows) {
           <div class="win-card-header">
             <span class="win-title">${esc(r['Engagement'] || '')}</span>
             <div style="display:flex;gap:.35rem;flex-wrap:wrap">
-              <span class="badge ${typeBadgeClass(type)}">${esc(type)}</span>
               <span class="badge badge-status-completed">Completed</span>
             </div>
           </div>
@@ -1656,17 +1639,14 @@ function renderMotion(rows, statuses) {
   rows.forEach((r, i) => {
     const rvpRaw = (r['RVP'] || 'Unassigned').trim();
     const rvp = (rvpRaw === 'TBD' || rvpRaw === '') ? 'Wardah Ansari' : rvpRaw;
-    const bucket = (r['Type'] || 'Unknown').trim();
-    if (!rvps[rvp]) rvps[rvp] = { total: 0, Completed: 0, 'In Process': 0, Postponed: 0, Planning: 0, 'On Hold': 0, buckets: {} };
+    if (!rvps[rvp]) rvps[rvp] = { total: 0, Completed: 0, 'In Process': 0, Postponed: 0, Planning: 0, 'On Hold': 0 };
     rvps[rvp].total++;
     const s = statuses[i];
     if (rvps[rvp][s] !== undefined) rvps[rvp][s]++;
-    rvps[rvp].buckets[bucket] = (rvps[rvp].buckets[bucket] || 0) + 1;
   });
 
   const sorted = Object.entries(rvps).sort((a, b) => b[1].total - a[1].total);
   const maxTotal = Math.max(1, ...sorted.map(([, v]) => v.total));
-  const bucketColors = { Solidify: 'var(--teal)', Transform: 'var(--purple)', Preserve: 'var(--green)', Activate: '#FF8C42', Unknown: 'var(--text-3)' };
 
   const html = `<div class="motion-grid">${
     sorted.map(([rvpName, counts]) => {
@@ -1680,12 +1660,6 @@ function renderMotion(rows, statuses) {
         ['Planning','badge-status-planning'],
       ].filter(([s]) => counts[s] > 0)
        .map(([s, cls]) => `<span class="status-pip ${cls}">${counts[s]} ${s}</span>`).join('');
-      const bucketChips = Object.entries(counts.buckets)
-        .sort((a,b) => b[1]-a[1])
-        .map(([b, n]) => {
-          const c = bucketColors[b] || 'var(--blue)';
-          return `<span style="font-size:.68rem;padding:.1rem .45rem;border-radius:6px;background:${c}22;border:1px solid ${c}55;color:${c};white-space:nowrap">${n} ${esc(b)}</span>`;
-        }).join('');
       return `
         <div class="motion-item">
           <div class="motion-header">
@@ -1699,7 +1673,6 @@ function renderMotion(rows, statuses) {
             </div>
           </div>
           <div class="motion-status-row">${statusPips}</div>
-          <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem">${bucketChips}</div>
         </div>`;
     }).join('')
   }</div>`;
@@ -1764,6 +1737,21 @@ function renderDates(rows, statuses) {
     </tr></thead><tbody>${rows2}</tbody>`;
 }
 
+function summarizeUpdate(text) {
+  if (!text) return '';
+  let s = text.replace(/\s+/g, ' ').trim();
+  // Take first sentence or up to 120 chars
+  const sentenceEnd = s.search(/[.!?]\s/);
+  if (sentenceEnd > 0 && sentenceEnd < 140) {
+    s = s.substring(0, sentenceEnd + 1);
+  } else if (s.length > 120) {
+    // Find a natural break point
+    const breakAt = s.lastIndexOf(' ', 120);
+    s = s.substring(0, breakAt > 60 ? breakAt : 120) + '…';
+  }
+  return s;
+}
+
 function renderActive(rows, currentCol) {
   const container = document.getElementById('active-engagements');
 
@@ -1790,26 +1778,24 @@ function renderActive(rows, currentCol) {
       const dateStr = date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
       const daysAway = date ? daysFromNow(date) : null;
       const dateClass = daysAway !== null && daysAway <= 7 ? 'date-urgent' : daysAway !== null && daysAway <= 14 ? 'date-soon' : '';
-      const type = (r['Type'] || '').trim();
 
       const riskHtml = risks.map(rk => `<span class="eng-row-risk">${esc(rk)}</span>`).join('');
+      const summary = summarizeUpdate(currentUpdate);
 
       return `
         <div class="eng-card ${statusCardClass(status)}" style="margin:0">
           <div class="eng-card-header">
             <div class="eng-card-title">
-              <span class="eng-type">${esc(r['Engagement'] || '')}</span>
+              <span class="eng-title">${esc(r['Engagement'] || '')}</span>
             </div>
             <div class="eng-badges">
-              <span class="badge ${typeBadgeClass(type)}">${esc(type)}</span>
               <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
               ${dateStr ? `<span class="badge badge-date ${dateClass}">📅 ${dateStr}</span>` : ''}
             </div>
           </div>
-          ${currentUpdate ? `<div class="eng-card-body">
+          ${summary ? `<div class="eng-card-body">
             ${risks.length ? `<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem">${riskHtml}</div>` : ''}
-            <div class="eng-update">${esc(currentUpdate)}</div>
-            ${buildTeamLine(r)}
+            <div class="eng-update">${esc(summary)}</div>
           </div>` : ''}
         </div>`;
     }).join('');
@@ -1863,9 +1849,9 @@ function renderEngList(containerId, rows, currentCol, showIntake) {
 const SKIP_VALS = new Set(['none','n/a','false','na','tbd','','premier - see tsui']);
 
 const ROLE_DEFS = [
-  { key: 'SE',            label: 'Solutions Engineer',        col: 'SE',         color: '#34D399'       },
+  { key: 'SE',            label: 'Core SE',                   col: 'SE',         color: '#34D399'       },
   { key: 'CSM',           label: 'Customer Success Manager',  col: 'CSM',        color: '#FBBF24'       },
-  { key: 'EA',            label: 'Engagement Architect',      col: 'EA',         color: 'var(--blue)'   },
+  { key: 'EA',            label: 'Enterprise Architect',      col: 'EA',         color: 'var(--blue)'   },
   { key: 'BVS',          label: 'Business Value Specialist',  col: 'BVS',        color: 'var(--green)'  },
   { key: 'DSE',          label: 'DSE',                        col: 'DSE',        color: 'var(--amber)'  },
   { key: 'TA',           label: 'Technical Architect',        col: 'TA',         color: 'var(--teal)'   },
@@ -1900,44 +1886,81 @@ function renderPodResources(rows, statuses) {
     });
   });
 
-  const maxActive = Math.max(1, ...ROLE_DEFS.flatMap(r =>
-    Object.values(data[r.key]).map(p => p.active)
-  ));
-
   let total = 0;
-  const html = ROLE_DEFS.map(({ key, label, color }) => {
+  // Build role groups, separating Core SE for bottom feature
+  const roleGroups = [];
+  let seGroup = null;
+
+  ROLE_DEFS.forEach(({ key, label, color }) => {
     const people = Object.entries(data[key])
-      .sort((a, b) => (b[1].active + b[1].done) - (a[1].active + a[1].done));
-    if (!people.length) return '';
+      .sort((a, b) => b[1].active - a[1].active || (b[1].active + b[1].done) - (a[1].active + a[1].done));
+    if (!people.length) return;
     total += people.length;
 
-    const rows2 = people.map(([name, counts], idx) => {
-      const activePct = Math.round(counts.active / maxActive * 100);
-      const donePct   = Math.min(Math.round(counts.done / maxActive * 100), 100 - activePct);
-      return `<div class="pr-row">
-        <div class="pr-avatar" style="background:${colorForIndex(idx)}">${esc(initials(name))}</div>
-        <div class="pr-name">${esc(name)}</div>
-        <div class="pr-bar-wrap">
-          <div class="pr-bar">
-            <div style="width:${activePct}%;background:${color};height:100%"></div>
-            <div style="width:${donePct}%;background:${color};opacity:.2;height:100%"></div>
-          </div>
-        </div>
-        <div class="pr-counts">
-          ${counts.active ? `<span class="pr-count-active" style="color:${color}">${counts.active} active</span>` : ''}
-          ${counts.done   ? `<span class="pr-count-done">${counts.done} done</span>` : ''}
-        </div>
+    const group = { key, label, color, people };
+    if (key === 'SE') {
+      seGroup = group;
+    } else {
+      roleGroups.push(group);
+    }
+  });
+
+  // Sort role groups by total active across their people
+  roleGroups.sort((a, b) => {
+    const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
+    const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
+    return bActive - aActive;
+  });
+
+  const html = roleGroups.map(({ label, color, people }) => {
+    const chips = people.map(([name, counts], idx) => {
+      const stats = [
+        counts.active ? `<span class="pr-stat pr-stat-active">${counts.active}</span>` : '',
+        counts.done   ? `<span class="pr-stat pr-stat-done">${counts.done}✓</span>` : '',
+      ].filter(Boolean).join('');
+      return `<div class="pr-person">
+        <div class="pr-avatar" style="background:${color}">${esc(initials(name))}</div>
+        <span class="pr-name">${esc(name)}</span>
+        ${stats}
       </div>`;
     }).join('');
 
-    return `<div class="pr-group">
-      <div class="pr-role-label">${esc(label)}</div>
-      ${rows2}
+    return `<div class="pr-role-group">
+      <div class="pr-role-header">
+        <div class="pr-role-dot" style="background:${color}"></div>
+        <span class="pr-role-label">${esc(label)}</span>
+        <span class="pr-role-count">${people.length}</span>
+      </div>
+      <div class="pr-people">${chips}</div>
     </div>`;
-  }).filter(Boolean).join('');
+  }).join('');
+
+  // Core SE featured at bottom as horizontal strip
+  let seHtml = '';
+  if (seGroup) {
+    const seChips = seGroup.people.map(([name, counts], idx) => {
+      const stats = [
+        counts.active ? `<span class="pr-stat pr-stat-active">${counts.active}</span>` : '',
+        counts.done   ? `<span class="pr-stat pr-stat-done">${counts.done}✓</span>` : '',
+      ].filter(Boolean).join('');
+      return `<div class="pr-person">
+        <div class="pr-avatar" style="background:${seGroup.color}">${esc(initials(name))}</div>
+        <span class="pr-name">${esc(name)}</span>
+        ${stats}
+      </div>`;
+    }).join('');
+    seHtml = `<div class="pr-se-feature">
+      <div class="pr-role-header">
+        <div class="pr-role-dot" style="background:${seGroup.color}"></div>
+        <span class="pr-role-label">${esc(seGroup.label)}</span>
+        <span class="pr-role-count">${seGroup.people.length}</span>
+      </div>
+      <div class="pr-people pr-people-scroll">${seChips}</div>
+    </div>`;
+  }
 
   document.getElementById('team-count').textContent = total;
-  document.getElementById('team-body').innerHTML = `<div class="pr-grid">${html}</div>`;
+  document.getElementById('team-body').innerHTML = `<div class="pr-section">${html}${seHtml}</div>`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
@@ -1952,14 +1975,6 @@ function renderPatterns(rows, statuses, currentCol) {
   });
   const topTypes = Object.entries(typeCounts).sort((a,b) => b[1]-a[1]).slice(0, 5);
 
-  // 2. Motion type active vs done
-  const motionActive = {}, motionDone = {};
-  rows.forEach((r, i) => {
-    const m = (r['Type'] || '').trim();
-    if (!m) return;
-    if (['In Process','Planning'].includes(statuses[i])) motionActive[m] = (motionActive[m]||0)+1;
-    if (statuses[i] === 'Completed') motionDone[m] = (motionDone[m]||0)+1;
-  });
 
   // 3. Keyword themes in current week's updates
   const THEMES = [
@@ -1990,24 +2005,6 @@ function renderPatterns(rows, statuses, currentCol) {
     patterns.push({ icon: '📋', title: 'Most Common Engagement Types', body: `<div class="pat-chips">${chips}</div>` });
   }
 
-  // Motion depth
-  const motions = Object.keys({...motionActive,...motionDone});
-  if (motions.length) {
-    const maxCount = Math.max(1, ...motions.map(m => (motionActive[m]||0) + (motionDone[m]||0)));
-    const rows2 = motions.map(m => {
-      const a = motionActive[m]||0, d = motionDone[m]||0, tot = a+d;
-      const pctA = Math.round(a / maxCount * 100);
-      const pctD = Math.round(d / maxCount * 100);
-      return `<div class="pat-bar-row">
-        <span class="pat-bar-label">${esc(m)}</span>
-        <div class="pat-bar-track">
-          <div style="width:${pctA}%;background:var(--blue);height:100%;display:inline-block"></div><div style="width:${pctD}%;background:var(--green);height:100%;display:inline-block"></div>
-        </div>
-        <span class="pat-bar-meta"><span style="color:var(--blue)">${a} active</span> · <span style="color:var(--green)">${d} done</span></span>
-      </div>`;
-    }).join('');
-    patterns.push({ icon: '🔄', title: 'Active Cycle Rate', body: `<div class="pat-bars">${rows2}</div>` });
-  }
 
   // Theme keywords
   if (themeCounts.length) {
