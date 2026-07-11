@@ -62,8 +62,31 @@
       position: relative;
       overflow: hidden;
     }
-    .hero-glow { display: none; }
-    .hero-glow2 { display: none; }
+    .hero-glow {
+      display: block; position: absolute; pointer-events: none;
+      width: 560px; height: 560px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,98,46,.16) 0%, transparent 62%);
+      top: -180px; left: -120px;
+      animation: glow-drift 10s ease-in-out infinite alternate;
+    }
+    .hero-glow2 {
+      display: block; position: absolute; pointer-events: none;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(250,249,245,.07) 0%, transparent 65%);
+      top: -90px; right: -90px;
+      animation: glow-drift 13s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes glow-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(38px, 22px) scale(1.1); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
     .hero-inner { position: relative; z-index: 1; }
     .eyebrow {
       display: inline-flex; align-items: center; gap: .5rem;
@@ -1645,6 +1668,28 @@
       }
     });
   }
+</script>
+
+<script>
+(function() {
+  const io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+
+  function prep(sel, stagger) {
+    document.querySelectorAll(sel).forEach(function(el, i) {
+      el.classList.add('reveal');
+      if (stagger) el.style.setProperty('--reveal-delay', (i * 65) + 'ms');
+      io.observe(el);
+    });
+  }
+
+  prep('#stats .container', false);
+  prep('.mp-tech-card', true);
+  prep('.case-card', true);
+})();
 </script>
 
 </body>
