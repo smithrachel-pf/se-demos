@@ -1933,14 +1933,17 @@ function renderPodResources(rows, statuses) {
   });
 
   // Put SE group back into roleGroups for unified rendering
-  const allGroups = seGroup ? [seGroup, ...roleGroups] : roleGroups;
+  const multiplierGroup = roleGroups.find(g => g.key === 'TheMultiplier');
+  const otherGroups = roleGroups.filter(g => g.key !== 'TheMultiplier');
+  const allGroups = [...(seGroup ? [seGroup] : []), ...otherGroups];
   allGroups.sort((a, b) => {
     const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
     const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
     return bActive - aActive;
   });
+  if (multiplierGroup) allGroups.push(multiplierGroup);
 
-  const maxActive = Math.max(1, ...allGroups.flatMap(g => g.people.map(([, c]) => c.active)));
+  const maxActive = Math.max(1, ...allGroups.filter(g => g.key !== 'TheMultiplier').flatMap(g => g.people.map(([, c]) => c.active)));
 
   const html = allGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
