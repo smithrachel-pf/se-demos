@@ -1605,14 +1605,14 @@ function renderStatCards({ done, active }) {
   const el = document.getElementById('stat-grid');
   const cards = [
     {
-      cls: 'done', n: done, label: 'Projects Completed',
-      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="var(--green)" stroke-width="1.5" opacity=".4"/></svg>',
-      onclick: "showView('completed')", arrow: '→ View all'
-    },
-    {
       cls: 'active', n: active, label: 'Projects Being Hustled',
       icon: '<svg width="28" height="28" viewBox="-2 -2 28 28" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       onclick: "document.getElementById('active-trigger').scrollIntoView({behavior:'smooth',block:'start'})", arrow: '↓ See list'
+    },
+    {
+      cls: 'done', n: done, label: 'Projects Completed',
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="var(--green)" stroke-width="1.5" opacity=".4"/></svg>',
+      onclick: "showView('completed')", arrow: '→ View all'
     },
   ];
   el.innerHTML = cards.map(c => `
