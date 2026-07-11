@@ -1824,8 +1824,10 @@ function renderMotion(rows, statuses) {
   const html = `<div class="motion-grid">${
     sorted.map(([rvpName, counts]) => {
       const ownTotal = Math.max(1, counts.total);
-      const barPctDone  = Math.round((counts['Completed'] / ownTotal) * 100);
-      const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / ownTotal) * 100);
+      const pctCompleted = Math.round((counts['Completed'] / ownTotal) * 100);
+      const pctInProcess = Math.round((counts['In Process'] / ownTotal) * 100);
+      const pctPlanning  = Math.round((counts['Planning'] / ownTotal) * 100);
+      const pctHold      = Math.round(((counts['Postponed'] + counts['On Hold']) / ownTotal) * 100);
       const statusPips = [
         ['In Process','badge-status-inprocess'],
         ['Planning','badge-status-planning'],
@@ -1838,25 +1840,20 @@ function renderMotion(rows, statuses) {
         <div class="motion-item">
           <div class="motion-header">
             <div class="motion-label"><span class="motion-dot" style="background:${RVP_COLORS[rvpName] || 'var(--blue)'}"></span>${esc(rvpName)}</div>
-            <div class="motion-count"></div>
+            <div class="motion-count">${counts.total}</div>
           </div>
           <div class="motion-bar-bg">
             <div style="display:flex;height:100%">
-              <div style="width:${barPctDone}%;background:var(--green)"></div>
-              <div style="width:${barPctActive}%;background:var(--blue)"></div>
+              <div style="width:${pctCompleted}%;background:var(--green)"></div>
+              <div style="width:${pctInProcess}%;background:var(--blue)"></div>
+              <div style="width:${pctPlanning}%;background:var(--purple)"></div>
+              <div style="width:${pctHold}%;background:var(--amber)"></div>
             </div>
           </div>
           <div class="motion-status-row">${statusPips}</div>
         </div>`;
     }).join('')
   }</div>`;
-
-  // Overall progress bar
-  const total = rows.length;
-  const done  = statuses.filter(s => s === 'Completed').length;
-  const inpro = statuses.filter(s => s === 'In Process').length;
-  const hold  = statuses.filter(s => ['Postponed','On Hold'].includes(s)).length;
-  const plan  = statuses.filter(s => s === 'Planning').length;
 
   document.getElementById('motion-body').innerHTML = html;
 }
