@@ -1052,7 +1052,7 @@ body {
     <div class="section-grid">
       <div class="card">
         <div class="card-header">
-          <span class="card-title">By POD Motion Type</span>
+          <span class="card-title">By RVP</span>
         </div>
         <div class="card-body" id="motion-body"></div>
       </div>
@@ -1618,22 +1618,26 @@ function renderQuarterlyBreakdown(rows, statuses, dateCols) {
 }
 
 function renderMotion(rows, statuses) {
-  const types = {};
+  // Group by RVP
+  const rvps = {};
   rows.forEach((r, i) => {
-    const t = (r['Type'] || 'Unknown').trim();
-    if (!types[t]) types[t] = { total: 0, Completed: 0, 'In Process': 0, Postponed: 0, Planning: 0, 'On Hold': 0 };
-    types[t].total++;
+    const rvp = (r['RVP'] || 'Unassigned').trim();
+    const bucket = (r['Type'] || 'Unknown').trim();
+    if (!rvps[rvp]) rvps[rvp] = { total: 0, Completed: 0, 'In Process': 0, Postponed: 0, Planning: 0, 'On Hold': 0, buckets: {} };
+    rvps[rvp].total++;
     const s = statuses[i];
-    if (types[t][s] !== undefined) types[t][s]++;
+    if (rvps[rvp][s] !== undefined) rvps[rvp][s]++;
+    rvps[rvp].buckets[bucket] = (rvps[rvp].buckets[bucket] || 0) + 1;
   });
 
-  const maxTotal = Math.max(...Object.values(types).map(v => v.total));
-  const typeColors = { Solidify: 'var(--teal)', Transform: 'var(--purple)', Preserve: 'var(--green)', Activate: '#FF8C42', Unknown: 'var(--text-3)' };
+  const sorted = Object.entries(rvps).sort((a, b) => b[1].total - a[1].total);
+  const maxTotal = Math.max(1, ...sorted.map(([, v]) => v.total));
+  const bucketColors = { Solidify: 'var(--teal)', Transform: 'var(--purple)', Preserve: 'var(--green)', Activate: '#FF8C42', Unknown: 'var(--text-3)' };
 
   const html = `<div class="motion-grid">${
-    Object.entries(types).map(([type, counts]) => {
-      const color = typeColors[type] || 'var(--blue)';
-      const pct = Math.round((counts.total / maxTotal) * 100);
+    sorted.map(([rvpName, counts]) => {
+      const barPctDone  = Math.round((counts['Completed'] / maxTotal) * 100);
+      const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / maxTotal) * 100);
       const statusPips = [
         ['In Process','badge-status-inprocess'],
         ['Completed','badge-status-completed'],
@@ -1642,14 +1646,26 @@ function renderMotion(rows, statuses) {
         ['Planning','badge-status-planning'],
       ].filter(([s]) => counts[s] > 0)
        .map(([s, cls]) => `<span class="status-pip ${cls}">${counts[s]} ${s}</span>`).join('');
+      const bucketChips = Object.entries(counts.buckets)
+        .sort((a,b) => b[1]-a[1])
+        .map(([b, n]) => {
+          const c = bucketColors[b] || 'var(--blue)';
+          return `<span style="font-size:.68rem;padding:.1rem .45rem;border-radius:6px;background:${c}22;border:1px solid ${c}55;color:${c};white-space:nowrap">${n} ${esc(b)}</span>`;
+        }).join('');
       return `
         <div class="motion-item">
           <div class="motion-header">
-            <div class="motion-label"><span class="motion-dot" style="background:${color}"></span>${esc(type)}</div>
+            <div class="motion-label"><span class="motion-dot" style="background:var(--blue)"></span>${esc(rvpName)}</div>
             <div class="motion-count">${counts.total}</div>
           </div>
-          <div class="motion-bar-bg"><div class="motion-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          <div class="motion-bar-bg">
+            <div style="display:flex;height:100%">
+              <div style="width:${barPctDone}%;background:var(--green)"></div>
+              <div style="width:${barPctActive}%;background:var(--blue)"></div>
+            </div>
+          </div>
           <div class="motion-status-row">${statusPips}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem">${bucketChips}</div>
         </div>`;
     }).join('')
   }</div>`;
