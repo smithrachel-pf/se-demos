@@ -544,6 +544,7 @@ body {
 .date-urgent { color: var(--red) !important; font-weight: 700; }
 .date-soon   { color: var(--amber) !important; font-weight: 600; }
 .date-normal { color: var(--text-2); }
+.date-good   { color: var(--green) !important; font-weight: 600; }
 
 /* ── Team Section ── */
 .team-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -1714,8 +1715,8 @@ function renderDates(rows, statuses) {
   }
 
   const rows2 = upcoming.slice(0, 10).map(({ row, date, days, status }) => {
-    const cls = days < 0 ? 'date-urgent' : days <= 7 ? 'date-urgent' : days <= 14 ? 'date-soon' : 'date-normal';
-    const label = days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `${days}d`;
+    const cls = days < 0 ? 'date-urgent' : days <= 14 ? 'date-soon' : 'date-good';
+    const label = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     return `<tr>
       <td><strong>${esc(row['Account'])}</strong></td>
       <td>${esc(row['Engagement'])}</td>
