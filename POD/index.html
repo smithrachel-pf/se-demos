@@ -1288,14 +1288,6 @@ body {
         </div>
         <div class="card-body" id="motion-body"></div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Upcoming Critical Dates</span>
-        </div>
-        <div class="card-body" style="padding:0">
-          <table class="dates-table" id="dates-table"></table>
-        </div>
-      </div>
     </div>
 
 
@@ -1567,7 +1559,6 @@ function renderDashboard(rows, headers) {
   renderMotion(rows, statuses);
 
   // Dates
-  renderDates(rows, statuses);
 
   // Active engagements
   renderActive(active, currentCol);
