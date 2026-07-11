@@ -1823,12 +1823,12 @@ function renderMotion(rows, statuses) {
   });
 
   const sorted = Object.entries(rvps).sort((a, b) => b[1].total - a[1].total);
-  const maxTotal = Math.max(1, ...sorted.map(([, v]) => v.total));
 
   const html = `<div class="motion-grid">${
     sorted.map(([rvpName, counts]) => {
-      const barPctDone  = Math.round((counts['Completed'] / maxTotal) * 100);
-      const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / maxTotal) * 100);
+      const ownTotal = Math.max(1, counts.total);
+      const barPctDone  = Math.round((counts['Completed'] / ownTotal) * 100);
+      const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / ownTotal) * 100);
       const statusPips = [
         ['In Process','badge-status-inprocess'],
         ['Planning','badge-status-planning'],
@@ -2236,19 +2236,24 @@ function renderPatterns(rows, statuses, currentCol) {
   // 4. Signal detection — blockers vs momentum in latest updates
   const latestCol = Q2_WEEKLY_COLS[Q2_WEEKLY_COLS.length - 1];
   const SIGNALS = [
-    { label: 'Blocked / Waiting', re: /block|stuck|delay|pending|on hold|paused|waiting/i, color: THEME_COLORS['Blocked'] },
-    { label: 'Exec Access', re: /CTO|CEO|CMO|CIO|CISO|SVP|VP|C-suite|exec.*sponsor|exec.*readout/i, color: THEME_COLORS['Executive'] },
-    { label: 'Onsite / Workshop', re: /workshop|onsite|on-site|in-person|working session|BOE/i, color: THEME_COLORS['Workshop'] },
+    { label: 'Blocked / Waiting', icon: '⚠', re: /block|stuck|delay|pending|on hold|paused|waiting/i, color: THEME_COLORS['Blocked'] },
+    { label: 'Exec Access', icon: '✓', re: /CTO|CEO|CMO|CIO|CISO|SVP|VP|C-suite|exec.*sponsor|exec.*readout/i, color: THEME_COLORS['Executive'] },
+    { label: 'Upcoming Onsite / Workshop', icon: '◎', re: /workshop|onsite|on-site|in-person|working session|BOE/i, exclude: /completed|delivered|held|finished/i, color: THEME_COLORS['Workshop'] },
   ];
   const signalAccounts = SIGNALS.map(sig => {
-    const matches = active.filter(r => sig.re.test(r[latestCol] || '')).map(r => (r['Account'] || '').trim()).filter(Boolean);
+    const matches = active.filter(r => {
+      const text = r[latestCol] || '';
+      if (!sig.re.test(text)) return false;
+      if (sig.exclude && sig.exclude.test(text)) return false;
+      return true;
+    }).map(r => (r['Account'] || '').trim()).filter(Boolean);
     return { ...sig, accounts: [...new Set(matches)] };
   }).filter(s => s.accounts.length > 0);
 
   if (signalAccounts.length) {
     const rows2 = signalAccounts.map(s => {
       const chips = s.accounts.map(a => `<span class="pat-chip" style="background:${s.color.bg};border-color:${s.color.border};color:${s.color.text}">${esc(a)}</span>`).join('');
-      return `<div style="margin-bottom:.5rem"><span style="font-size:.72rem;font-weight:600;color:${s.color.text}">${esc(s.label)}</span><div class="pat-chips" style="margin-top:.25rem">${chips}</div></div>`;
+      return `<div style="margin-bottom:.5rem"><span style="font-size:.72rem;font-weight:600;color:${s.color.text}">${s.icon} ${esc(s.label)}</span><div class="pat-chips" style="margin-top:.25rem">${chips}</div></div>`;
     }).join('');
     patterns.push({ title: 'Latest Week Signals', body: rows2 });
   }
