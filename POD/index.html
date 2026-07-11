@@ -1955,7 +1955,28 @@ function renderActive(rows, currentCol) {
     return;
   }
 
-  container.innerHTML = Object.entries(byAccount).map(([acct, engagements]) => {
+  // Sort accounts: urgent dates → active/moving → stalling
+  const accountEntries = Object.entries(byAccount);
+  accountEntries.sort(([, aEngs], [, bEngs]) => {
+    function groupScore(engs) {
+      let hasUrgentDate = false;
+      let allStalling = true;
+      for (const r of engs) {
+        const d = parseDate(r['Next Critical Date']);
+        if (d && daysFromNow(d) >= 0 && daysFromNow(d) <= 5) hasUrgentDate = true;
+        const update = currentCol ? (r[currentCol.header] || '').trim() : '';
+        const status = normalizeStatus(r['Status']);
+        const stalling = /^no change|^need update|^same as|^no update/i.test(update) || (!update && status === 'In Process');
+        if (!stalling) allStalling = false;
+      }
+      if (hasUrgentDate) return 0;
+      if (!allStalling) return 1;
+      return 2;
+    }
+    return groupScore(aEngs) - groupScore(bEngs);
+  });
+
+  container.innerHTML = accountEntries.map(([acct, engagements]) => {
     const rvp = engagements[0]['RVP'] || '';
     const engRows = engagements.map(r => {
       const status = normalizeStatus(r['Status']);
