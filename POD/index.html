@@ -1997,23 +1997,17 @@ function renderPodResources(rows, statuses) {
     }
   });
 
-  // Sort role groups by total active across their people
-  roleGroups.sort((a, b) => {
-    const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
-    const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
-    return bActive - aActive;
+  // Fixed display order for POD resources
+  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Cinematographer','Designer','CSM','TheMultiplier'];
+  const podGroups = [];
+  RESOURCE_ORDER.forEach(key => {
+    const g = roleGroups.find(rg => rg.key === key);
+    if (g) podGroups.push(g);
   });
-
-  // Separate shared POD resources from Core SEs
-  const multiplierGroup = roleGroups.find(g => g.key === 'TheMultiplier');
-  const podGroups = roleGroups.filter(g => g.key !== 'TheMultiplier');
-  podGroups.sort((a, b) => {
-    const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
-    const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
-    return bActive - aActive;
+  // Add any remaining groups not in the fixed order
+  roleGroups.forEach(g => {
+    if (!RESOURCE_ORDER.includes(g.key)) podGroups.push(g);
   });
-  if (multiplierGroup) podGroups.push(multiplierGroup);
-
   const maxActive = Math.max(1, ...podGroups.filter(g => g.key !== 'TheMultiplier').flatMap(g => g.people.map(([, c]) => c.active)));
 
   const podHtml = podGroups.map(({ label, color, people }) => {
