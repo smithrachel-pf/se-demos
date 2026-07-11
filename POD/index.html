@@ -982,6 +982,12 @@ body {
   min-width: 16px;
   text-align: right;
 }
+.pr-cell-role {
+  font-size: .6rem;
+  color: var(--text-3);
+  margin-left: .3rem;
+  font-weight: 400;
+}
 
 /* ── Patterns Identified ── */
 .pat-grid {
@@ -2007,10 +2013,8 @@ const ROLE_DEFS = [
   { key: 'DSE',          label: 'DSE',                        col: 'DSE',        color: '#F97316'       },
   { key: 'TA',           label: 'Technical Architect',        col: 'TA',         color: 'var(--teal)'   },
   { key: 'AF',              label: 'ASE',               col: 'AF',         color: '#60A5FA' },
-  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer']) },
-  { key: 'Cinematographer', label: 'Cinematographer',  col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman']) },
-  { key: 'Designer',        label: 'Designer',          col: 'Multiplier', color: '#A78BFA',  names: new Set(['Tina Solin']) },
-  { key: 'TheMultiplier',   label: 'The Multiplier',    col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
+  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer','Alex Russell']) },
+  { key: 'Creative',       label: 'Creative',          col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman','Tina Solin']) },
 ];
 
 function renderPodResources(rows, statuses) {
@@ -2056,7 +2060,7 @@ function renderPodResources(rows, statuses) {
   });
 
   // Fixed display order for POD resources
-  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Cinematographer','Designer','CSM','TheMultiplier'];
+  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Creative','CSM'];
   const podGroups = [];
   RESOURCE_ORDER.forEach(key => {
     const g = roleGroups.find(rg => rg.key === key);
@@ -2066,15 +2070,18 @@ function renderPodResources(rows, statuses) {
   roleGroups.forEach(g => {
     if (!RESOURCE_ORDER.includes(g.key)) podGroups.push(g);
   });
-  const maxActive = Math.max(1, ...podGroups.filter(g => g.key !== 'TheMultiplier').flatMap(g => g.people.map(([, c]) => c.active)));
+  const maxActive = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active)));
+
+  const ROLE_TAGS = { 'Alex Russell': 'The Multiplier', 'Sasha Freedman': 'Cinematographer', 'Tina Solin': 'Designer' };
 
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
       const isInactive = counts.active === 0;
       const displayN = isInactive ? counts.completed : counts.active;
+      const roleTag = ROLE_TAGS[name] || '';
       return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
         <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
-        <span class="pr-cell-name">${esc(name)}</span>
+        <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
         <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : `color:${color}`}">${displayN}</span>
       </div>`;
     }).join('');
