@@ -540,6 +540,20 @@ body {
 .date-normal { color: var(--text-2); }
 .date-good   { color: var(--green) !important; font-weight: 600; }
 
+.date-pulse {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  margin-right: 5px;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.4); }
+}
+
 /* ── Team Section ── */
 .team-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
@@ -1785,9 +1799,9 @@ function renderActive(rows, currentCol) {
       const currentUpdate = currentCol ? (r[currentCol.header] || '').trim() : '';
       const risks = detectRisk(currentUpdate);
       const date = parseDate(r['Next Critical Date']);
-      const dateStr = date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
       const daysAway = date ? daysFromNow(date) : null;
-      const dateClass = daysAway !== null && daysAway <= 7 ? 'date-urgent' : daysAway !== null && daysAway <= 14 ? 'date-soon' : '';
+      const showDate = daysAway !== null && daysAway >= 0 && daysAway <= 5;
+      const dateStr = showDate ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
 
       const summary = summarizeUpdate(currentUpdate);
 
@@ -1799,7 +1813,7 @@ function renderActive(rows, currentCol) {
             </div>
             <div class="eng-badges">
               <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
-              ${dateStr ? `<span class="badge badge-date ${dateClass}">📅 ${dateStr}</span>` : ''}
+              ${dateStr ? `<span class="badge badge-date date-urgent"><span class="date-pulse"></span>${dateStr}</span>` : ''}
             </div>
           </div>
           ${summary ? `<div class="eng-card-body">
