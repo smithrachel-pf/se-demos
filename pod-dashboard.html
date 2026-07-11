@@ -454,6 +454,8 @@ body {
 .badge-date { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
 .badge-no-date { background: rgba(251,191,36,0.1); color: #FBBF24; border: 1px solid rgba(251,191,36,0.3); font-size: .65rem; }
 .eng-stalling { color: #FBBF24 !important; font-weight: 600; }
+.rvp-bucket.collapsed .rvp-bucket-content { display: none; }
+.rvp-bucket.collapsed .rvp-chevron { transform: rotate(-90deg); }
 
 /* ── Engagement Cards ── */
 .eng-card {
@@ -1257,7 +1259,7 @@ body {
 <div id="dashboard">
   <div class="topbar">
     <div class="topbar-left">
-      <img src="pod-logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-1);transform:scale(1.35);clip-path:circle(50%)">
+      <div style="width:36px;height:36px;flex-shrink:0;border-radius:50%;overflow:hidden"><img src="pod-logo.png" style="width:100%;height:100%;object-fit:cover"></div>
       <div class="topbar-divider"></div>
       <div class="topbar-label">Nassiri POD SQUAD Insights</div>
       <div class="topbar-week" id="week-label">—</div>
@@ -1288,28 +1290,8 @@ body {
         </div>
         <div class="card-body" id="motion-body"></div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Upcoming Critical Dates</span>
-          <span class="card-count" id="dates-count">—</span>
-        </div>
-        <div class="card-body" style="padding:0">
-          <table class="dates-table" id="dates-table"></table>
-        </div>
-      </div>
     </div>
 
-
-    <!-- Quarterly Breakdown -->
-    <div class="section-full">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">FY27 Quarterly Breakdown</span>
-          <span style="font-size:.72rem;color:var(--text-3)">Feb 2026 – Jan 2027</span>
-        </div>
-        <div class="card-body" id="quarterly-body"></div>
-      </div>
-    </div>
 
     <!-- Patterns Identified -->
     <div class="section-full">
@@ -1319,6 +1301,17 @@ body {
           <span class="card-count" id="patterns-count">—</span>
         </div>
         <div id="patterns-body"></div>
+      </div>
+    </div>
+
+    <!-- Quarterly Breakdown -->
+    <div class="section-full">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">FY27 Quarterly Breakdown</span>
+          <span style="font-size:.72rem;color:var(--text-3)">Feb 2026 – Jan 2027</span>
+        </div>
+        <div class="card-body" id="quarterly-body"></div>
       </div>
     </div>
 
@@ -1568,7 +1561,6 @@ function renderDashboard(rows, headers) {
   renderMotion(rows, statuses);
 
   // Dates
-  renderDates(rows, statuses);
 
   // Active engagements
   renderActive(active, currentCol);
@@ -1605,14 +1597,14 @@ function renderStatCards({ done, active }) {
   const el = document.getElementById('stat-grid');
   const cards = [
     {
-      cls: 'done', n: done, label: 'Projects Completed',
-      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="var(--green)" stroke-width="1.5" opacity=".4"/></svg>',
-      onclick: "showView('completed')", arrow: '→ View all'
-    },
-    {
       cls: 'active', n: active, label: 'Projects Being Hustled',
       icon: '<svg width="28" height="28" viewBox="-2 -2 28 28" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       onclick: "document.getElementById('active-trigger').scrollIntoView({behavior:'smooth',block:'start'})", arrow: '↓ See list'
+    },
+    {
+      cls: 'done', n: done, label: 'Projects Completed',
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="var(--green)" stroke-width="1.5" opacity=".4"/></svg>',
+      onclick: "showView('completed')", arrow: '→ View all'
     },
   ];
   el.innerHTML = cards.map(c => `
@@ -1706,7 +1698,7 @@ function renderCompletedWins(containerId, rows) {
       <div class="account-group">
         <div class="account-group-header">
           <span class="account-name">${esc(acct)}</span>
-          <span style="color:var(--text-3);font-size:.75rem">${esc(rvp)}</span>
+          <span style="color:${RVP_COLORS[rvp] || 'var(--text-3)'};font-size:.75rem;font-weight:600">${esc(rvp)}</span>
           <span class="card-count">${engagements.length}</span>
         </div>
         <div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.6rem">${cards}</div>
@@ -1810,6 +1802,13 @@ function renderQuarterlyBreakdown(rows, statuses, dateCols) {
   document.getElementById('quarterly-body').innerHTML = html;
 }
 
+const RVP_COLORS = {
+  'Andrew Blum': '#3B9EFF',
+  'Wardah Ansari': '#BC8CFF',
+  'Duncan Gladwin': '#34D399',
+  'Jesse Sun': '#F5C542',
+};
+
 function renderMotion(rows, statuses) {
   // Group by RVP
   const rvps = {};
@@ -1822,13 +1821,15 @@ function renderMotion(rows, statuses) {
     if (rvps[rvp][s] !== undefined) rvps[rvp][s]++;
   });
 
-  const sorted = Object.entries(rvps).sort((a, b) => b[1].total - a[1].total);
-  const maxTotal = Math.max(1, ...sorted.map(([, v]) => v.total));
+  const sorted = Object.entries(rvps).sort((a, b) => a[0].localeCompare(b[0]));
 
   const html = `<div class="motion-grid">${
     sorted.map(([rvpName, counts]) => {
-      const barPctDone  = Math.round((counts['Completed'] / maxTotal) * 100);
-      const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / maxTotal) * 100);
+      const ownTotal = Math.max(1, counts.total);
+      const pctCompleted = Math.round((counts['Completed'] / ownTotal) * 100);
+      const pctInProcess = Math.round((counts['In Process'] / ownTotal) * 100);
+      const pctPlanning  = Math.round((counts['Planning'] / ownTotal) * 100);
+      const pctHold      = Math.round(((counts['Postponed'] + counts['On Hold']) / ownTotal) * 100);
       const statusPips = [
         ['In Process','badge-status-inprocess'],
         ['Planning','badge-status-planning'],
@@ -1840,13 +1841,15 @@ function renderMotion(rows, statuses) {
       return `
         <div class="motion-item">
           <div class="motion-header">
-            <div class="motion-label"><span class="motion-dot" style="background:var(--blue)"></span>${esc(rvpName)}</div>
+            <div class="motion-label"><span class="motion-dot" style="background:${RVP_COLORS[rvpName] || 'var(--blue)'}"></span>${esc(rvpName)}</div>
             <div class="motion-count">${counts.total}</div>
           </div>
           <div class="motion-bar-bg">
             <div style="display:flex;height:100%">
-              <div style="width:${barPctDone}%;background:var(--green)"></div>
-              <div style="width:${barPctActive}%;background:var(--blue)"></div>
+              <div style="width:${pctInProcess}%;background:var(--blue)"></div>
+              <div style="width:${pctPlanning}%;background:var(--purple)"></div>
+              <div style="width:${pctHold}%;background:var(--amber)"></div>
+              <div style="width:${pctCompleted}%;background:var(--green)"></div>
             </div>
           </div>
           <div class="motion-status-row">${statusPips}</div>
@@ -1854,28 +1857,7 @@ function renderMotion(rows, statuses) {
     }).join('')
   }</div>`;
 
-  // Overall progress bar
-  const total = rows.length;
-  const done  = statuses.filter(s => s === 'Completed').length;
-  const inpro = statuses.filter(s => s === 'In Process').length;
-  const hold  = statuses.filter(s => ['Postponed','On Hold'].includes(s)).length;
-  const plan  = statuses.filter(s => s === 'Planning').length;
-
-  const barHtml = `
-    <div class="overview-bar">
-      <div class="overview-bar-seg" style="width:${pct(done,total)}%;background:var(--green)"></div>
-      <div class="overview-bar-seg" style="width:${pct(inpro,total)}%;background:var(--blue)"></div>
-      <div class="overview-bar-seg" style="width:${pct(plan,total)}%;background:var(--purple)"></div>
-      <div class="overview-bar-seg" style="width:${pct(hold,total)}%;background:var(--amber)"></div>
-    </div>
-    <div class="overview-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>${done} Completed</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>${inpro} In Process</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>${plan} Planning</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>${hold} On Hold</div>
-    </div>`;
-
-  document.getElementById('motion-body').innerHTML = barHtml + '<div style="margin-top:1.25rem">' + html + '</div>';
+  document.getElementById('motion-body').innerHTML = html;
 }
 
 function renderDates(rows, statuses) {
@@ -1890,7 +1872,6 @@ function renderDates(rows, statuses) {
   });
   upcoming.sort((a, b) => a.days - b.days);
 
-  document.getElementById('dates-count').textContent = upcoming.length;
 
   if (!upcoming.length) {
     document.getElementById('dates-table').innerHTML = '<tr><td style="padding:1.5rem;color:var(--text-3);text-align:center">No upcoming critical dates</td></tr>';
@@ -1955,60 +1936,106 @@ function renderActive(rows, currentCol) {
     return;
   }
 
-  container.innerHTML = Object.entries(byAccount).map(([acct, engagements]) => {
-    const rvp = engagements[0]['RVP'] || '';
-    const engRows = engagements.map(r => {
-      const status = normalizeStatus(r['Status']);
-      const currentUpdate = currentCol ? (r[currentCol.header] || '').trim() : '';
-      const risks = detectRisk(currentUpdate);
-      const date = parseDate(r['Next Critical Date']);
-      const daysAway = date ? daysFromNow(date) : null;
-      const showDate = daysAway !== null && daysAway >= 0 && daysAway <= 5;
-      const dateStr = showDate ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  // Sort accounts: urgent dates → active/moving → stalling
+  const accountEntries = Object.entries(byAccount);
+  accountEntries.sort(([, aEngs], [, bEngs]) => {
+    function groupScore(engs) {
+      let hasUrgentDate = false;
+      let allStalling = true;
+      for (const r of engs) {
+        const d = parseDate(r['Next Critical Date']);
+        if (d && daysFromNow(d) >= 0 && daysFromNow(d) <= 5) hasUrgentDate = true;
+        const update = currentCol ? (r[currentCol.header] || '').trim() : '';
+        const status = normalizeStatus(r['Status']);
+        const stalling = /^no change|^need update|^same as|^no update/i.test(update) || (!update && status === 'In Process');
+        if (!stalling) allStalling = false;
+      }
+      if (hasUrgentDate) return 0;
+      if (!allStalling) return 1;
+      return 2;
+    }
+    return groupScore(aEngs) - groupScore(bEngs);
+  });
 
-      let summary = summarizeUpdate(currentUpdate);
+  // Group sorted accounts by RVP
+  const byRvp = {};
+  accountEntries.forEach(([acct, engagements]) => {
+    const rvpRaw = (engagements[0]['RVP'] || 'Unassigned').trim();
+    const rvp = (rvpRaw === 'TBD' || rvpRaw === '') ? 'Wardah Ansari' : rvpRaw;
+    if (!byRvp[rvp]) byRvp[rvp] = [];
+    byRvp[rvp].push([acct, engagements]);
+  });
 
-      // Detect stalling — "no change" or identical to prior week
-      const isStalling = /^no change|^need update|^same as|^no update/i.test(currentUpdate.trim()) || (!currentUpdate.trim() && status === 'In Process');
-      if (isStalling && !summary) summary = 'No changes detected — stalling';
+  // Sort RVPs alphabetically
+  const rvpKeys = Object.keys(byRvp).sort((a, b) => a.localeCompare(b));
 
-      // Missing next date indicator
-      const rawDate = (r['Next Critical Date'] || '').trim();
-      const missingDate = !rawDate && ['In Process','Planning'].includes(status);
+  container.innerHTML = rvpKeys.map(rvp => {
+    const color = RVP_COLORS[rvp] || 'var(--text-3)';
+    const accounts = byRvp[rvp];
+    const acctCount = accounts.reduce((sum, [, engs]) => sum + engs.length, 0);
 
-      const seName = (r['SE'] || '').trim();
-      const aeName = (r['AE'] || '').trim();
-      const nameTags = [
-        aeName && aeName !== 'NONE' && aeName !== 'N/A' ? `<span class="eng-name-tag eng-name-ae">${esc(aeName)}</span>` : '',
-        seName && seName !== 'NONE' && seName !== 'N/A' ? `<span class="eng-name-tag eng-name-se">${esc(seName)}</span>` : '',
-      ].filter(Boolean).join('');
+    const accountsHtml = accounts.map(([acct, engagements]) => {
+      const engRows = engagements.map(r => {
+        const status = normalizeStatus(r['Status']);
+        const currentUpdate = currentCol ? (r[currentCol.header] || '').trim() : '';
+        const risks = detectRisk(currentUpdate);
+        const date = parseDate(r['Next Critical Date']);
+        const daysAway = date ? daysFromNow(date) : null;
+        const showDate = daysAway !== null && daysAway >= 0 && daysAway <= 5;
+        const dateStr = showDate ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+
+        let summary = summarizeUpdate(currentUpdate);
+
+        const isStalling = /^no change|^need update|^same as|^no update/i.test(currentUpdate.trim()) || (!currentUpdate.trim() && status === 'In Process');
+        if (isStalling && !summary) summary = 'No changes detected — stalling';
+
+        const rawDate = (r['Next Critical Date'] || '').trim();
+        const missingDate = !rawDate && ['In Process','Planning'].includes(status);
+
+        const seName = (r['SE'] || '').trim();
+        const aeName = (r['AE'] || '').trim();
+        const nameTags = [
+          aeName && aeName !== 'NONE' && aeName !== 'N/A' ? `<span class="eng-name-tag eng-name-ae">${esc(aeName)}</span>` : '',
+          seName && seName !== 'NONE' && seName !== 'N/A' ? `<span class="eng-name-tag eng-name-se">${esc(seName)}</span>` : '',
+        ].filter(Boolean).join('');
+
+        return `
+          <div class="eng-card ${statusCardClass(status)}" style="margin:0">
+            <div class="eng-card-header">
+              <div class="eng-card-title">
+                <span class="eng-title">${esc(r['Engagement'] || '')}</span>
+              </div>
+              <div class="eng-badges">
+                ${missingDate ? '<span class="badge badge-no-date" title="No next date set">⚠ No Date</span>' : ''}
+                <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
+                ${dateStr ? `<span class="badge badge-date date-urgent"><span class="date-pulse"></span>${dateStr}</span>` : ''}
+              </div>
+            </div>
+            ${isStalling ? `<div class="eng-card-body"><div class="eng-update eng-stalling">⚠ No changes detected — stalling</div></div>`
+              : summary ? `<div class="eng-card-body"><div class="eng-update">${esc(summary)}</div></div>` : ''}
+            ${nameTags ? `<div class="eng-card-names">${nameTags}</div>` : ''}
+          </div>`;
+      }).join('');
 
       return `
-        <div class="eng-card ${statusCardClass(status)}" style="margin:0">
-          <div class="eng-card-header">
-            <div class="eng-card-title">
-              <span class="eng-title">${esc(r['Engagement'] || '')}</span>
-            </div>
-            <div class="eng-badges">
-              ${missingDate ? '<span class="badge badge-no-date" title="No next date set">⚠ No Date</span>' : ''}
-              <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
-              ${dateStr ? `<span class="badge badge-date date-urgent"><span class="date-pulse"></span>${dateStr}</span>` : ''}
-            </div>
+        <div class="account-group">
+          <div class="account-group-header">
+            <span class="account-name">${esc(acct)}</span>
+            <span class="card-count">${engagements.length}</span>
           </div>
-          ${isStalling ? `<div class="eng-card-body"><div class="eng-update eng-stalling">⚠ No changes detected — stalling</div></div>`
-            : summary ? `<div class="eng-card-body"><div class="eng-update">${esc(summary)}</div></div>` : ''}
-          ${nameTags ? `<div class="eng-card-names">${nameTags}</div>` : ''}
+          <div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.6rem">${engRows}</div>
         </div>`;
     }).join('');
 
     return `
-      <div class="account-group">
-        <div class="account-group-header">
-          <span class="account-name">${esc(acct)}</span>
-          <span style="color:var(--text-3);font-size:.75rem">${esc(rvp)}</span>
-          <span class="card-count">${engagements.length}</span>
+      <div class="rvp-bucket" style="border-left:3px solid ${color};margin-bottom:1.5rem;padding-left:0">
+        <div onclick="this.parentElement.classList.toggle('collapsed')" style="display:flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:var(--surface-2);border-radius:0 8px 8px 0;margin-bottom:.5rem;cursor:pointer;user-select:none">
+          <span class="rvp-chevron" style="font-size:.7rem;color:var(--text-3);transition:transform .2s">▼</span>
+          <span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0"></span>
+          <span style="font-weight:700;font-size:.9rem;color:${color}">${esc(rvp)}</span>
+          <span class="card-count">${acctCount}</span>
         </div>
-        <div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.6rem">${engRows}</div>
+        <div class="rvp-bucket-content">${accountsHtml}</div>
       </div>`;
   }).join('');
 }
@@ -2056,10 +2083,9 @@ const ROLE_DEFS = [
   { key: 'BVS',          label: 'Business Value Specialist',  col: 'BVS',        color: 'var(--green)'  },
   { key: 'DSE',          label: 'DSE',                        col: 'DSE',        color: '#F97316'       },
   { key: 'TA',           label: 'Technical Architect',        col: 'TA',         color: 'var(--teal)'   },
-  { key: 'AF',              label: 'ASE',               col: 'AF',         color: '#60A5FA' },
-  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer']) },
+  { key: 'AF',              label: 'FDE',               col: 'AF',         color: '#60A5FA' },
+  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer','Alex Russell']) },
   { key: 'Creative',       label: 'Creative',          col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman','Tina Solin']) },
-  { key: 'TheMultiplier',  label: 'OG Multiplier',     col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
 ];
 
 function renderPodResources(rows, statuses) {
@@ -2105,7 +2131,7 @@ function renderPodResources(rows, statuses) {
   });
 
   // Fixed display order for POD resources
-  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Creative','CSM','TheMultiplier'];
+  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Creative','CSM'];
   const podGroups = [];
   RESOURCE_ORDER.forEach(key => {
     const g = roleGroups.find(rg => rg.key === key);
@@ -2117,30 +2143,47 @@ function renderPodResources(rows, statuses) {
   });
   const maxTotal = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active + c.completed)));
 
-  const ROLE_TAGS = { 'Alex Russell': 'OG Multiplier', 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
+  const ROLE_TAGS = { 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
 
-  const podHtml = podGroups.map(({ label, color, people }) => {
-    const rows2 = people.map(([name, counts]) => {
-      const isInactive = counts.active === 0;
-      const total = counts.active + counts.completed;
-      const activePct = Math.round((counts.active / maxTotal) * 100);
-      const completedPct = Math.round((counts.completed / maxTotal) * 100);
-      const roleTag = ROLE_TAGS[name] || '';
-      return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
-        <div class="pr-cell-top">
-          <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
-          <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
+  function renderPersonCell(name, counts, color) {
+    const isInactive = counts.active === 0;
+    const activePct = Math.round((counts.active / maxTotal) * 100);
+    const completedPct = Math.round((counts.completed / maxTotal) * 100);
+    const roleTag = ROLE_TAGS[name] || '';
+    return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
+      <div class="pr-cell-top">
+        <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
+        <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
+      </div>
+      <div class="pr-cell-bar-row">
+        <div class="pr-cell-bar-track">
+          <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
+          <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
         </div>
-        <div class="pr-cell-bar-row">
-          <div class="pr-cell-bar-track">
-            <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
-            <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
-          </div>
-          <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}${counts.completed ? `<span class="pr-cell-completed"> + ${counts.completed} done</span>` : ''}</span>
+        <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}${counts.completed ? `<span class="pr-cell-completed"> + ${counts.completed} done</span>` : ''}</span>
+      </div>
+    </div>`;
+  }
+
+  const podHtml = podGroups.map(({ key, label, color, people }) => {
+    if (key === 'BizCon') {
+      const alexEntry = people.find(([n]) => n === 'Alex Russell');
+      const others = people.filter(([n]) => n !== 'Alex Russell');
+      const othersHtml = others.map(([name, counts]) => renderPersonCell(name, counts, color)).join('');
+      const alexHtml = alexEntry ? `<div style="margin-top:.5rem;padding:.5rem;background:var(--surface-1);border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:.65rem;font-weight:700;color:#E879A0;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">OG Multiplier</div>
+        ${renderPersonCell(alexEntry[0], alexEntry[1], '#E879A0')}
+      </div>` : '';
+      return `<div class="pr-grid-group">
+        <div class="pr-role-header">
+          <div class="pr-role-dot" style="background:${color}"></div>
+          <span class="pr-role-label">${esc(label)}</span>
         </div>
+        <div class="pr-grid-people">${othersHtml}${alexHtml}</div>
       </div>`;
-    }).join('');
+    }
 
+    const rows2 = people.map(([name, counts]) => renderPersonCell(name, counts, color)).join('');
     return `<div class="pr-grid-group">
       <div class="pr-role-header">
         <div class="pr-role-dot" style="background:${color}"></div>
@@ -2202,14 +2245,6 @@ function renderPatterns(rows, statuses, currentCol) {
     { bg: 'rgba(167,139,250,0.1)', border: 'rgba(167,139,250,0.3)', text: '#A78BFA' },
     { bg: 'rgba(255,112,67,0.1)', border: 'rgba(255,112,67,0.3)', text: '#FF7043' },
   ];
-  if (topTypes.length) {
-    const chips = topTypes.map(([t, n], i) => {
-      const c = TYPE_COLORS[i % TYPE_COLORS.length];
-      return `<span class="pat-chip" style="background:${c.bg};border-color:${c.border};color:${c.text}">${esc(t)} <span class="pat-chip-n" style="color:${c.text}">${n}</span></span>`;
-    }).join('');
-    patterns.push({ title: 'Most Common Engagement Types', body: `<div class="pat-chips">${chips}</div>` });
-  }
-
   // Theme keywords — color coded
   const THEME_COLORS = {
     'Data': { bg: 'rgba(59,158,255,0.1)', border: 'rgba(59,158,255,0.3)', text: '#3B9EFF' },
@@ -2231,6 +2266,14 @@ function renderPatterns(rows, statuses, currentCol) {
       return `<span class="pat-chip" style="background:${c.bg};border-color:${c.border};color:${c.text}">${esc(t.label)} <span class="pat-chip-n" style="color:${c.text}">${t.count}</span></span>`;
     }).join('');
     patterns.push({ title: 'Recurring Themes Across All Engagements', body: `<div class="pat-chips">${chips}</div>` });
+  }
+
+  if (topTypes.length) {
+    const chips = topTypes.map(([t, n], i) => {
+      const c = TYPE_COLORS[i % TYPE_COLORS.length];
+      return `<span class="pat-chip" style="background:${c.bg};border-color:${c.border};color:${c.text}">${esc(t)} <span class="pat-chip-n" style="color:${c.text}">${n}</span></span>`;
+    }).join('');
+    patterns.push({ title: 'Most Common Engagement Types', body: `<div class="pat-chips">${chips}</div>` });
   }
 
   // 4. Signal detection — blockers vs momentum in latest updates
