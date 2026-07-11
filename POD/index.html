@@ -2015,7 +2015,7 @@ const ROLE_DEFS = [
   { key: 'AF',              label: 'ASE',               col: 'AF',         color: '#60A5FA' },
   { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer']) },
   { key: 'Creative',       label: 'Creative',          col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman','Tina Solin']) },
-  { key: 'TheMultiplier',  label: 'The Multiplier',    col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
+  { key: 'TheMultiplier',  label: 'OG Multiplier',     col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
 ];
 
 function renderPodResources(rows, statuses) {
@@ -2032,7 +2032,7 @@ function renderPodResources(rows, statuses) {
       const cell = (row[col] || '').trim();
       if (!cell) return;
       cell.split(',').forEach(part => {
-        const name = part.trim();
+        const name = part.trim().replace(/\s*\(.*?\)\s*/g, '').trim();
         if (!name || SKIP_VALS.has(name.toLowerCase())) return;
         if (names && !names.has(name)) return;
         if (!data[key][name]) data[key][name] = { active: 0, completed: 0 };
@@ -2073,7 +2073,7 @@ function renderPodResources(rows, statuses) {
   });
   const maxActive = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active)));
 
-  const ROLE_TAGS = { 'Alex Russell': 'The Multiplier', 'Sasha Freedman': 'Cinematographer', 'Tina Solin': 'Designer' };
+  const ROLE_TAGS = { 'Alex Russell': 'OG Multiplier', 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
 
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
