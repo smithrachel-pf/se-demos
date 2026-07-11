@@ -2047,7 +2047,7 @@ function renderPodResources(rows, statuses) {
 
   ROLE_DEFS.forEach(({ key, label, color }) => {
     const people = Object.entries(data[key])
-      .sort((a, b) => a[0].localeCompare(b[0]));
+      .sort((a, b) => b[1].active - a[1].active || b[1].completed - a[1].completed);
     if (!people.length) return;
     total += people.length;
 
