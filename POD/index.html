@@ -944,13 +944,13 @@ body {
 .pr-grid-people {
   display: flex;
   flex-direction: column;
-  gap: .35rem;
+  gap: .5rem;
   margin-top: .5rem;
 }
 .pr-cell {
   display: flex;
-  align-items: center;
-  gap: .4rem;
+  flex-direction: column;
+  gap: .2rem;
 }
 .pr-cell-inactive .pr-cell-name {
   color: var(--text-3);
@@ -976,11 +976,45 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.pr-cell-top {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.pr-cell-bar-row {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin-left: 30px;
+}
+.pr-cell-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+}
+.pr-cell-bar-done {
+  height: 100%;
+  background: var(--text-3);
+  opacity: .5;
+}
+.pr-cell-bar-active {
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+}
 .pr-cell-n {
-  font-size: .75rem;
+  font-size: .7rem;
   font-weight: 700;
-  min-width: 16px;
+  color: var(--text-1);
+  min-width: 28px;
   text-align: right;
+  white-space: nowrap;
+}
+.pr-cell-completed {
+  font-weight: 400;
+  color: var(--text-3);
 }
 .pr-cell-role {
   font-size: .6rem;
@@ -2071,19 +2105,29 @@ function renderPodResources(rows, statuses) {
   roleGroups.forEach(g => {
     if (!RESOURCE_ORDER.includes(g.key)) podGroups.push(g);
   });
-  const maxActive = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active)));
+  const maxTotal = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active + c.completed)));
 
   const ROLE_TAGS = { 'Alex Russell': 'OG Multiplier', 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
 
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
       const isInactive = counts.active === 0;
-      const displayN = isInactive ? counts.completed : counts.active;
+      const total = counts.active + counts.completed;
+      const activePct = Math.round((counts.active / maxTotal) * 100);
+      const completedPct = Math.round((counts.completed / maxTotal) * 100);
       const roleTag = ROLE_TAGS[name] || '';
       return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
-        <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
-        <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
-        <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : `color:${color}`}">${displayN}</span>
+        <div class="pr-cell-top">
+          <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
+          <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
+        </div>
+        <div class="pr-cell-bar-row">
+          <div class="pr-cell-bar-track">
+            <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
+            <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
+          </div>
+          <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}<span class="pr-cell-completed">/${total}</span></span>
+        </div>
       </div>`;
     }).join('');
 
