@@ -929,6 +929,60 @@ body {
   color: var(--text-3);
 }
 
+.pr-grid-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+.pr-grid-group {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .75rem .9rem;
+}
+.pr-grid-people {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  margin-top: .5rem;
+}
+.pr-cell {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.pr-cell-inactive .pr-cell-name {
+  color: var(--text-3);
+}
+.pr-avatar-sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .55rem;
+  font-weight: 700;
+  color: var(--bg-1);
+  flex-shrink: 0;
+}
+.pr-cell-name {
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--text-1);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pr-cell-n {
+  font-size: .75rem;
+  font-weight: 700;
+  min-width: 16px;
+  text-align: right;
+}
+
 /* ── Patterns Identified ── */
 .pat-grid {
   display: grid;
@@ -2017,36 +2071,26 @@ function renderPodResources(rows, statuses) {
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
       const isInactive = counts.active === 0;
-      const barPct = isInactive
-        ? Math.round((counts.completed / Math.max(1, maxActive)) * 100)
-        : Math.round((counts.active / maxActive) * 100);
-      const barColor = isInactive ? 'var(--text-3)' : color;
       const displayN = isInactive ? counts.completed : counts.active;
-      return `<div class="pr-row${isInactive ? ' pr-row-inactive' : ''}">
-        <div class="pr-row-left">
-          <div class="pr-avatar" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
-          <span class="pr-row-name">${esc(name)}</span>
-        </div>
-        <div class="pr-row-right">
-          <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
-          <span class="pr-row-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${displayN}</span>
-        </div>
+      return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
+        <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
+        <span class="pr-cell-name">${esc(name)}</span>
+        <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : `color:${color}`}">${displayN}</span>
       </div>`;
     }).join('');
 
-    return `<div class="pr-role-group">
+    return `<div class="pr-grid-group">
       <div class="pr-role-header">
         <div class="pr-role-dot" style="background:${color}"></div>
         <span class="pr-role-label">${esc(label)}</span>
       </div>
-      ${rows2}
+      <div class="pr-grid-people">${rows2}</div>
     </div>`;
   }).join('');
 
-  // Core SEs excluded — they appear as tags on WIP cards instead
   const podTotal = total - (seGroup ? seGroup.people.length : 0);
   document.getElementById('team-count').textContent = podTotal;
-  document.getElementById('team-body').innerHTML = `<div class="pr-section">${podHtml}</div>`;
+  document.getElementById('team-body').innerHTML = `<div class="pr-grid-section">${podHtml}</div>`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
