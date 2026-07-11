@@ -454,6 +454,8 @@ body {
 .badge-date { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
 .badge-no-date { background: rgba(251,191,36,0.1); color: #FBBF24; border: 1px solid rgba(251,191,36,0.3); font-size: .65rem; }
 .eng-stalling { color: #FBBF24 !important; font-weight: 600; }
+.rvp-bucket.collapsed .rvp-bucket-content { display: none; }
+.rvp-bucket.collapsed .rvp-chevron { transform: rotate(-90deg); }
 
 /* ── Engagement Cards ── */
 .eng-card {
@@ -2027,12 +2029,13 @@ function renderActive(rows, currentCol) {
 
     return `
       <div class="rvp-bucket" style="border-left:3px solid ${color};margin-bottom:1.5rem;padding-left:0">
-        <div style="display:flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:var(--surface-2);border-radius:0 8px 8px 0;margin-bottom:.5rem">
+        <div onclick="this.parentElement.classList.toggle('collapsed')" style="display:flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:var(--surface-2);border-radius:0 8px 8px 0;margin-bottom:.5rem;cursor:pointer;user-select:none">
+          <span class="rvp-chevron" style="font-size:.7rem;color:var(--text-3);transition:transform .2s">▼</span>
           <span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0"></span>
           <span style="font-weight:700;font-size:.9rem;color:${color}">${esc(rvp)}</span>
           <span class="card-count">${acctCount}</span>
         </div>
-        ${accountsHtml}
+        <div class="rvp-bucket-content">${accountsHtml}</div>
       </div>`;
   }).join('');
 }
