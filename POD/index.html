@@ -2135,28 +2135,45 @@ function renderPodResources(rows, statuses) {
 
   const ROLE_TAGS = { 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
 
-  const podHtml = podGroups.map(({ label, color, people }) => {
-    const rows2 = people.map(([name, counts]) => {
-      const isInactive = counts.active === 0;
-      const total = counts.active + counts.completed;
-      const activePct = Math.round((counts.active / maxTotal) * 100);
-      const completedPct = Math.round((counts.completed / maxTotal) * 100);
-      const roleTag = ROLE_TAGS[name] || '';
-      return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
-        <div class="pr-cell-top">
-          <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
-          <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
+  function renderPersonCell(name, counts, color) {
+    const isInactive = counts.active === 0;
+    const activePct = Math.round((counts.active / maxTotal) * 100);
+    const completedPct = Math.round((counts.completed / maxTotal) * 100);
+    const roleTag = ROLE_TAGS[name] || '';
+    return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
+      <div class="pr-cell-top">
+        <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
+        <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
+      </div>
+      <div class="pr-cell-bar-row">
+        <div class="pr-cell-bar-track">
+          <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
+          <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
         </div>
-        <div class="pr-cell-bar-row">
-          <div class="pr-cell-bar-track">
-            <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
-            <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
-          </div>
-          <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}${counts.completed ? `<span class="pr-cell-completed"> + ${counts.completed} done</span>` : ''}</span>
-        </div>
-      </div>`;
-    }).join('');
+        <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}${counts.completed ? `<span class="pr-cell-completed"> + ${counts.completed} done</span>` : ''}</span>
+      </div>
+    </div>`;
+  }
 
+  const podHtml = podGroups.map(({ key, label, color, people }) => {
+    if (key === 'BizCon') {
+      const alexEntry = people.find(([n]) => n === 'Alex Russell');
+      const others = people.filter(([n]) => n !== 'Alex Russell');
+      const othersHtml = others.map(([name, counts]) => renderPersonCell(name, counts, color)).join('');
+      const alexHtml = alexEntry ? `<div style="margin-top:.5rem;padding:.5rem;background:var(--surface-1);border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:.65rem;font-weight:700;color:#E879A0;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem">OG Multiplier</div>
+        ${renderPersonCell(alexEntry[0], alexEntry[1], '#E879A0')}
+      </div>` : '';
+      return `<div class="pr-grid-group">
+        <div class="pr-role-header">
+          <div class="pr-role-dot" style="background:${color}"></div>
+          <span class="pr-role-label">${esc(label)}</span>
+        </div>
+        <div class="pr-grid-people">${othersHtml}${alexHtml}</div>
+      </div>`;
+    }
+
+    const rows2 = people.map(([name, counts]) => renderPersonCell(name, counts, color)).join('');
     return `<div class="pr-grid-group">
       <div class="pr-role-header">
         <div class="pr-role-dot" style="background:${color}"></div>
