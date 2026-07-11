@@ -452,6 +452,8 @@ body {
 
 .badge-risk { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
 .badge-date { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.badge-no-date { background: rgba(251,191,36,0.1); color: #FBBF24; border: 1px solid rgba(251,191,36,0.3); font-size: .65rem; }
+.eng-stalling { color: #FBBF24 !important; font-weight: 600; }
 
 /* ── Engagement Cards ── */
 .eng-card {
@@ -1964,7 +1966,15 @@ function renderActive(rows, currentCol) {
       const showDate = daysAway !== null && daysAway >= 0 && daysAway <= 5;
       const dateStr = showDate ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
 
-      const summary = summarizeUpdate(currentUpdate);
+      let summary = summarizeUpdate(currentUpdate);
+
+      // Detect stalling — "no change" or identical to prior week
+      const isStalling = /^no change|^need update|^same as|^no update/i.test(currentUpdate.trim()) || (!currentUpdate.trim() && status === 'In Process');
+      if (isStalling && !summary) summary = 'No changes detected — stalling';
+
+      // Missing next date indicator
+      const rawDate = (r['Next Critical Date'] || '').trim();
+      const missingDate = !rawDate && ['In Process','Planning'].includes(status);
 
       const seName = (r['SE'] || '').trim();
       const aeName = (r['AE'] || '').trim();
@@ -1980,13 +1990,13 @@ function renderActive(rows, currentCol) {
               <span class="eng-title">${esc(r['Engagement'] || '')}</span>
             </div>
             <div class="eng-badges">
+              ${missingDate ? '<span class="badge badge-no-date" title="No next date set">⚠ No Date</span>' : ''}
               <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
               ${dateStr ? `<span class="badge badge-date date-urgent"><span class="date-pulse"></span>${dateStr}</span>` : ''}
             </div>
           </div>
-          ${summary ? `<div class="eng-card-body">
-            <div class="eng-update">${esc(summary)}</div>
-          </div>` : ''}
+          ${isStalling ? `<div class="eng-card-body"><div class="eng-update eng-stalling">⚠ No changes detected — stalling</div></div>`
+            : summary ? `<div class="eng-card-body"><div class="eng-update">${esc(summary)}</div></div>` : ''}
           ${nameTags ? `<div class="eng-card-names">${nameTags}</div>` : ''}
         </div>`;
     }).join('');
@@ -2126,7 +2136,7 @@ function renderPodResources(rows, statuses) {
             <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
             <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
           </div>
-          <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}<span class="pr-cell-completed">/${total}</span></span>
+          <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}${counts.completed ? `<span class="pr-cell-completed"> + ${counts.completed} done</span>` : ''}</span>
         </div>
       </div>`;
     }).join('');
