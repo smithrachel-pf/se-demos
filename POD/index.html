@@ -2138,7 +2138,7 @@ function renderPodResources(rows, statuses) {
   });
   const maxTotal = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active + c.completed)));
 
-  const ROLE_TAGS = { 'Alex Russell': 'OG Multiplier', 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
+  const ROLE_TAGS = { 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
 
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
