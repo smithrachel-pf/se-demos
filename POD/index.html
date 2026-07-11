@@ -1094,7 +1094,7 @@ body {
 <div id="dashboard">
   <div class="topbar">
     <div class="topbar-left">
-      <img src="pod-logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0">
+      <img src="pod-logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-1);transform:scale(1.15);clip-path:circle(50%)">
       <div class="topbar-divider"></div>
       <div class="topbar-label">Nassiri POD SQUAD Insights</div>
       <div class="topbar-week" id="week-label">—</div>
@@ -1878,10 +1878,10 @@ const ROLE_DEFS = [
   { key: 'DSE',          label: 'DSE',                        col: 'DSE',        color: '#F97316'       },
   { key: 'TA',           label: 'Technical Architect',        col: 'TA',         color: 'var(--teal)'   },
   { key: 'AF',              label: 'ASE',               col: 'AF',         color: '#60A5FA' },
-  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#E879A0',  names: new Set(['Priya Stipe','Megan Emmer']) },
+  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer']) },
   { key: 'Cinematographer', label: 'Cinematographer',  col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman']) },
   { key: 'Designer',        label: 'Designer',          col: 'Multiplier', color: '#A78BFA',  names: new Set(['Tina Solin']) },
-  { key: 'TheMultiplier',   label: 'The Multiplier',    col: 'Multiplier', color: '#F5C542',  names: new Set(['Alex Russell']) },
+  { key: 'TheMultiplier',   label: 'The Multiplier',    col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
 ];
 
 function renderPodResources(rows, statuses) {
