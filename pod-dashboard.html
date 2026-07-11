@@ -452,6 +452,8 @@ body {
 
 .badge-risk { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
 .badge-date { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.badge-no-date { background: rgba(251,191,36,0.1); color: #FBBF24; border: 1px solid rgba(251,191,36,0.3); font-size: .65rem; }
+.eng-stalling { color: #FBBF24 !important; font-weight: 600; }
 
 /* ── Engagement Cards ── */
 .eng-card {
@@ -925,6 +927,103 @@ body {
   min-width: 18px;
   text-align: right;
 }
+.pr-row-inactive .pr-row-name {
+  color: var(--text-3);
+}
+
+.pr-grid-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+.pr-grid-group {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .75rem .9rem;
+}
+.pr-grid-people {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+.pr-cell {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+.pr-cell-inactive .pr-cell-name {
+  color: var(--text-3);
+}
+.pr-avatar-sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .55rem;
+  font-weight: 700;
+  color: var(--bg-1);
+  flex-shrink: 0;
+}
+.pr-cell-name {
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--text-1);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pr-cell-top {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.pr-cell-bar-row {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin-left: 30px;
+}
+.pr-cell-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+}
+.pr-cell-bar-done {
+  height: 100%;
+  background: var(--text-3);
+  opacity: .5;
+}
+.pr-cell-bar-active {
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+}
+.pr-cell-n {
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--text-1);
+  min-width: 28px;
+  text-align: right;
+  white-space: nowrap;
+}
+.pr-cell-completed {
+  font-weight: 400;
+  color: var(--text-3);
+}
+.pr-cell-role {
+  font-size: .6rem;
+  color: var(--text-3);
+  margin-left: .3rem;
+  font-weight: 400;
+}
 
 /* ── Patterns Identified ── */
 .pat-grid {
@@ -1158,7 +1257,7 @@ body {
 <div id="dashboard">
   <div class="topbar">
     <div class="topbar-left">
-      <img src="pod-logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-1);transform:scale(1.15);clip-path:circle(50%)">
+      <img src="pod-logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-1);transform:scale(1.35);clip-path:circle(50%)">
       <div class="topbar-divider"></div>
       <div class="topbar-label">Nassiri POD SQUAD Insights</div>
       <div class="topbar-week" id="week-label">—</div>
@@ -1732,10 +1831,10 @@ function renderMotion(rows, statuses) {
       const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / maxTotal) * 100);
       const statusPips = [
         ['In Process','badge-status-inprocess'],
-        ['Completed','badge-status-completed'],
+        ['Planning','badge-status-planning'],
         ['Postponed','badge-status-postponed'],
         ['On Hold','badge-status-postponed'],
-        ['Planning','badge-status-planning'],
+        ['Completed','badge-status-completed'],
       ].filter(([s]) => counts[s] > 0)
        .map(([s, cls]) => `<span class="status-pip ${cls}">${counts[s]} ${s}</span>`).join('');
       return `
@@ -1867,7 +1966,15 @@ function renderActive(rows, currentCol) {
       const showDate = daysAway !== null && daysAway >= 0 && daysAway <= 5;
       const dateStr = showDate ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
 
-      const summary = summarizeUpdate(currentUpdate);
+      let summary = summarizeUpdate(currentUpdate);
+
+      // Detect stalling — "no change" or identical to prior week
+      const isStalling = /^no change|^need update|^same as|^no update/i.test(currentUpdate.trim()) || (!currentUpdate.trim() && status === 'In Process');
+      if (isStalling && !summary) summary = 'No changes detected — stalling';
+
+      // Missing next date indicator
+      const rawDate = (r['Next Critical Date'] || '').trim();
+      const missingDate = !rawDate && ['In Process','Planning'].includes(status);
 
       const seName = (r['SE'] || '').trim();
       const aeName = (r['AE'] || '').trim();
@@ -1883,13 +1990,13 @@ function renderActive(rows, currentCol) {
               <span class="eng-title">${esc(r['Engagement'] || '')}</span>
             </div>
             <div class="eng-badges">
+              ${missingDate ? '<span class="badge badge-no-date" title="No next date set">⚠ No Date</span>' : ''}
               <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
               ${dateStr ? `<span class="badge badge-date date-urgent"><span class="date-pulse"></span>${dateStr}</span>` : ''}
             </div>
           </div>
-          ${summary ? `<div class="eng-card-body">
-            <div class="eng-update">${esc(summary)}</div>
-          </div>` : ''}
+          ${isStalling ? `<div class="eng-card-body"><div class="eng-update eng-stalling">⚠ No changes detected — stalling</div></div>`
+            : summary ? `<div class="eng-card-body"><div class="eng-update">${esc(summary)}</div></div>` : ''}
           ${nameTags ? `<div class="eng-card-names">${nameTags}</div>` : ''}
         </div>`;
     }).join('');
@@ -1951,9 +2058,8 @@ const ROLE_DEFS = [
   { key: 'TA',           label: 'Technical Architect',        col: 'TA',         color: 'var(--teal)'   },
   { key: 'AF',              label: 'ASE',               col: 'AF',         color: '#60A5FA' },
   { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer']) },
-  { key: 'Cinematographer', label: 'Cinematographer',  col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman']) },
-  { key: 'Designer',        label: 'Designer',          col: 'Multiplier', color: '#A78BFA',  names: new Set(['Tina Solin']) },
-  { key: 'TheMultiplier',   label: 'The Multiplier',    col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
+  { key: 'Creative',       label: 'Creative',          col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman','Tina Solin']) },
+  { key: 'TheMultiplier',  label: 'OG Multiplier',     col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
 ];
 
 function renderPodResources(rows, statuses) {
@@ -1963,29 +2069,30 @@ function renderPodResources(rows, statuses) {
   rows.forEach((row, i) => {
     const status  = statuses[i];
     const isActive = ['In Process', 'Planning'].includes(status);
-    if (!isActive) return;
+    const isCompleted = status === 'Completed';
+    if (!isActive && !isCompleted) return;
 
     ROLE_DEFS.forEach(({ key, col, names }) => {
       const cell = (row[col] || '').trim();
       if (!cell) return;
       cell.split(',').forEach(part => {
-        const name = part.trim();
+        const name = part.trim().replace(/\s*\(.*?\)\s*/g, '').trim();
         if (!name || SKIP_VALS.has(name.toLowerCase())) return;
         if (names && !names.has(name)) return;
-        if (!data[key][name]) data[key][name] = { active: 0 };
-        data[key][name].active++;
+        if (!data[key][name]) data[key][name] = { active: 0, completed: 0 };
+        if (isActive) data[key][name].active++;
+        else data[key][name].completed++;
       });
     });
   });
 
   let total = 0;
-  // Build role groups, separating Core SE for bottom feature
   const roleGroups = [];
   let seGroup = null;
 
   ROLE_DEFS.forEach(({ key, label, color }) => {
     const people = Object.entries(data[key])
-      .sort((a, b) => a[0].localeCompare(b[0]));
+      .sort((a, b) => b[1].active - a[1].active || b[1].completed - a[1].completed);
     if (!people.length) return;
     total += people.length;
 
@@ -1998,7 +2105,7 @@ function renderPodResources(rows, statuses) {
   });
 
   // Fixed display order for POD resources
-  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Cinematographer','Designer','CSM','TheMultiplier'];
+  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Creative','CSM','TheMultiplier'];
   const podGroups = [];
   RESOURCE_ORDER.forEach(key => {
     const g = roleGroups.find(rg => rg.key === key);
@@ -2008,37 +2115,44 @@ function renderPodResources(rows, statuses) {
   roleGroups.forEach(g => {
     if (!RESOURCE_ORDER.includes(g.key)) podGroups.push(g);
   });
-  const maxActive = Math.max(1, ...podGroups.filter(g => g.key !== 'TheMultiplier').flatMap(g => g.people.map(([, c]) => c.active)));
+  const maxTotal = Math.max(1, ...podGroups.flatMap(g => g.people.map(([, c]) => c.active + c.completed)));
+
+  const ROLE_TAGS = { 'Alex Russell': 'OG Multiplier', 'Sasha Freedman': 'Video', 'Tina Solin': 'Design' };
 
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
-      const barPct = Math.round((counts.active / maxActive) * 100);
-      return `<div class="pr-row">
-        <div class="pr-row-left">
-          <div class="pr-avatar" style="background:${color}">${esc(initials(name))}</div>
-          <span class="pr-row-name">${esc(name)}</span>
+      const isInactive = counts.active === 0;
+      const total = counts.active + counts.completed;
+      const activePct = Math.round((counts.active / maxTotal) * 100);
+      const completedPct = Math.round((counts.completed / maxTotal) * 100);
+      const roleTag = ROLE_TAGS[name] || '';
+      return `<div class="pr-cell${isInactive ? ' pr-cell-inactive' : ''}">
+        <div class="pr-cell-top">
+          <div class="pr-avatar-sm" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
+          <span class="pr-cell-name">${esc(name)}${roleTag ? `<span class="pr-cell-role">${esc(roleTag)}</span>` : ''}</span>
         </div>
-        <div class="pr-row-right">
-          <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${color}"></div></div>
-          <span class="pr-row-n">${counts.active}</span>
+        <div class="pr-cell-bar-row">
+          <div class="pr-cell-bar-track">
+            <div class="pr-cell-bar-done" style="width:${completedPct}%"></div>
+            <div class="pr-cell-bar-active" style="width:${activePct}%;background:${color}"></div>
+          </div>
+          <span class="pr-cell-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${counts.active}${counts.completed ? `<span class="pr-cell-completed"> + ${counts.completed} done</span>` : ''}</span>
         </div>
       </div>`;
     }).join('');
 
-    return `<div class="pr-role-group">
+    return `<div class="pr-grid-group">
       <div class="pr-role-header">
         <div class="pr-role-dot" style="background:${color}"></div>
         <span class="pr-role-label">${esc(label)}</span>
-        <span class="pr-role-count">${people.length}</span>
       </div>
-      ${rows2}
+      <div class="pr-grid-people">${rows2}</div>
     </div>`;
   }).join('');
 
-  // Core SEs excluded — they appear as tags on WIP cards instead
   const podTotal = total - (seGroup ? seGroup.people.length : 0);
   document.getElementById('team-count').textContent = podTotal;
-  document.getElementById('team-body').innerHTML = `<div class="pr-section">${podHtml}</div>`;
+  document.getElementById('team-body').innerHTML = `<div class="pr-grid-section">${podHtml}</div>`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
@@ -2060,10 +2174,14 @@ function renderPatterns(rows, statuses, currentCol) {
     { label: 'Architecture', re: /architect|ARI|roadmap/i },
     { label: 'POC / Pilot',  re: /\bpoc\b|pilot|proof of concept/i },
     { label: 'Escalated',    re: /escalat/i },
-    { label: 'Executive',    re: /execut|c-suite|CXO|CTO|CEO|COO/i },
+    { label: 'Executive',    re: /execut|c-suite|CXO|CTO|CEO|COO|CIO|CISO|SVP|VP/i },
     { label: 'Data',         re: /\bdata\b|analytics|AI|ML/i },
     { label: 'Renewal',      re: /renew|attrition|churn/i },
     { label: 'Revenue',      re: /revenue|ARR|deal|close|pipeline/i },
+    { label: 'Blocked',      re: /block|stuck|delay|pending|on hold|paused|waiting/i },
+    { label: 'Workshop',     re: /workshop|working session|design session|white.?board|onsite|on-site|in-person/i },
+    { label: 'Competitive',  re: /compet|displace|incumbent|replace|vs\b|alternative/i },
+    { label: 'Momentum',     re: /progress|delivered|completed|booked|confirmed|scheduled|locked/i },
   ];
   const allTextCols = [...Q1_WEEKLY_COLS, ...Q2_WEEKLY_COLS];
   const updateText = rows.map(r => allTextCols.map(c => r[c] || '').join(' ')).join(' ');
@@ -2102,6 +2220,10 @@ function renderPatterns(rows, statuses, currentCol) {
     'Revenue': { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.3)', text: '#34D399' },
     'Renewal': { bg: 'rgba(255,112,67,0.1)', border: 'rgba(255,112,67,0.3)', text: '#FF7043' },
     'Escalated': { bg: 'rgba(248,81,73,0.1)', border: 'rgba(248,81,73,0.3)', text: '#F85149' },
+    'Blocked': { bg: 'rgba(248,81,73,0.1)', border: 'rgba(248,81,73,0.3)', text: '#F85149' },
+    'Workshop': { bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.3)', text: '#60A5FA' },
+    'Competitive': { bg: 'rgba(251,191,36,0.1)', border: 'rgba(251,191,36,0.3)', text: '#FBBF24' },
+    'Momentum': { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.3)', text: '#34D399' },
   };
   if (themeCounts.length) {
     const chips = themeCounts.map(t => {
@@ -2111,6 +2233,30 @@ function renderPatterns(rows, statuses, currentCol) {
     patterns.push({ title: 'Recurring Themes Across All Engagements', body: `<div class="pat-chips">${chips}</div>` });
   }
 
+  // 4. Signal detection — blockers vs momentum in latest updates
+  const latestCol = Q2_WEEKLY_COLS[Q2_WEEKLY_COLS.length - 1];
+  const SIGNALS = [
+    { label: 'Blocked / Waiting', icon: '⚠', re: /block|stuck|delay|pending|on hold|paused|waiting/i, color: THEME_COLORS['Blocked'] },
+    { label: 'Exec Access', icon: '✓', re: /CTO|CEO|CMO|CIO|CISO|SVP|VP|C-suite|exec.*sponsor|exec.*readout/i, color: THEME_COLORS['Executive'] },
+    { label: 'Upcoming Onsite / Workshop', icon: '◎', re: /workshop|onsite|on-site|in-person|working session|BOE/i, exclude: /completed|delivered|held|finished/i, color: THEME_COLORS['Workshop'] },
+  ];
+  const signalAccounts = SIGNALS.map(sig => {
+    const matches = active.filter(r => {
+      const text = r[latestCol] || '';
+      if (!sig.re.test(text)) return false;
+      if (sig.exclude && sig.exclude.test(text)) return false;
+      return true;
+    }).map(r => (r['Account'] || '').trim()).filter(Boolean);
+    return { ...sig, accounts: [...new Set(matches)] };
+  }).filter(s => s.accounts.length > 0);
+
+  if (signalAccounts.length) {
+    const rows2 = signalAccounts.map(s => {
+      const chips = s.accounts.map(a => `<span class="pat-chip" style="background:${s.color.bg};border-color:${s.color.border};color:${s.color.text}">${esc(a)}</span>`).join('');
+      return `<div style="margin-bottom:.5rem"><span style="font-size:.72rem;font-weight:600;color:${s.color.text}">${s.icon} ${esc(s.label)}</span><div class="pat-chips" style="margin-top:.25rem">${chips}</div></div>`;
+    }).join('');
+    patterns.push({ title: 'Latest Week Signals', body: rows2 });
+  }
 
   document.getElementById('patterns-count').textContent = patterns.length;
   document.getElementById('patterns-body').innerHTML = `
