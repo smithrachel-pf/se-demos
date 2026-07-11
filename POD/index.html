@@ -487,6 +487,28 @@ body {
 
 .eng-card-body { padding: 0 1rem 0.75rem; }
 
+.eng-card-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding: 0 1rem 0.65rem;
+}
+.eng-name-tag {
+  font-size: .68rem;
+  font-weight: 600;
+  padding: .15rem .5rem;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.eng-name-ae {
+  background: rgba(59,158,255,.15);
+  color: #7CC4FA;
+}
+.eng-name-se {
+  background: rgba(52,211,153,.15);
+  color: #34D399;
+}
+
 .eng-update {
   font-size: 0.8rem;
   color: var(--text-2);
@@ -1847,6 +1869,13 @@ function renderActive(rows, currentCol) {
 
       const summary = summarizeUpdate(currentUpdate);
 
+      const seName = (r['SE'] || '').trim();
+      const aeName = (r['AE'] || '').trim();
+      const nameTags = [
+        aeName && aeName !== 'NONE' && aeName !== 'N/A' ? `<span class="eng-name-tag eng-name-ae">${esc(aeName)}</span>` : '',
+        seName && seName !== 'NONE' && seName !== 'N/A' ? `<span class="eng-name-tag eng-name-se">${esc(seName)}</span>` : '',
+      ].filter(Boolean).join('');
+
       return `
         <div class="eng-card ${statusCardClass(status)}" style="margin:0">
           <div class="eng-card-header">
@@ -1861,6 +1890,7 @@ function renderActive(rows, currentCol) {
           ${summary ? `<div class="eng-card-body">
             <div class="eng-update">${esc(summary)}</div>
           </div>` : ''}
+          ${nameTags ? `<div class="eng-card-names">${nameTags}</div>` : ''}
         </div>`;
     }).join('');
 
@@ -2011,24 +2041,10 @@ function renderPodResources(rows, statuses) {
     </div>`;
   }).join('');
 
-  // Core SEs as horizontal chips at bottom
-  const seHtml = seGroup ? `<div class="pr-se-footer">
-    <div class="pr-se-header">
-      <div class="pr-role-dot" style="background:${seGroup.color}"></div>
-      <span class="pr-role-label">Core SE</span>
-      <span class="pr-role-count">${seGroup.people.length}</span>
-    </div>
-    <div class="pr-se-chips">${seGroup.people.map(([name, counts]) =>
-      `<div class="pr-se-chip">
-        <div class="pr-avatar" style="background:${seGroup.color}">${esc(initials(name))}</div>
-        <span class="pr-se-chip-name">${esc(name)}</span>
-        <span class="pr-se-chip-n">${counts.active}</span>
-      </div>`).join('')}
-    </div>
-  </div>` : '';
-
-  document.getElementById('team-count').textContent = total;
-  document.getElementById('team-body').innerHTML = `<div class="pr-section">${podHtml}</div>${seHtml}`;
+  // Core SEs excluded — they appear as tags on WIP cards instead
+  const podTotal = total - (seGroup ? seGroup.people.length : 0);
+  document.getElementById('team-count').textContent = podTotal;
+  document.getElementById('team-body').innerHTML = `<div class="pr-section">${podHtml}</div>`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
