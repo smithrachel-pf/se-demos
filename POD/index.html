@@ -473,16 +473,10 @@ body {
   gap: 1rem;
 }
 
-.eng-type {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: 10px;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-  background: rgba(139,148,158,0.12);
-  color: var(--text-2);
-  border: 1px solid var(--border-2);
+.eng-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-1);
 }
 .eng-badges { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; }
 
@@ -980,6 +974,20 @@ body {
 .pr-stat-active { color: var(--blue); }
 .pr-stat-done   { color: var(--text-3); }
 
+.pr-se-feature {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.pr-people-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: .5rem;
+  padding-bottom: .25rem;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1385,20 +1393,24 @@ function renderStatCards({ done, active }) {
   const el = document.getElementById('stat-grid');
   const cards = [
     {
-      cls: 'done', n: done, label: 'Completed', sub: 'Delivered this fiscal',
+      cls: 'done', n: done, label: 'Projects Completed',
+      icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="var(--green)" stroke-width="1.5" opacity=".4"/></svg>',
       onclick: "showView('completed')", arrow: '→ View all'
     },
     {
-      cls: 'active', n: active, label: 'Projects Being Hustled', sub: 'In process & planned',
+      cls: 'active', n: active, label: 'Projects Being Hustled',
+      icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       onclick: "document.getElementById('active-trigger').scrollIntoView({behavior:'smooth',block:'start'})", arrow: '↓ See list'
     },
   ];
   el.innerHTML = cards.map(c => `
     <div class="stat-card ${c.cls}" onclick="${c.onclick}">
       <span class="stat-card-arrow">${c.arrow}</span>
-      <div class="stat-number">${c.n}</div>
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.25rem">
+        ${c.icon}
+        <div class="stat-number">${c.n}</div>
+      </div>
       <div class="stat-label">${c.label}</div>
-      <div class="stat-sub">${c.sub}</div>
     </div>
   `).join('');
 }
@@ -1452,7 +1464,6 @@ function renderCompletedWins(containerId, rows) {
   container.innerHTML = Object.entries(byAccount).map(([acct, engagements]) => {
     const rvp = engagements[0]['RVP'] || '';
     const cards = engagements.map(r => {
-      const type = (r['Type'] || '').trim();
       const description = (r['Intake'] || '').trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
       const team = ['AE','SE','CSM','DSE','EA','AF','TA','BVS','Multiplier']
         .map(col => ({ role: col, name: (r[col] || '').trim() }))
@@ -1726,6 +1737,21 @@ function renderDates(rows, statuses) {
     </tr></thead><tbody>${rows2}</tbody>`;
 }
 
+function summarizeUpdate(text) {
+  if (!text) return '';
+  let s = text.replace(/\s+/g, ' ').trim();
+  // Take first sentence or up to 120 chars
+  const sentenceEnd = s.search(/[.!?]\s/);
+  if (sentenceEnd > 0 && sentenceEnd < 140) {
+    s = s.substring(0, sentenceEnd + 1);
+  } else if (s.length > 120) {
+    // Find a natural break point
+    const breakAt = s.lastIndexOf(' ', 120);
+    s = s.substring(0, breakAt > 60 ? breakAt : 120) + '…';
+  }
+  return s;
+}
+
 function renderActive(rows, currentCol) {
   const container = document.getElementById('active-engagements');
 
@@ -1752,25 +1778,24 @@ function renderActive(rows, currentCol) {
       const dateStr = date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
       const daysAway = date ? daysFromNow(date) : null;
       const dateClass = daysAway !== null && daysAway <= 7 ? 'date-urgent' : daysAway !== null && daysAway <= 14 ? 'date-soon' : '';
-      const type = (r['Type'] || '').trim();
 
       const riskHtml = risks.map(rk => `<span class="eng-row-risk">${esc(rk)}</span>`).join('');
+      const summary = summarizeUpdate(currentUpdate);
 
       return `
         <div class="eng-card ${statusCardClass(status)}" style="margin:0">
           <div class="eng-card-header">
             <div class="eng-card-title">
-              <span class="eng-type">${esc(r['Engagement'] || '')}</span>
+              <span class="eng-title">${esc(r['Engagement'] || '')}</span>
             </div>
             <div class="eng-badges">
               <span class="badge ${statusBadgeClass(status)}">${esc(status)}</span>
               ${dateStr ? `<span class="badge badge-date ${dateClass}">📅 ${dateStr}</span>` : ''}
             </div>
           </div>
-          ${currentUpdate ? `<div class="eng-card-body">
+          ${summary ? `<div class="eng-card-body">
             ${risks.length ? `<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem">${riskHtml}</div>` : ''}
-            <div class="eng-update">${esc(currentUpdate)}</div>
-            ${buildTeamLine(r)}
+            <div class="eng-update">${esc(summary)}</div>
           </div>` : ''}
         </div>`;
     }).join('');
@@ -1862,12 +1887,32 @@ function renderPodResources(rows, statuses) {
   });
 
   let total = 0;
-  const html = ROLE_DEFS.map(({ key, label, color }) => {
+  // Build role groups, separating Core SE for bottom feature
+  const roleGroups = [];
+  let seGroup = null;
+
+  ROLE_DEFS.forEach(({ key, label, color }) => {
     const people = Object.entries(data[key])
-      .sort((a, b) => (b[1].active + b[1].done) - (a[1].active + a[1].done));
-    if (!people.length) return '';
+      .sort((a, b) => b[1].active - a[1].active || (b[1].active + b[1].done) - (a[1].active + a[1].done));
+    if (!people.length) return;
     total += people.length;
 
+    const group = { key, label, color, people };
+    if (key === 'SE') {
+      seGroup = group;
+    } else {
+      roleGroups.push(group);
+    }
+  });
+
+  // Sort role groups by total active across their people
+  roleGroups.sort((a, b) => {
+    const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
+    const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
+    return bActive - aActive;
+  });
+
+  const html = roleGroups.map(({ label, color, people }) => {
     const chips = people.map(([name, counts], idx) => {
       const stats = [
         counts.active ? `<span class="pr-stat pr-stat-active">${counts.active}</span>` : '',
@@ -1888,10 +1933,34 @@ function renderPodResources(rows, statuses) {
       </div>
       <div class="pr-people">${chips}</div>
     </div>`;
-  }).filter(Boolean).join('');
+  }).join('');
+
+  // Core SE featured at bottom as horizontal strip
+  let seHtml = '';
+  if (seGroup) {
+    const seChips = seGroup.people.map(([name, counts], idx) => {
+      const stats = [
+        counts.active ? `<span class="pr-stat pr-stat-active">${counts.active}</span>` : '',
+        counts.done   ? `<span class="pr-stat pr-stat-done">${counts.done}✓</span>` : '',
+      ].filter(Boolean).join('');
+      return `<div class="pr-person">
+        <div class="pr-avatar" style="background:${seGroup.color}">${esc(initials(name))}</div>
+        <span class="pr-name">${esc(name)}</span>
+        ${stats}
+      </div>`;
+    }).join('');
+    seHtml = `<div class="pr-se-feature">
+      <div class="pr-role-header">
+        <div class="pr-role-dot" style="background:${seGroup.color}"></div>
+        <span class="pr-role-label">${esc(seGroup.label)}</span>
+        <span class="pr-role-count">${seGroup.people.length}</span>
+      </div>
+      <div class="pr-people pr-people-scroll">${seChips}</div>
+    </div>`;
+  }
 
   document.getElementById('team-count').textContent = total;
-  document.getElementById('team-body').innerHTML = `<div class="pr-section">${html}</div>`;
+  document.getElementById('team-body').innerHTML = `<div class="pr-section">${html}${seHtml}</div>`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
