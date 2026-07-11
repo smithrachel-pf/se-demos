@@ -778,6 +778,19 @@
 
     <div class="case-grid" id="caseGrid">
 
+      <div class="case-card" data-case="cbspod">
+        <div class="case-accent" style="background: linear-gradient(90deg, #0f3d60, #1a6a9a);"></div>
+        <div class="card-logo"><img src="https://logo.clearbit.com/salesforce.com" alt="Salesforce" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+        <div class="card-co">CBS POD</div>
+        <div class="card-div">field sales ops · internal</div>
+        <div class="tags">
+          <span class="tag tag-demo">team dashboard</span>
+          <span class="tag tag-strat">motion tracker</span>
+        </div>
+        <div class="card-date">updated jul 10</div>
+        <div class="card-chevron">↓</div>
+      </div>
+
       <div class="case-card" data-case="servicelogic">
         <div class="case-accent" style="background: linear-gradient(90deg, #1a5fa8, #2e7dd4);"></div>
         <div class="card-logo"><img src="https://logo.clearbit.com/servicelogic.com" alt="Service Logic" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
@@ -1413,6 +1426,72 @@
         </div>
       </div>
     </div><!-- /detail-hertz -->
+
+    <div class="detail-wrap" id="detail-cbspod">
+      <div class="detail-panel">
+        <div class="dp-head" style="background: linear-gradient(135deg, #071b2e, #0f3a5c);">
+          <div class="dp-head-glow" style="background: radial-gradient(circle, rgba(26,106,154,.3) 0%, transparent 65%);"></div>
+          <div class="dp-logo"><img src="https://logo.clearbit.com/salesforce.com" alt="Salesforce" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+          <div class="dp-company">CBS POD SQUAD</div>
+          <p class="dp-situation">CBS tracks 60+ accounts weekly across four engagement motions — Solidify, Transform, Preserve, Activate — with RVPs, critical dates, and weekly check-ins all living in a Google Sheets export. The weekly readout was a manual CSV ritual. I asked Claude to build a live dashboard that parses the weekly export in-browser, auto-detects the current week's column, and surfaces patterns by RVP and motion type — no server, no API key, drag-and-drop.</p>
+          <div class="tags">
+            <span class="tag tag-demo">team dashboard</span>
+            <span class="tag tag-strat">motion tracker</span>
+          </div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-grid">
+            <div>
+              <div class="dp-col-label">intelligence provided</div>
+              <div class="input-chips">
+                <div class="input-chip"><span class="input-chip-icon">📋</span>FY27 CBS Pod Tracker CSV schema — Account, Type, RVP, Engagement, Status, weekly date columns</div>
+                <div class="input-chip"><span class="input-chip-icon">🎯</span>4 motion types: Solidify, Transform, Preserve, Activate</div>
+                <div class="input-chip"><span class="input-chip-icon">👥</span>team column structure: AE, SE, CSM, DSE, EA, AF, TA, BVS, Multiplier</div>
+                <div class="input-chip"><span class="input-chip-icon">📅</span>weekly readout cadence — current week auto-detected from most recent date column</div>
+                <div class="input-chip"><span class="input-chip-icon">✅</span>status values: Completed, In Process, Postponed, Planning</div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">the conversation</div>
+              <div class="conv-thread">
+                <div class="conv-item">
+                  <span class="conv-label">first prompt</span>
+                  <div class="conv-quote">"build me a dashboard from this google sheets CSV — show motion breakdown by RVP, upcoming critical dates, team coverage. all in-browser, no server"</div>
+                </div>
+                <div class="conv-item">
+                  <span class="conv-label">iteration</span>
+                  <div class="conv-quote">"add a wins section that surfaces completed engagements and who was on each team"</div>
+                </div>
+                <div class="conv-item">
+                  <span class="conv-label">final ask</span>
+                  <div class="conv-quote">"add a patterns section — auto-surface insights from the data, like which motions are stalling or which RVPs have the most overdue dates"</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="dp-col-label">the output</div>
+              <div class="output-box">
+                <a href="https://smithrachel-pf.github.io/se-demos/pod-dashboard.html" target="_blank" rel="noopener" class="output-preview" style="background: linear-gradient(135deg, #071b2e, #0f3a5c);">
+                  <div class="op-card">
+                    <div class="op-card-icon">📊</div>
+                    <div class="op-card-label">CBS POD SQUAD Dashboard</div>
+                    <div class="op-card-divider"></div>
+                    <div class="op-card-sub">weekly motion tracker · CSV drag-drop · in-browser</div>
+                  </div>
+                </a>
+                <div class="output-foot">
+                  <div>
+                    <div class="output-name">CBS POD SQUAD Insights</div>
+                    <div class="output-type">weekly motion tracker — drag CSV to update · pw: Salesforce1</div>
+                  </div>
+                  <a href="https://smithrachel-pf.github.io/se-demos/pod-dashboard.html" target="_blank" class="output-cta">open live ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /detail-cbspod -->
 
     <div class="live-strip">
       <span class="live-dot"></span>
