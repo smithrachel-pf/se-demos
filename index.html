@@ -1858,21 +1858,7 @@ function renderMotion(rows, statuses) {
   const hold  = statuses.filter(s => ['Postponed','On Hold'].includes(s)).length;
   const plan  = statuses.filter(s => s === 'Planning').length;
 
-  const barHtml = `
-    <div class="overview-bar">
-      <div class="overview-bar-seg" style="width:${pct(done,total)}%;background:var(--green)"></div>
-      <div class="overview-bar-seg" style="width:${pct(inpro,total)}%;background:var(--blue)"></div>
-      <div class="overview-bar-seg" style="width:${pct(plan,total)}%;background:var(--purple)"></div>
-      <div class="overview-bar-seg" style="width:${pct(hold,total)}%;background:var(--amber)"></div>
-    </div>
-    <div class="overview-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>${done} Completed</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>${inpro} In Process</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>${plan} Planning</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>${hold} On Hold</div>
-    </div>`;
-
-  document.getElementById('motion-body').innerHTML = barHtml + '<div style="margin-top:1.25rem">' + html + '</div>';
+  document.getElementById('motion-body').innerHTML = html;
 }
 
 function renderDates(rows, statuses) {
