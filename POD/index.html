@@ -2221,14 +2221,6 @@ function renderPatterns(rows, statuses, currentCol) {
     { bg: 'rgba(167,139,250,0.1)', border: 'rgba(167,139,250,0.3)', text: '#A78BFA' },
     { bg: 'rgba(255,112,67,0.1)', border: 'rgba(255,112,67,0.3)', text: '#FF7043' },
   ];
-  if (topTypes.length) {
-    const chips = topTypes.map(([t, n], i) => {
-      const c = TYPE_COLORS[i % TYPE_COLORS.length];
-      return `<span class="pat-chip" style="background:${c.bg};border-color:${c.border};color:${c.text}">${esc(t)} <span class="pat-chip-n" style="color:${c.text}">${n}</span></span>`;
-    }).join('');
-    patterns.push({ title: 'Most Common Engagement Types', body: `<div class="pat-chips">${chips}</div>` });
-  }
-
   // Theme keywords — color coded
   const THEME_COLORS = {
     'Data': { bg: 'rgba(59,158,255,0.1)', border: 'rgba(59,158,255,0.3)', text: '#3B9EFF' },
@@ -2250,6 +2242,14 @@ function renderPatterns(rows, statuses, currentCol) {
       return `<span class="pat-chip" style="background:${c.bg};border-color:${c.border};color:${c.text}">${esc(t.label)} <span class="pat-chip-n" style="color:${c.text}">${t.count}</span></span>`;
     }).join('');
     patterns.push({ title: 'Recurring Themes Across All Engagements', body: `<div class="pat-chips">${chips}</div>` });
+  }
+
+  if (topTypes.length) {
+    const chips = topTypes.map(([t, n], i) => {
+      const c = TYPE_COLORS[i % TYPE_COLORS.length];
+      return `<span class="pat-chip" style="background:${c.bg};border-color:${c.border};color:${c.text}">${esc(t)} <span class="pat-chip-n" style="color:${c.text}">${n}</span></span>`;
+    }).join('');
+    patterns.push({ title: 'Most Common Engagement Types', body: `<div class="pat-chips">${chips}</div>` });
   }
 
   // 4. Signal detection — blockers vs momentum in latest updates
