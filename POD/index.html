@@ -1829,10 +1829,10 @@ function renderMotion(rows, statuses) {
       const barPctActive = Math.round(((counts['In Process'] + counts['Planning']) / maxTotal) * 100);
       const statusPips = [
         ['In Process','badge-status-inprocess'],
-        ['Completed','badge-status-completed'],
+        ['Planning','badge-status-planning'],
         ['Postponed','badge-status-postponed'],
         ['On Hold','badge-status-postponed'],
-        ['Planning','badge-status-planning'],
+        ['Completed','badge-status-completed'],
       ].filter(([s]) => counts[s] > 0)
        .map(([s, cls]) => `<span class="status-pip ${cls}">${counts[s]} ${s}</span>`).join('');
       return `
@@ -2164,10 +2164,14 @@ function renderPatterns(rows, statuses, currentCol) {
     { label: 'Architecture', re: /architect|ARI|roadmap/i },
     { label: 'POC / Pilot',  re: /\bpoc\b|pilot|proof of concept/i },
     { label: 'Escalated',    re: /escalat/i },
-    { label: 'Executive',    re: /execut|c-suite|CXO|CTO|CEO|COO/i },
+    { label: 'Executive',    re: /execut|c-suite|CXO|CTO|CEO|COO|CIO|CISO|SVP|VP/i },
     { label: 'Data',         re: /\bdata\b|analytics|AI|ML/i },
     { label: 'Renewal',      re: /renew|attrition|churn/i },
     { label: 'Revenue',      re: /revenue|ARR|deal|close|pipeline/i },
+    { label: 'Blocked',      re: /block|stuck|delay|pending|on hold|paused|waiting/i },
+    { label: 'Workshop',     re: /workshop|working session|design session|white.?board|onsite|on-site|in-person/i },
+    { label: 'Competitive',  re: /compet|displace|incumbent|replace|vs\b|alternative/i },
+    { label: 'Momentum',     re: /progress|delivered|completed|booked|confirmed|scheduled|locked/i },
   ];
   const allTextCols = [...Q1_WEEKLY_COLS, ...Q2_WEEKLY_COLS];
   const updateText = rows.map(r => allTextCols.map(c => r[c] || '').join(' ')).join(' ');
@@ -2206,6 +2210,10 @@ function renderPatterns(rows, statuses, currentCol) {
     'Revenue': { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.3)', text: '#34D399' },
     'Renewal': { bg: 'rgba(255,112,67,0.1)', border: 'rgba(255,112,67,0.3)', text: '#FF7043' },
     'Escalated': { bg: 'rgba(248,81,73,0.1)', border: 'rgba(248,81,73,0.3)', text: '#F85149' },
+    'Blocked': { bg: 'rgba(248,81,73,0.1)', border: 'rgba(248,81,73,0.3)', text: '#F85149' },
+    'Workshop': { bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.3)', text: '#60A5FA' },
+    'Competitive': { bg: 'rgba(251,191,36,0.1)', border: 'rgba(251,191,36,0.3)', text: '#FBBF24' },
+    'Momentum': { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.3)', text: '#34D399' },
   };
   if (themeCounts.length) {
     const chips = themeCounts.map(t => {
@@ -2215,6 +2223,25 @@ function renderPatterns(rows, statuses, currentCol) {
     patterns.push({ title: 'Recurring Themes Across All Engagements', body: `<div class="pat-chips">${chips}</div>` });
   }
 
+  // 4. Signal detection — blockers vs momentum in latest updates
+  const latestCol = Q2_WEEKLY_COLS[Q2_WEEKLY_COLS.length - 1];
+  const SIGNALS = [
+    { label: 'Blocked / Waiting', re: /block|stuck|delay|pending|on hold|paused|waiting/i, color: THEME_COLORS['Blocked'] },
+    { label: 'Exec Access', re: /CTO|CEO|CMO|CIO|CISO|SVP|VP|C-suite|exec.*sponsor|exec.*readout/i, color: THEME_COLORS['Executive'] },
+    { label: 'Onsite / Workshop', re: /workshop|onsite|on-site|in-person|working session|BOE/i, color: THEME_COLORS['Workshop'] },
+  ];
+  const signalAccounts = SIGNALS.map(sig => {
+    const matches = active.filter(r => sig.re.test(r[latestCol] || '')).map(r => (r['Account'] || '').trim()).filter(Boolean);
+    return { ...sig, accounts: [...new Set(matches)] };
+  }).filter(s => s.accounts.length > 0);
+
+  if (signalAccounts.length) {
+    const rows2 = signalAccounts.map(s => {
+      const chips = s.accounts.map(a => `<span class="pat-chip" style="background:${s.color.bg};border-color:${s.color.border};color:${s.color.text}">${esc(a)}</span>`).join('');
+      return `<div style="margin-bottom:.5rem"><span style="font-size:.72rem;font-weight:600;color:${s.color.text}">${esc(s.label)}</span><div class="pat-chips" style="margin-top:.25rem">${chips}</div></div>`;
+    }).join('');
+    patterns.push({ title: 'Latest Week Signals', body: rows2 });
+  }
 
   document.getElementById('patterns-count').textContent = patterns.length;
   document.getElementById('patterns-body').innerHTML = `
