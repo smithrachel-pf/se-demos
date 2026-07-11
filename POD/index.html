@@ -984,6 +984,48 @@ body {
   margin-left: auto;
 }
 
+.pr-se-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.pr-se-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .6rem;
+  text-transform: uppercase;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--text-2);
+}
+.pr-se-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+.pr-se-chip {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: .2rem .6rem .2rem .2rem;
+}
+.pr-se-chip-name {
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+.pr-se-chip-n {
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
 .pr-people {
   display: flex;
   flex-wrap: wrap;
@@ -1932,20 +1974,19 @@ function renderPodResources(rows, statuses) {
     return bActive - aActive;
   });
 
-  // Put SE group back into roleGroups for unified rendering
+  // Separate shared POD resources from Core SEs
   const multiplierGroup = roleGroups.find(g => g.key === 'TheMultiplier');
-  const otherGroups = roleGroups.filter(g => g.key !== 'TheMultiplier');
-  const allGroups = [...(seGroup ? [seGroup] : []), ...otherGroups];
-  allGroups.sort((a, b) => {
+  const podGroups = roleGroups.filter(g => g.key !== 'TheMultiplier');
+  podGroups.sort((a, b) => {
     const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
     const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
     return bActive - aActive;
   });
-  if (multiplierGroup) allGroups.push(multiplierGroup);
+  if (multiplierGroup) podGroups.push(multiplierGroup);
 
-  const maxActive = Math.max(1, ...allGroups.filter(g => g.key !== 'TheMultiplier').flatMap(g => g.people.map(([, c]) => c.active)));
+  const maxActive = Math.max(1, ...podGroups.filter(g => g.key !== 'TheMultiplier').flatMap(g => g.people.map(([, c]) => c.active)));
 
-  const html = allGroups.map(({ label, color, people }) => {
+  const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
       const barPct = Math.round((counts.active / maxActive) * 100);
       return `<div class="pr-row">
@@ -1970,8 +2011,24 @@ function renderPodResources(rows, statuses) {
     </div>`;
   }).join('');
 
+  // Core SEs as horizontal chips at bottom
+  const seHtml = seGroup ? `<div class="pr-se-footer">
+    <div class="pr-se-header">
+      <div class="pr-role-dot" style="background:${seGroup.color}"></div>
+      <span class="pr-role-label">Core SE</span>
+      <span class="pr-role-count">${seGroup.people.length}</span>
+    </div>
+    <div class="pr-se-chips">${seGroup.people.map(([name, counts]) =>
+      `<div class="pr-se-chip">
+        <div class="pr-avatar" style="background:${seGroup.color}">${esc(initials(name))}</div>
+        <span class="pr-se-chip-name">${esc(name)}</span>
+        <span class="pr-se-chip-n">${counts.active}</span>
+      </div>`).join('')}
+    </div>
+  </div>` : '';
+
   document.getElementById('team-count').textContent = total;
-  document.getElementById('team-body').innerHTML = `<div class="pr-section">${html}</div>`;
+  document.getElementById('team-body').innerHTML = `<div class="pr-section">${podHtml}</div>${seHtml}`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
