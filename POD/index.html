@@ -2029,7 +2029,7 @@ function renderPodResources(rows, statuses) {
         </div>
         <div class="pr-row-right">
           <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
-          <span class="pr-row-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${displayN}${isInactive ? ' ✓' : ''}</span>
+          <span class="pr-row-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${displayN}</span>
         </div>
       </div>`;
     }).join('');
@@ -2038,7 +2038,6 @@ function renderPodResources(rows, statuses) {
       <div class="pr-role-header">
         <div class="pr-role-dot" style="background:${color}"></div>
         <span class="pr-role-label">${esc(label)}</span>
-        <span class="pr-role-count">${people.length}</span>
       </div>
       ${rows2}
     </div>`;
