@@ -2013,8 +2013,9 @@ const ROLE_DEFS = [
   { key: 'DSE',          label: 'DSE',                        col: 'DSE',        color: '#F97316'       },
   { key: 'TA',           label: 'Technical Architect',        col: 'TA',         color: 'var(--teal)'   },
   { key: 'AF',              label: 'ASE',               col: 'AF',         color: '#60A5FA' },
-  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer','Alex Russell']) },
+  { key: 'BizCon',         label: 'BizCon',            col: 'Multiplier', color: '#F5C542',  names: new Set(['Priya Stipe','Megan Emmer']) },
   { key: 'Creative',       label: 'Creative',          col: 'Multiplier', color: '#FF7043',  names: new Set(['Sasha Freedman','Tina Solin']) },
+  { key: 'TheMultiplier',  label: 'The Multiplier',    col: 'Multiplier', color: '#E879A0',  names: new Set(['Alex Russell']) },
 ];
 
 function renderPodResources(rows, statuses) {
@@ -2060,7 +2061,7 @@ function renderPodResources(rows, statuses) {
   });
 
   // Fixed display order for POD resources
-  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Creative','CSM'];
+  const RESOURCE_ORDER = ['BizCon','BVS','EA','DSE','TA','AF','Creative','CSM','TheMultiplier'];
   const podGroups = [];
   RESOURCE_ORDER.forEach(key => {
     const g = roleGroups.find(rg => rg.key === key);
