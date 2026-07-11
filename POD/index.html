@@ -925,6 +925,9 @@ body {
   min-width: 18px;
   text-align: right;
 }
+.pr-row-inactive {
+  opacity: .55;
+}
 
 /* ── Patterns Identified ── */
 .pat-grid {
@@ -1963,7 +1966,8 @@ function renderPodResources(rows, statuses) {
   rows.forEach((row, i) => {
     const status  = statuses[i];
     const isActive = ['In Process', 'Planning'].includes(status);
-    if (!isActive) return;
+    const isCompleted = status === 'Completed';
+    if (!isActive && !isCompleted) return;
 
     ROLE_DEFS.forEach(({ key, col, names }) => {
       const cell = (row[col] || '').trim();
@@ -1972,14 +1976,14 @@ function renderPodResources(rows, statuses) {
         const name = part.trim();
         if (!name || SKIP_VALS.has(name.toLowerCase())) return;
         if (names && !names.has(name)) return;
-        if (!data[key][name]) data[key][name] = { active: 0 };
-        data[key][name].active++;
+        if (!data[key][name]) data[key][name] = { active: 0, completed: 0 };
+        if (isActive) data[key][name].active++;
+        else data[key][name].completed++;
       });
     });
   });
 
   let total = 0;
-  // Build role groups, separating Core SE for bottom feature
   const roleGroups = [];
   let seGroup = null;
 
@@ -2012,15 +2016,20 @@ function renderPodResources(rows, statuses) {
 
   const podHtml = podGroups.map(({ label, color, people }) => {
     const rows2 = people.map(([name, counts]) => {
-      const barPct = Math.round((counts.active / maxActive) * 100);
-      return `<div class="pr-row">
+      const isInactive = counts.active === 0;
+      const barPct = isInactive
+        ? Math.round((counts.completed / Math.max(1, maxActive)) * 100)
+        : Math.round((counts.active / maxActive) * 100);
+      const barColor = isInactive ? 'var(--text-3)' : color;
+      const displayN = isInactive ? counts.completed : counts.active;
+      return `<div class="pr-row${isInactive ? ' pr-row-inactive' : ''}">
         <div class="pr-row-left">
-          <div class="pr-avatar" style="background:${color}">${esc(initials(name))}</div>
+          <div class="pr-avatar" style="background:${isInactive ? 'var(--text-3)' : color}">${esc(initials(name))}</div>
           <span class="pr-row-name">${esc(name)}</span>
         </div>
         <div class="pr-row-right">
-          <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${color}"></div></div>
-          <span class="pr-row-n">${counts.active}</span>
+          <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+          <span class="pr-row-n" style="${isInactive ? 'color:var(--text-3)' : ''}">${displayN}${isInactive ? ' ✓' : ''}</span>
         </div>
       </div>`;
     }).join('');
