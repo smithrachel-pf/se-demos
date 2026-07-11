@@ -1696,7 +1696,7 @@ function renderCompletedWins(containerId, rows) {
       <div class="account-group">
         <div class="account-group-header">
           <span class="account-name">${esc(acct)}</span>
-          <span style="color:var(--text-3);font-size:.75rem">${esc(rvp)}</span>
+          <span style="color:${RVP_COLORS[rvp] || 'var(--text-3)'};font-size:.75rem;font-weight:600">${esc(rvp)}</span>
           <span class="card-count">${engagements.length}</span>
         </div>
         <div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.6rem">${cards}</div>
@@ -1800,6 +1800,13 @@ function renderQuarterlyBreakdown(rows, statuses, dateCols) {
   document.getElementById('quarterly-body').innerHTML = html;
 }
 
+const RVP_COLORS = {
+  'Andrew Blum': '#3B9EFF',
+  'Wardah Ansari': '#BC8CFF',
+  'Duncan Gladwin': '#34D399',
+  'Jesse Sun': '#F5C542',
+};
+
 function renderMotion(rows, statuses) {
   // Group by RVP
   const rvps = {};
@@ -1830,7 +1837,7 @@ function renderMotion(rows, statuses) {
       return `
         <div class="motion-item">
           <div class="motion-header">
-            <div class="motion-label"><span class="motion-dot" style="background:var(--blue)"></span>${esc(rvpName)}</div>
+            <div class="motion-label"><span class="motion-dot" style="background:${RVP_COLORS[rvpName] || 'var(--blue)'}"></span>${esc(rvpName)}</div>
             <div class="motion-count"></div>
           </div>
           <div class="motion-bar-bg">
@@ -2015,7 +2022,7 @@ function renderActive(rows, currentCol) {
       <div class="account-group">
         <div class="account-group-header">
           <span class="account-name">${esc(acct)}</span>
-          <span style="color:var(--text-3);font-size:.75rem">${esc(rvp)}</span>
+          <span style="color:${RVP_COLORS[rvp] || 'var(--text-3)'};font-size:.75rem;font-weight:600">${esc(rvp)}</span>
           <span class="card-count">${engagements.length}</span>
         </div>
         <div style="padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:.6rem">${engRows}</div>
