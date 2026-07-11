@@ -1918,34 +1918,43 @@ function renderPodResources(rows, statuses) {
     return bActive - aActive;
   });
 
-  // Flatten all people with their role info for a compact table
-  const allPeople = [];
-  if (seGroup) {
-    seGroup.people.forEach(([name, counts]) => allPeople.push({ name, active: counts.active, role: seGroup.label, color: seGroup.color }));
-  }
-  roleGroups.forEach(({ label, color, people }) => {
-    people.forEach(([name, counts]) => allPeople.push({ name, active: counts.active, role: label, color }));
+  // Put SE group back into roleGroups for unified rendering
+  const allGroups = seGroup ? [seGroup, ...roleGroups] : roleGroups;
+  allGroups.sort((a, b) => {
+    const aActive = a.people.reduce((s, [, c]) => s + c.active, 0);
+    const bActive = b.people.reduce((s, [, c]) => s + c.active, 0);
+    return bActive - aActive;
   });
-  allPeople.sort((a, b) => b.active - a.active);
-  const maxActive = Math.max(1, ...allPeople.map(p => p.active));
 
-  const rows2 = allPeople.map(p => {
-    const barPct = Math.round((p.active / maxActive) * 100);
-    return `<div class="pr-row">
-      <div class="pr-row-left">
-        <div class="pr-avatar" style="background:${p.color}">${esc(initials(p.name))}</div>
-        <span class="pr-row-name">${esc(p.name)}</span>
-        <span class="pr-row-role">${esc(p.role)}</span>
+  const maxActive = Math.max(1, ...allGroups.flatMap(g => g.people.map(([, c]) => c.active)));
+
+  const html = allGroups.map(({ label, color, people }) => {
+    const rows2 = people.map(([name, counts]) => {
+      const barPct = Math.round((counts.active / maxActive) * 100);
+      return `<div class="pr-row">
+        <div class="pr-row-left">
+          <div class="pr-avatar" style="background:${color}">${esc(initials(name))}</div>
+          <span class="pr-row-name">${esc(name)}</span>
+        </div>
+        <div class="pr-row-right">
+          <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${color}"></div></div>
+          <span class="pr-row-n">${counts.active}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="pr-role-group">
+      <div class="pr-role-header">
+        <div class="pr-role-dot" style="background:${color}"></div>
+        <span class="pr-role-label">${esc(label)}</span>
+        <span class="pr-role-count">${people.length}</span>
       </div>
-      <div class="pr-row-right">
-        <div class="pr-bar-track"><div class="pr-bar-fill" style="width:${barPct}%;background:${p.color}"></div></div>
-        <span class="pr-row-n">${p.active}</span>
-      </div>
+      ${rows2}
     </div>`;
   }).join('');
 
-  document.getElementById('team-count').textContent = allPeople.length;
-  document.getElementById('team-body').innerHTML = `<div class="pr-section">${rows2}</div>`;
+  document.getElementById('team-count').textContent = total;
+  document.getElementById('team-body').innerHTML = `<div class="pr-section">${html}</div>`;
 }
 
 function renderPatterns(rows, statuses, currentCol) {
