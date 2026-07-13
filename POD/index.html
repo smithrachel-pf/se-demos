@@ -74,83 +74,6 @@ body {
   line-height: 1.5;
 }
 
-/* ── Upload Screen ── */
-#upload-screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: radial-gradient(ellipse at 50% 0%, #0D2040 0%, #0D1117 60%);
-}
-
-.upload-logo {
-  margin-bottom: 2.5rem;
-}
-
-.upload-logo img {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.drop-zone {
-  background: var(--surface);
-  border: 2px dashed var(--border-2);
-  border-radius: 16px;
-  padding: 4rem 3rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  max-width: 480px;
-  width: 100%;
-}
-
-.drop-zone:hover, .drop-zone.drag-over {
-  background: var(--surface-2);
-  border-color: var(--blue);
-  box-shadow: 0 0 0 4px rgba(59,158,255,0.1);
-}
-
-.drop-icon {
-  width: 56px; height: 56px;
-  margin: 0 auto 1.25rem;
-  background: var(--blue-bg);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid var(--blue-dim);
-}
-
-.drop-icon svg { width: 28px; height: 28px; stroke: var(--blue); fill: none; }
-
-.drop-zone h2 {
-  color: var(--text-1);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.drop-zone p {
-  color: var(--text-2);
-  font-size: 0.9rem;
-}
-
-.drop-zone label {
-  color: var(--blue);
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-#file-input { display: none; }
-
-.upload-hint {
-  margin-top: 1.5rem;
-  color: var(--text-3);
-  font-size: 0.8rem;
-  text-align: center;
-}
 
 /* ── Dashboard ── */
 #dashboard { display: none; }
@@ -201,22 +124,6 @@ body {
   border-radius: 20px;
 }
 
-.btn-upload {
-  background: var(--surface);
-  color: var(--text-1);
-  border: 1px solid var(--border-2);
-  border-radius: 6px;
-  padding: 0.35rem 0.85rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.btn-upload:hover {
-  background: var(--surface-2);
-  border-color: var(--blue);
-  color: var(--blue);
-}
 
 .main {
   max-width: 1280px;
@@ -1240,18 +1147,6 @@ body {
   </div>
 </div>
 
-<!-- ── Upload Screen ── -->
-<div id="upload-screen" style="display:none">
-  <div class="drop-zone" id="drop-zone">
-    <div class="drop-icon">
-      <svg viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-    </div>
-    <h2>Drop your weekly CSV export</h2>
-    <p>or <label for="file-input">choose a file</label> to get started</p>
-    <input type="file" id="file-input" accept=".csv">
-  </div>
-  <div class="upload-hint">Export from Google Sheets → File → Download → CSV · Replace each week to refresh</div>
-</div>
 
 <!-- ── Dashboard ── -->
 <div id="dashboard">
@@ -1263,7 +1158,6 @@ body {
       <div class="topbar-week" id="week-label">—</div>
     </div>
     <div class="topbar-actions">
-      <button class="btn-upload" id="reload-btn">↑ Update Data</button>
     </div>
   </div>
 
@@ -1392,8 +1286,8 @@ function autoLoadDashboard() {
       document.getElementById('dashboard').style.display = 'block';
     })
     .catch(() => {
-      // No CSV on server yet — fall back to upload screen
-      document.getElementById('upload-screen').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('dashboard').innerHTML = '<div style="padding:4rem;text-align:center;color:var(--text-3)">Unable to load data. Ensure pod-data.csv is available.</div>';
     });
 }
 
@@ -1419,39 +1313,6 @@ const AVATAR_COLORS = ['#1B6CC8','#2D8A3E','#6A3DB5','#B07820','#1A8A7A','#A8322
 
 let parsedData = null;
 
-// ── File Handling ────────────────────────────────────────
-const dropZone   = document.getElementById('drop-zone');
-const fileInput  = document.getElementById('file-input');
-const reloadBtn  = document.getElementById('reload-btn');
-
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) loadFile(file);
-});
-fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
-reloadBtn.addEventListener('click', () => {
-  document.getElementById('upload-screen').style.display = 'flex';
-  document.getElementById('dashboard').style.display = 'none';
-  fileInput.value = '';
-});
-
-function loadFile(file) {
-  Papa.parse(file, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: h => h.trim(),
-    complete: res => {
-      parsedData = res.data.filter(r => r['Account'] && r['Account'].trim());
-      renderDashboard(parsedData, res.meta.fields.map(f => f.trim()));
-      document.getElementById('upload-screen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-    }
-  });
-}
 
 // ── Data Processing ──────────────────────────────────────
 function normalizeStatus(s) {
