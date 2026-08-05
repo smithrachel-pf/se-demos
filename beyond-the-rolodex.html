@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond the Rolodex | JLL Leasing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F0F0F;
+    --surface: #1A1A1A;
+    --surface-2: #222222;
+    --border: #2E2E2E;
+    --text: #EFEFEF;
+    --text-secondary: #CCCCCC;
+    --text-muted: #6B6B6B;
+    --red: #E30613;
+
+    /* Slack palette - matched to actual Slack dark theme */
+    --slack-bg: #1A1D21;
+    --slack-sidebar: #3F0E40;
+    --slack-sidebar-hover: #350D36;
+    --slack-sidebar-active: rgba(255,255,255,0.12);
+    --slack-sidebar-text: #CFC3CF;
+    --slack-topbar-bg: #1A1D21;
+    --slack-hover: #222529;
+    --slack-active: #1164A3;
+    --slack-green: #2BAC76;
+    --slack-green-btn: #007A5A;
+    --slack-text: #D1D2D3;
+    --slack-white: #FFFFFF;
+    --slack-border: #49274B;
+    --slack-msg-border: #383838;
+    --slack-tab-active: #FFFFFF;
+    --slack-tab-inactive: #9B9B9F;
+    --slack-link: #1D9BD1;
+    --slack-attachment-border: #2BAC76;
+    --slack-thread-bg: #222529;
+    --slack-compose-bg: #222529;
+    --slack-compose-border: #565856;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 40px; }
+  section { padding: 100px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  h1 { font-size: clamp(2.8rem, 5vw, 3.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  h3 { font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+  p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); }
+
+  .label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); margin-bottom: 16px; }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.95rem; font-weight: 600; color: var(--red);
+    text-decoration: none; margin-top: 24px; transition: gap 0.2s ease;
+  }
+  .cta:hover { gap: 12px; }
+  .cta svg { width: 18px; height: 18px; }
+
+  /* — HERO — */
+  .hero { padding: 140px 0 100px; }
+  .hero-content { max-width: 640px; }
+  .hero p { margin-top: 20px; font-size: 1.15rem; }
+  .hero-logos {
+    display: flex; align-items: center; gap: 20px; margin-bottom: 32px;
+  }
+  .logo-jll { height: 32px; width: auto; border-radius: 4px; background: white; padding: 4px 8px; }
+  .logo-plus { font-size: 1.2rem; font-weight: 300; color: var(--text-muted); }
+  .logo-sfdc { height: 38px; width: auto; }
+
+  /* — STATS — */
+  .stats { padding: 60px 0; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center; }
+  .stat-number { font-size: 2.8rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+  .stat-number span { color: var(--red); }
+  .stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
+
+  /* — COMPARISON — */
+  .comparison { padding: 100px 0; }
+  .comparison-header { max-width: 680px; margin-bottom: 64px; }
+  .comparison-header p { margin-top: 16px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 48px; } }
+  @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+  .col-before h3 { color: var(--text-muted); margin-bottom: 24px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .old-way-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  @media (max-width: 500px) { .old-way-grid { grid-template-columns: 1fr; } }
+  .old-way-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .old-way-card .ow-icon {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    background: rgba(227,6,19,0.08); display: flex; align-items: center; justify-content: center;
+  }
+  .old-way-card .ow-icon svg { width: 16px; height: 16px; color: var(--red); opacity: 0.7; }
+  .old-way-card p { font-size: 0.85rem; color: var(--text); line-height: 1.45; }
+
+  .col-after h3 { margin-bottom: 20px; }
+
+  /* — SLACK WINDOW (Account Channel w/ Tabs) — */
+  .slack-window {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--slack-msg-border);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+    background: var(--slack-bg);
+  }
+
+  .slack-window-full {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--slack-msg-border);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    background: var(--slack-bg);
+  }
+
+  @media (max-width: 900px) {
+    .slack-window-full { grid-template-columns: 1fr; }
+    .slack-full-sidebar { display: none; }
+  }
+
+  .slack-full-sidebar {
+    background: var(--slack-sidebar);
+    padding: 12px 12px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.82rem;
+  }
+
+  .slack-full-sidebar .ws-name {
+    font-weight: 800; color: var(--slack-white); padding: 8px 10px; margin-bottom: 4px; font-size: 1rem;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slack-full-sidebar .ws-name::after {
+    content: ''; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-top: 5px solid rgba(255,255,255,0.6); margin-left: 2px;
+  }
+
+  .slack-full-sidebar .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 5px 10px; border-radius: 6px; color: var(--slack-sidebar-text);
+    cursor: pointer; margin-bottom: 1px;
+  }
+  .slack-full-sidebar .nav-item:hover { background: var(--slack-sidebar-hover); }
+  .slack-full-sidebar .nav-item.active { background: var(--slack-active); color: var(--slack-white); }
+
+  .slack-full-sidebar .nav-icon { font-size: 0.9rem; width: 20px; text-align: center; }
+
+  .slack-full-sidebar .section-divider {
+    font-size: 0.72rem; font-weight: 600; color: var(--slack-sidebar-text);
+    padding: 14px 10px 4px; margin-top: 4px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .slack-full-sidebar .section-divider::after {
+    content: '+'; font-size: 0.85rem; opacity: 0.5; cursor: pointer;
+  }
+
+  .slack-full-sidebar .ch-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 10px; border-radius: 6px; color: var(--slack-sidebar-text);
+    cursor: pointer; font-size: 0.82rem;
+  }
+  .slack-full-sidebar .ch-item:hover { background: var(--slack-sidebar-hover); }
+  .slack-full-sidebar .ch-item.active { background: rgba(255,255,255,0.12); color: var(--slack-white); font-weight: 600; }
+  .slack-full-sidebar .ch-item .hash { opacity: 0.7; font-size: 0.78rem; font-weight: 400; }
+
+  .slack-full-main { display: flex; flex-direction: column; min-height: 480px; }
+
+  /* Top bar with channel name and actions */
+  .acct-header {
+    padding: 10px 20px 0;
+    border-bottom: 1px solid var(--slack-msg-border);
+  }
+
+  .acct-topbar {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+  }
+  .acct-topbar-actions {
+    display: flex; align-items: center; gap: 12px; color: var(--slack-tab-inactive); font-size: 0.85rem;
+  }
+  .acct-topbar-actions span { cursor: pointer; opacity: 0.6; }
+  .acct-topbar-actions span:hover { opacity: 1; }
+
+  .acct-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 1.05rem; font-weight: 800; color: var(--slack-white);
+  }
+  .acct-title .lock { opacity: 0.5; font-size: 0.85rem; }
+  .acct-title .badge { font-size: 0.62rem; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; color: var(--slack-tab-inactive); font-weight: 500; }
+
+  .acct-tabs {
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  .acct-tabs .tab {
+    padding: 8px 14px; font-size: 0.8rem; font-weight: 500;
+    color: var(--slack-tab-inactive); border-bottom: 2px solid transparent;
+    white-space: nowrap; cursor: pointer; transition: all 0.15s;
+  }
+  .acct-tabs .tab:hover { color: var(--slack-white); }
+  .acct-tabs .tab.active { color: var(--slack-white); border-bottom-color: var(--slack-green); font-weight: 600; }
+
+  /* Messages area */
+  .slack-messages {
+    flex: 1; padding: 16px 20px; overflow: hidden;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  .slack-msg { display: flex; gap: 12px; }
+  .slack-msg:hover { background: rgba(255,255,255,0.01); margin: -4px -8px; padding: 4px 8px; border-radius: 6px; }
+
+  .slack-avatar {
+    width: 36px; height: 36px; border-radius: 5px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700;
+  }
+  .slack-avatar.agent { background: linear-gradient(135deg, #611f69, #9b59b6); color: white; }
+  .slack-avatar.human { background: #2D6A4F; color: white; }
+  .slack-avatar.costar { background: #1a5276; color: white; font-size: 0.6rem; }
+
+  .slack-msg-content { flex: 1; min-width: 0; }
+
+  .slack-msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .slack-msg-name { font-size: 0.9rem; font-weight: 800; color: var(--slack-white); }
+  .slack-msg-name .app-badge {
+    font-size: 0.6rem; font-weight: 500; background: rgba(255,255,255,0.06);
+    color: var(--slack-tab-inactive); padding: 2px 5px; border-radius: 3px;
+    margin-left: 5px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .slack-msg-time { font-size: 0.72rem; color: var(--text-muted); }
+
+  .slack-msg-body { font-size: 0.88rem; line-height: 1.6; color: var(--slack-text); }
+  .slack-msg-body strong { color: var(--slack-white); font-weight: 700; }
+  .slack-msg-body .emoji { font-style: normal; }
+  .slack-msg-body .link { color: var(--slack-link); text-decoration: none; }
+  .slack-msg-body .link:hover { text-decoration: underline; }
+
+  /* Compose bar */
+  .slack-compose {
+    margin: 8px 16px 12px; border: 1px solid var(--slack-compose-border);
+    border-radius: 8px; background: var(--slack-compose-bg); padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .slack-compose-placeholder { font-size: 0.82rem; color: var(--text-muted); }
+  .slack-compose-icons { display: flex; gap: 10px; color: var(--text-muted); font-size: 0.85rem; }
+  .slack-compose-icons span { opacity: 0.6; cursor: pointer; }
+  .slack-compose-icons span:hover { opacity: 1; }
+
+  .slack-attachment {
+    margin-top: 8px; border-left: 3px solid var(--slack-attachment-border);
+    padding: 8px 12px; background: rgba(255,255,255,0.02);
+    border-radius: 0 4px 4px 0; font-size: 0.8rem; color: var(--text-secondary);
+  }
+
+  .slack-metadata {
+    margin-top: 10px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px;
+    font-size: 0.78rem;
+  }
+  .slack-metadata dt { color: var(--text-muted); font-weight: 500; }
+  .slack-metadata dd { color: var(--slack-text); margin: 0; }
+
+  .slack-bullets {
+    margin-top: 8px; padding-left: 0; list-style: none;
+    font-size: 0.82rem; color: var(--slack-text); line-height: 1.7;
+  }
+  .slack-bullets li::before { content: '•'; margin-right: 8px; color: var(--text-muted); }
+
+  .slack-actions {
+    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .slack-actions button {
+    border: 1px solid var(--slack-border); background: rgba(255,255,255,0.04);
+    border-radius: 6px; padding: 7px 14px; font-size: 0.78rem; font-weight: 500;
+    color: var(--slack-text); cursor: pointer; transition: all 0.15s;
+  }
+  .slack-actions button:hover { background: rgba(255,255,255,0.08); border-color: #555; color: var(--slack-white); }
+  .slack-actions button.green { background: var(--slack-green-btn); border-color: var(--slack-green-btn); color: white; }
+  .slack-actions button.green:hover { background: #006B4F; }
+
+  .slack-query {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; margin-bottom: 6px;
+  }
+  .slack-query::before { content: '🔍'; font-size: 0.7rem; }
+
+  .slack-thread-indicator {
+    margin-top: 8px; font-size: 0.75rem; color: var(--slack-link); cursor: pointer;
+  }
+
+  /* — FLOW — */
+  .flow { background: var(--surface); padding: 100px 0; }
+  .flow-header { max-width: 560px; margin-bottom: 56px; }
+  .flow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  @media (max-width: 900px) { .flow-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .flow-grid { grid-template-columns: 1fr; } }
+  .flow-num { font-size: 2rem; font-weight: 800; color: var(--red); margin-bottom: 12px; }
+  .flow-item h3 { margin-bottom: 10px; }
+  .flow-item p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* — STRATEGY — */
+  .strategy { background: var(--surface); padding: 100px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .strategy h2 { max-width: 720px; margin-bottom: 40px; }
+  .strategy-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 48px; }
+  @media (max-width: 768px) { .strategy-cols { grid-template-columns: 1fr; gap: 32px; } }
+  .strategy-cols p { font-size: 0.95rem; }
+  .strategy-cols strong { color: var(--text); }
+
+  /* — PROOF — */
+  .proof { padding: 100px 0; }
+  .proof-content { max-width: 780px; }
+  .proof blockquote { font-size: clamp(1.3rem, 2.5vw, 1.7rem); font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 24px; letter-spacing: -0.01em; }
+  .proof .attribution { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+  .proof .attribution strong { color: var(--red); }
+
+  footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
+  footer p { color: var(--text-muted); font-size: 0.8rem; }
+  footer .brand { color: var(--red); font-weight: 700; font-size: 1rem; margin-bottom: 8px; letter-spacing: 0.05em; }
+
+  /* Lists view */
+  .slack-list { margin-top: 12px; border: 1px solid var(--slack-msg-border); border-radius: 6px; overflow: hidden; font-size: 0.78rem; }
+  .slack-list-header { display: grid; grid-template-columns: 80px 1fr 100px 80px 100px; gap: 0; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--slack-msg-border); }
+  .slack-list-header span { padding: 8px 10px; color: var(--text-muted); font-weight: 600; }
+  .slack-list-row { display: grid; grid-template-columns: 80px 1fr 100px 80px 100px; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .slack-list-row:last-child { border-bottom: none; }
+  .slack-list-row span { padding: 9px 10px; color: var(--slack-text); }
+  .slack-list-row .status { font-size: 0.72rem; font-weight: 500; }
+  .slack-list-row .status.expiring { color: #E8A838; }
+  .slack-list-row .status.available { color: var(--slack-green); }
+  .slack-list-row .status.pending { color: var(--slack-link); }
+
+  /* Section between mockups */
+  .mockup-section { padding: 80px 0; }
+  .mockup-section .section-intro { max-width: 560px; margin-bottom: 40px; }
+
+  /* — MODES — */
+  .modes { padding: 100px 0; }
+  .modes-header { max-width: 640px; margin-bottom: 56px; }
+  .modes-header p { margin-top: 16px; }
+  .modes-grid { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 48px; }
+  .mode-row {
+    display: grid; grid-template-columns: 28px 56px 1fr auto; gap: 0 12px;
+    align-items: center; padding: 28px 0; border-bottom: 1px solid var(--border);
+  }
+  .mode-row:first-child { border-top: 1px solid var(--border); }
+  .mode-number {
+    font-size: 1.1rem; font-weight: 800; color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .mode-icon {
+    width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  }
+  .mode-icon svg { width: 20px; height: 20px; }
+  .mode-icon-1 { background: rgba(227,6,19,0.1); color: var(--red); }
+  .mode-icon-2 { background: rgba(232,168,56,0.1); color: #E8A838; }
+  .mode-icon-3 { background: rgba(45,106,79,0.12); color: #2BAC76; }
+  .mode-icon-4 { background: rgba(18,100,163,0.12); color: #4BA3E3; }
+  .mode-icon-5 { background: rgba(107,33,168,0.1); color: #A855F7; }
+  .mode-content h4 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .mode-content .mode-desc { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+  .mode-tasks { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; text-align: right; }
+  .mode-row.mode-fed .mode-content h4 { color: var(--text); }
+  @media (max-width: 768px) {
+    .mode-row { grid-template-columns: 24px 40px 1fr; gap: 0 8px; }
+    .mode-tasks { grid-column: 1 / -1; text-align: left; padding-left: 72px; margin-top: 4px; }
+  }
+  .modes-insight {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 24px 32px; max-width: 760px;
+  }
+  .modes-insight p { font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary); }
+  .modes-insight strong { color: var(--text); }
+  .modes-insight .metric { color: var(--red); font-weight: 700; }
+
+  /* — PROSPECTING CHANNEL — */
+  .prospect-tabs {
+    display: flex; gap: 0; margin: 12px 20px 0; border-bottom: 1px solid var(--slack-border);
+  }
+  .prospect-tabs .ptab {
+    padding: 8px 14px; font-size: 0.78rem; font-weight: 500;
+    color: var(--slack-tab-inactive); border-bottom: 2px solid transparent;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .prospect-tabs .ptab:hover { color: var(--slack-white); }
+  .prospect-tabs .ptab.active { color: var(--slack-white); border-bottom-color: var(--slack-green-btn); }
+
+  .lead-card {
+    margin-top: 10px; padding: 12px 16px; background: rgba(255,255,255,0.02);
+    border: 1px solid var(--slack-border); border-radius: 6px;
+  }
+  .lead-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .lead-card-header .lead-name { font-size: 0.85rem; font-weight: 700; color: var(--slack-white); }
+  .lead-card-header .lead-source { font-size: 0.7rem; color: var(--text-muted); }
+  .lead-card-detail { font-size: 0.78rem; color: var(--slack-text); line-height: 1.6; }
+  .lead-actions-triage { display: flex; gap: 8px; margin-top: 10px; }
+  .lead-actions-triage button {
+    border-radius: 20px; padding: 6px 16px; font-size: 0.75rem; font-weight: 600;
+    border: 1px solid var(--slack-border); background: rgba(255,255,255,0.04);
+    color: var(--slack-text); cursor: pointer; transition: all 0.15s;
+  }
+  .lead-actions-triage button.yes { border-color: var(--slack-green-btn); color: var(--slack-green); }
+  .lead-actions-triage button.yes:hover { background: var(--slack-green-btn); color: white; }
+  .lead-actions-triage button.skip:hover { background: rgba(255,255,255,0.08); }
+
+  /* Research table */
+  .research-table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin-top: 16px; }
+  .research-table th { text-align: left; padding: 8px 12px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--slack-border); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .research-table td { padding: 8px 12px; color: var(--slack-text); border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top; }
+  .research-table td:first-child { color: var(--slack-white); font-weight: 600; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-logos">
+        <img src="jll-logo.png" alt="JLL" class="logo-jll">
+        <span class="logo-plus">+</span>
+        <img src="salesforce-logo.png" alt="Salesforce" class="logo-sfdc">
+      </div>
+      <h1>Beyond the Rolodex.</h1>
+      <p>There's the conventional way of doing things. Manual entry, dashboard hunting, institutional knowledge that walks out the door. And then there's a brighter way.</p>
+      <a href="#comparison" class="cta">See the shift <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-number">41,300<span>+</span></div>
+        <div class="stat-label">Leasing transactions completed globally in 2024</div>
+      </div>
+      <div>
+        <div class="stat-number">815M<span> sf</span></div>
+        <div class="stat-label">Real estate leased worldwide in 2024</div>
+      </div>
+      <div>
+        <div class="stat-number">6,000<span>+</span></div>
+        <div class="stat-label">Leasing professionals working across 130 countries</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- COMPARISON -->
+<section class="comparison" id="comparison">
+  <div class="container">
+    <div class="comparison-header">
+      <p class="label">The shift</p>
+      <h2>Forget what you know about CRM.</h2>
+      <p>CRM has been a tax on brokers, not a tool. The winning pattern doesn't fix the old system. It replaces the surface entirely.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="col-before">
+        <h3>The old way</h3>
+        <div class="old-way-grid">
+          <div class="old-way-card">
+            <div class="ow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+            <p>Contacts live in personal spreadsheets</p>
+          </div>
+          <div class="old-way-card">
+            <div class="ow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <p>Pipeline depends on the last conversation</p>
+          </div>
+          <div class="old-way-card">
+            <div class="ow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+            <p>Institutional knowledge walks out the door</p>
+          </div>
+          <div class="old-way-card">
+            <div class="ow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <p>CRM requires a separate login and manual entry</p>
+          </div>
+          <div class="old-way-card">
+            <div class="ow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <p>Every update is a tax on billable time</p>
+          </div>
+          <div class="old-way-card">
+            <div class="ow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <p>Reporting lags reality by days or weeks</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-after">
+        <h3>How top brokers work today</h3>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px;">An account channel in the broker's Slack workspace. Salesforce data surfaced as tabs, agents working alongside the team.</p>
+
+        <!-- ACCOUNT CHANNEL MOCKUP -->
+        <div class="slack-window">
+          <div class="acct-header">
+            <div class="acct-topbar">
+              <div class="acct-title">
+                <span class="lock">🔒</span>
+                Siemens Energy
+                <span class="badge">Account</span>
+              </div>
+              <div class="acct-topbar-actions">
+                <span>☆</span>
+                <span>📌</span>
+                <span>🔍</span>
+              </div>
+            </div>
+            <div class="acct-tabs">
+              <div class="tab active">Messages</div>
+              <div class="tab">Account details</div>
+              <div class="tab">Summary</div>
+              <div class="tab">Properties</div>
+              <div class="tab">Leases</div>
+              <div class="tab">Opportunities</div>
+            </div>
+          </div>
+          <div class="slack-messages">
+            <div class="slack-msg">
+              <div class="slack-avatar agent">✦</div>
+              <div class="slack-msg-content">
+                <div class="slack-msg-header">
+                  <span class="slack-msg-name">Pursuit Agent <span class="app-badge">app</span></span>
+                  <span class="slack-msg-time">9:02 AM</span>
+                </div>
+                <div class="slack-msg-body">
+                  <span class="emoji">📋</span> <strong>Lease Expiration Alert</strong><br><br>
+                  <strong>Raleigh, NC | 55,000 SF Office (Sole-Tenant)</strong><br>
+                  • Current lease expires March 2027 (209 days)<br>
+                  • Siemens Energy headcount in Triangle grew 18% YoY<br><br>
+                  <span class="emoji">🧠</span> <strong>Why This Matters Now</strong><br>
+                  • Client exploring expansion to 72,000 SF, needs decision by Q4<br>
+                  • Two Class A deliveries in RTP submarket create leverage<br>
+                  • Renewal + expansion = ~$2.8M annual rent, 7-year term
+                </div>
+                <div class="slack-actions">
+                  <button class="green">Draft Outreach</button>
+                  <button>Review Lease Assumptions</button>
+                  <button>Open Market Comps</button>
+                </div>
+                <div class="slack-thread-indicator">3 replies</div>
+              </div>
+            </div>
+          </div>
+          <div class="slack-compose">
+            <span class="slack-compose-placeholder">Message #siemens-energy</span>
+            <div class="slack-compose-icons"><span>Aa</span><span>📎</span><span>😊</span><span>@</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- MARKET INTEL AGENT -->
+<section class="mockup-section">
+  <div class="container">
+    <div class="section-intro">
+      <p class="label">Agents in the flow</p>
+      <h2>Market intelligence delivered as a message, not a report.</h2>
+      <p style="margin-top:12px;">External data agents (CoStar, market feeds) surface signals directly in the account channel. Brokers collaborate in-thread without switching tools.</p>
+    </div>
+
+    <!-- FULL SLACK WINDOW WITH SIDEBAR -->
+    <div class="slack-window-full">
+      <div class="slack-full-sidebar">
+        <div class="ws-name">JLL Leasing</div>
+        <div class="nav-item"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item"><span class="nav-icon">💬</span> DMs</div>
+        <div class="nav-item"><span class="nav-icon">📊</span> Activity</div>
+        <div class="nav-item active"><span class="nav-icon">🏢</span> Sales</div>
+        <div class="nav-item"><span class="nav-icon">✦</span> Agentforce</div>
+        <div class="section-divider">Salesforce</div>
+        <div class="ch-item active"><span class="hash">#</span> Siemens Energy</div>
+        <div class="ch-item"><span class="hash">#</span> HSBC NYC HQ</div>
+        <div class="ch-item"><span class="hash">#</span> Procter & Gamble</div>
+        <div class="section-divider">Channels</div>
+        <div class="ch-item"><span class="hash">#</span> market-intel</div>
+        <div class="ch-item"><span class="hash">#</span> leasing-ops</div>
+        <div class="section-divider">Agents</div>
+        <div class="ch-item"><span class="hash">#</span> pursuit-agent</div>
+        <div class="ch-item"><span class="hash">#</span> comp-monitor</div>
+      </div>
+
+      <div class="slack-full-main">
+        <div class="acct-header">
+          <div class="acct-topbar">
+            <div class="acct-title">
+              <span class="lock">🔒</span>
+              Siemens Energy
+              <span class="badge">Account</span>
+            </div>
+            <div class="acct-topbar-actions">
+              <span>☆</span>
+              <span>🎧</span>
+              <span>📌</span>
+              <span>🔍</span>
+            </div>
+          </div>
+          <div class="acct-tabs">
+            <div class="tab active">Messages</div>
+            <div class="tab">Account details</div>
+            <div class="tab">Summary</div>
+            <div class="tab">Properties</div>
+            <div class="tab">Leases</div>
+            <div class="tab">Opportunities</div>
+            <div class="tab">Files</div>
+          </div>
+        </div>
+
+        <div class="slack-messages">
+          <!-- CoStar Market Alert -->
+          <div class="slack-msg">
+            <div class="slack-avatar costar">CS</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-header">
+                <span class="slack-msg-name">CoStar <span class="app-badge">app</span></span>
+                <span class="slack-msg-time">10:12 AM</span>
+              </div>
+              <div class="slack-msg-body">
+                <span class="emoji">📊</span> <strong>Market Alert | Office | Research Triangle, NC</strong><br><br>
+                CoStar has identified a market shift relevant to Siemens Energy's 55,000 SF sole-tenant position in Raleigh.<br><br>
+                Two new Class A deliveries entering submarket, creating leverage for expansion negotiation.
+              </div>
+              <div class="slack-metadata">
+                <dt>Market</dt><dd>Research Triangle Park</dd>
+                <dt>Asset Class</dt><dd>Class A Office</dd>
+                <dt>Vacancy Rate</dt><dd>📈 Up 3.2%, now 14.8%</dd>
+                <dt>Avg Asking Rent</dt><dd>$34.50 / SF FSG</dd>
+                <dt>New Deliveries</dt><dd>+420,000 SF by Q1 2027</dd>
+                <dt>Tenant Demand</dt><dd>📈 Energy / tech expansion</dd>
+              </div>
+              <ul class="slack-bullets">
+                <li>Rising vacancy = leverage for below-market renewal rate</li>
+                <li>New supply creates expansion options within 2-mile radius</li>
+                <li>Comparable energy-sector tenants secured 8-12% concessions this cycle</li>
+              </ul>
+              <div class="slack-actions">
+                <button class="green">View Full Market Report</button>
+                <button>Open Market Comps (CoStar)</button>
+              </div>
+              <div class="slack-thread-indicator">4 replies from Jennifer H., Jamal W., and others</div>
+            </div>
+          </div>
+
+          <!-- Slackbot CRM query -->
+          <div class="slack-msg">
+            <div class="slack-avatar human">JH</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-header">
+                <span class="slack-msg-name">Jennifer Hynes</span>
+                <span class="slack-msg-time">10:18 AM</span>
+              </div>
+              <div class="slack-msg-body">@Slackbot what's the current pursuit status for Siemens Energy, Raleigh?</div>
+            </div>
+          </div>
+
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background:#4A154B; color:white;">🤖</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-header">
+                <span class="slack-msg-name">Slackbot</span>
+                <span class="slack-msg-time">10:18 AM</span>
+              </div>
+              <div class="slack-query">Queried Salesforce (JLL CRM)</div>
+              <div class="slack-msg-body">
+                Here's what's happening with <strong>Siemens Energy, Raleigh</strong>. There are <strong>2 active pursuits</strong> in the system:<br><br>
+                <strong>Active Pursuits:</strong><br>
+                1. <a class="link" href="#">Siemens Energy: 55K SF Renewal (Raleigh)</a><br>
+                &nbsp;&nbsp;&nbsp;• 55,000 SF · Stage: Proposal (80% probability)<br>
+                &nbsp;&nbsp;&nbsp;• Close Date: Oct 1, 2026<br><br>
+                2. <a class="link" href="#">Siemens Energy: Expansion (RTP Adjacent)</a><br>
+                &nbsp;&nbsp;&nbsp;• 17,000 SF · Stage: Site Selection (50% probability)<br>
+                &nbsp;&nbsp;&nbsp;• Close Date: Jan 15, 2027
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slack-compose">
+          <span class="slack-compose-placeholder">Message #siemens-energy</span>
+          <div class="slack-compose-icons"><span>Aa</span><span>📎</span><span>😊</span><span>@</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- FOUR MOVES -->
+<section class="flow">
+  <div class="container">
+    <div class="flow-header">
+      <p class="label">A modern broker's day</p>
+      <h2>Four moves. One surface.</h2>
+    </div>
+    <div class="flow-grid">
+      <div class="flow-item">
+        <div class="flow-num">01</div>
+        <h3>Prioritized view</h3>
+        <p>Open the workspace. Top pursuits ranked by close-probability, today's meetings, agent-surfaced actions. No CRM login.</p>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">02</div>
+        <h3>Find & qualify</h3>
+        <p>Agents monitor market signals and drop qualified leads as one-decision cards. Triage them like chat DMs.</p>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">03</div>
+        <h3>Pursue</h3>
+        <p>Draft outreach, log meetings by talking to an agent, move pursuits forward. Email and calendar sync automatically.</p>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">04</div>
+        <h3>Nurture the book</h3>
+        <p>Pipeline view shows every pursuit, last touch, and AI's next-best-action. The day ends when the list is worked.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE 5 MODES -->
+<section class="modes">
+  <div class="container">
+    <div class="modes-header">
+      <p class="label">The broker's real workflow</p>
+      <h2>Five modes. Only one gets done consistently.</h2>
+      <p>Every leasing broker operates across five modes. The problem: most live in Mode 4 (executing active deals) and starve Modes 1–3. The result is a feast-or-famine pipeline that compounds over 18+ months.</p>
+    </div>
+
+    <div class="modes-grid">
+      <div class="mode-row mode-starved">
+        <div class="mode-number">1</div>
+        <div class="mode-icon mode-icon-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="mode-content">
+          <h4>Business Development</h4>
+          <p class="mode-desc">Finding new tenants, outbound outreach, referral cultivation, first meetings</p>
+        </div>
+        <div class="mode-tasks">Starved when deals are active</div>
+      </div>
+      <div class="mode-row mode-starved">
+        <div class="mode-number">2</div>
+        <div class="mode-icon mode-icon-2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div class="mode-content">
+          <h4>Pipeline Nurturing</h4>
+          <p class="mode-desc">Lease expiration tracking, drip content, re-engaging dormant contacts, timing triggers</p>
+        </div>
+        <div class="mode-tasks">Starved when deals are active</div>
+      </div>
+      <div class="mode-row mode-starved">
+        <div class="mode-number">3</div>
+        <div class="mode-icon mode-icon-3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0022 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="mode-content">
+          <h4>Market Intelligence</h4>
+          <p class="mode-desc">CoStar / CompStak research, vacancy and comp tracking, sector news, competitive positioning</p>
+        </div>
+        <div class="mode-tasks">Starved when deals are active</div>
+      </div>
+      <div class="mode-row mode-fed">
+        <div class="mode-number">4</div>
+        <div class="mode-icon mode-icon-4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="mode-content">
+          <h4>Active Deal Execution</h4>
+          <p class="mode-desc">Space criteria, market surveys, RFP/LOI, financial analysis, lease closing</p>
+        </div>
+        <div class="mode-tasks">Where brokers live today</div>
+      </div>
+      <div class="mode-row">
+        <div class="mode-number">5</div>
+        <div class="mode-icon mode-icon-5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="mode-content">
+          <h4>Client Stewardship</h4>
+          <p class="mode-desc">Post-deal check-ins, renewal reminders at 18-24 months, referral asks, portfolio advisory</p>
+        </div>
+        <div class="mode-tasks"></div>
+      </div>
+    </div>
+
+    <div class="modes-insight">
+      <p><strong>The feast-or-famine trap:</strong> When you're deep in Mode 4 deals, Modes 1–3 go dark. Eighteen months later, the pipeline is empty. Top tenant reps aim for a <span class="metric">100-prospect active pipeline</span> at all times, with 3–5 active prospects needed to close 1 deal per quarter. The AI teammate's job is to keep Modes 1–3 running <em>even when the broker is buried in active deals.</em></p>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- BUILD MY BOOK PROSPECTING CHANNEL -->
+<section class="mockup-section">
+  <div class="container">
+    <div class="section-intro">
+      <p class="label">Mode 1, automated</p>
+      <h2>Build My Book: prospecting as a feed, not a task.</h2>
+      <p style="margin-top:12px;">A dedicated Slack channel where AI-surfaced leads arrive as triage-ready cards. Swipe yes or skip. No data entry, no CRM tab.</p>
+    </div>
+
+    <div class="slack-window" style="max-width:680px;">
+      <div class="acct-header">
+        <div class="acct-topbar">
+          <div class="acct-title">
+            <span class="lock">🔒</span>
+            #build-my-book
+            <span class="badge">Prospecting</span>
+          </div>
+          <div class="acct-topbar-actions">
+            <span>☆</span>
+            <span>🔍</span>
+          </div>
+        </div>
+        <div class="prospect-tabs">
+          <div class="ptab active">Find Leads</div>
+          <div class="ptab">Pursue</div>
+          <div class="ptab">Nurture</div>
+        </div>
+      </div>
+      <div class="slack-messages">
+        <!-- Lead 1 -->
+        <div class="slack-msg">
+          <div class="slack-avatar agent">✦</div>
+          <div class="slack-msg-content">
+            <div class="slack-msg-header">
+              <span class="slack-msg-name">Lead Agent <span class="app-badge">app</span></span>
+              <span class="slack-msg-time">8:15 AM</span>
+            </div>
+            <div class="slack-query">Sourced from CoStar Lease Intelligence DB</div>
+            <div class="lead-card">
+              <div class="lead-card-header">
+                <span class="lead-name">Brillio, Midtown Manhattan</span>
+                <span class="lead-source">Lease expiring 14 mo</span>
+              </div>
+              <div class="lead-card-detail">
+                <strong>Current:</strong> 22,000 SF at 1450 Broadway (full floor)<br>
+                <strong>Signal:</strong> Headcount +40% since signing, likely needs expansion<br>
+                <strong>Trigger:</strong> Lease expires March 2028. Decision window opens now.
+              </div>
+              <div class="lead-actions-triage">
+                <button class="yes">+ Add to My List</button>
+                <button class="skip">Skip</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lead 2 -->
+        <div class="slack-msg">
+          <div class="slack-avatar agent">✦</div>
+          <div class="slack-msg-content">
+            <div class="slack-msg-header">
+              <span class="slack-msg-name">Lead Agent <span class="app-badge">app</span></span>
+              <span class="slack-msg-time">8:15 AM</span>
+            </div>
+            <div class="slack-query">Sourced from Ren Systems + LinkedIn</div>
+            <div class="lead-card">
+              <div class="lead-card-header">
+                <span class="lead-name">Evolution Research Group (ERG)</span>
+                <span class="lead-source">Growth signal</span>
+              </div>
+              <div class="lead-card-detail">
+                <strong>Current:</strong> Recently relocated to 75,000 SF regional HQ<br>
+                <strong>Signal:</strong> Series D funded, opening 2 satellite offices in SE region<br>
+                <strong>Trigger:</strong> VP of Real Estate posted "hiring facilities team" on LinkedIn
+              </div>
+              <div class="lead-actions-triage">
+                <button class="yes">+ Add to My List</button>
+                <button class="skip">Skip</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slack-compose">
+        <span class="slack-compose-placeholder">Message #build-my-book</span>
+        <div class="slack-compose-icons"><span>Aa</span><span>📎</span><span>😊</span><span>@</span></div>
+      </div>
+    </div>
+
+    <!-- PRE-CALL RESEARCH TABLE -->
+    <div style="margin-top:48px; max-width:680px;">
+      <h3 style="font-size:0.95rem; margin-bottom:4px;">What the agent researches before any outreach call</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:16px;">Automatically assembled. Delivered to the broker's channel before the call starts.</p>
+      <div class="slack-window" style="padding:16px 20px;">
+        <table class="research-table">
+          <thead>
+            <tr><th>Research Area</th><th>What to Find</th><th>Source</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Lease Status</td><td>Current address, estimated expiration, SF occupied</td><td>CoStar, CompStak, Reonomy</td></tr>
+            <tr><td>Company Health</td><td>Revenue trajectory, funding, headcount growth/decline</td><td>LinkedIn, Crunchbase, D&B, ZoomInfo</td></tr>
+            <tr><td>Leadership</td><td>Who actually makes the real estate decision (CFO/COO/Head of RE)</td><td>LinkedIn, company website</td></tr>
+            <tr><td>News & Triggers</td><td>Recent press, expansions, new contracts, layoffs</td><td>Google Alerts, Bisnow, Business Journal</td></tr>
+            <tr><td>Existing Broker</td><td>Are they currently working with someone?</td><td>CoStar history, ask directly</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- LEASES LIST VIEW -->
+<section class="mockup-section">
+  <div class="container">
+    <div class="section-intro">
+      <p class="label">Salesforce data in Slack</p>
+      <h2>Leases, properties, and pipeline as native Slack Lists.</h2>
+      <p style="margin-top:12px;">No CRM login required. Brokers see structured data inside the same workspace where they message, collaborate, and take action.</p>
+    </div>
+
+    <div class="slack-window" style="max-width:720px;">
+      <div class="acct-header">
+        <div class="acct-topbar">
+          <div class="acct-title">
+            <span class="lock">🔒</span>
+            Siemens Energy
+            <span class="badge">Account</span>
+          </div>
+          <div class="acct-topbar-actions">
+            <span>☆</span>
+            <span>📌</span>
+            <span>🔍</span>
+          </div>
+        </div>
+        <div class="acct-tabs">
+          <div class="tab">Messages</div>
+          <div class="tab">Account details</div>
+          <div class="tab">Summary</div>
+          <div class="tab">Properties</div>
+          <div class="tab active">Leases</div>
+          <div class="tab">Opportunities</div>
+        </div>
+      </div>
+      <div style="padding:16px 20px;">
+        <div class="slack-list">
+          <div class="slack-list-header">
+            <span>Lease #</span>
+            <span>Property</span>
+            <span>Status</span>
+            <span>Sq Ft</span>
+            <span>Rent ($/sf)</span>
+          </div>
+          <div class="slack-list-row">
+            <span>📄 7201</span>
+            <span>2000 Perimeter Park, Raleigh NC</span>
+            <span class="status expiring">Expiring</span>
+            <span>55,000</span>
+            <span>$34.50</span>
+          </div>
+          <div class="slack-list-row">
+            <span>📄 7202</span>
+            <span>400 S Tryon St, Charlotte NC</span>
+            <span class="status available">Active</span>
+            <span>12,000</span>
+            <span>$38.75</span>
+          </div>
+          <div class="slack-list-row">
+            <span>📄 7203</span>
+            <span>RTP East, Bldg C (Expansion)</span>
+            <span class="status pending">LOI Pending</span>
+            <span>17,000</span>
+            <span>$32.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- STRATEGY -->
+<section class="strategy">
+  <div class="container">
+    <p class="label">Why this fits JLL's own strategy</p>
+    <h2>JLL already has the platform. The missing piece is the last mile to the broker.</h2>
+
+    <div class="strategy-cols">
+      <div>
+        <p><strong>JLL Falcon</strong>, the first AI platform built for CRE, already powers predictive analytics, portfolio intelligence, and agentic workflows across the enterprise. JLL has invested more in AI than any other real estate company.</p>
+      </div>
+      <div>
+        <p>The opportunity isn't another platform investment. It's putting that intelligence into the surface where leasing professionals already spend their day. Not another dashboard. An AI teammate in the chat workspace that does the logging for them. <strong>Innovative, intelligent, and human</strong>, now delivered to the broker, too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="proof">
+  <div class="container">
+    <div class="proof-content">
+      <blockquote>The competition isn't rolling out a better CRM. They're making CRM invisible.</blockquote>
+      <p class="attribution">Top-3 CRE peers are already in production with AI-augmented broker workflows. Thousands of brokers on the roadmap. Industry benchmarks showing ~20% transaction-volume lift. The "should we?" question has been answered. The remaining question is who moves first in Leasing. <strong>See a brighter way.</strong></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p class="brand">JLL</p>
+    <p>Confidential. Prepared for internal discussion.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.slack-actions .green').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      btn.textContent = 'Loading…';
+      btn.style.opacity = '0.7';
+      setTimeout(() => { btn.textContent = '✓ Done'; btn.style.background = '#2BAC76'; }, 1000);
+    });
+  });
+
+  document.querySelectorAll('.acct-tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const parent = tab.closest('.acct-tabs');
+      parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.prospect-tabs .ptab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const parent = tab.closest('.prospect-tabs');
+      parent.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.lead-actions-triage .yes').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.lead-card');
+      btn.textContent = '✓ Added to Call List';
+      btn.style.background = 'var(--slack-green-btn)';
+      btn.style.color = 'white';
+      btn.style.borderColor = 'var(--slack-green-btn)';
+      card.style.borderColor = 'var(--slack-green-btn)';
+      const skip = card.querySelector('.skip');
+      if (skip) skip.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('.lead-actions-triage .skip').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.lead-card');
+      card.style.opacity = '0.4';
+      btn.textContent = 'Skipped';
+      const yes = card.querySelector('.yes');
+      if (yes) yes.style.display = 'none';
+    });
+  });
+</script>
+</body>
+</html>
