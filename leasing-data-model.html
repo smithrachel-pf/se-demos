@@ -600,13 +600,60 @@
   .dim { opacity: 0.25; transition: opacity 0.3s ease; }
   .bright { opacity: 1; transition: opacity 0.3s ease; }
 
+  /* ARCH NOTES BANNER */
+  .arch-notes-banner {
+    margin: 0 48px 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px 24px;
+  }
+  .arch-note-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .arch-note-item::before {
+    content: '→';
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .arch-note-item strong {
+    color: var(--text-primary);
+  }
+  .arch-notes-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 48px 8px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .arch-notes-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
   /* FOOTNOTE */
   .footnote {
-    padding: 20px 48px;
-    border-top: 1px solid var(--border);
+    padding: 12px 48px 20px;
     font-size: 11px;
     color: var(--text-muted);
     line-height: 1.6;
+    border-top: 1px solid var(--border);
   }
   .footnote strong { color: var(--text-secondary); }
 
@@ -1084,7 +1131,7 @@
 <!-- GLOBAL TAB NAV -->
 <div class="tab-nav">
   <button class="tab-btn tab-active" id="tab-btn-model" onclick="switchTab('model')">Data Model</button>
-  <button class="tab-btn" id="tab-btn-headless" onclick="switchTab('headless')">Salesforce as Backend — Headless Architecture</button>
+  <button class="tab-btn" id="tab-btn-headless" onclick="switchTab('headless')">Headless UI</button>
 </div>
 
 <!-- ============================================================
@@ -1096,7 +1143,7 @@
 <div class="header">
   <div class="header-left">
     <h1>Marcus &amp; Millichap — Leasing Platform Data Architecture</h1>
-    <p>Best-in-class Salesforce object model &nbsp;·&nbsp; Landlord Rep &amp; Tenant Rep personas &nbsp;·&nbsp; Agentic-ready foundation</p>
+    <p>Scalable + Agentic Data Model &nbsp;·&nbsp; Personas: Landlord Rep + Tenant Rep</p>
   </div>
   <div class="header-right">
     <div class="fork-toggle">
@@ -1129,24 +1176,24 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   </div>
   <div class="legend-item">
     <div class="legend-dot" style="background:var(--obj-junction);"></div>
-    Junction Object
-    <i class="info-icon" data-tt-title="Junction Object" data-tt-body="A bridge record that connects two other objects in a many-to-many relationship. Example: one Opportunity can cover multiple Properties, and one Property can appear on multiple Opportunities. The Opportunity Property junction holds that relationship. Without it, you'd be forced into a one-to-one link and lose critical deal context.">i</i>
+    Junction (Link) Record
+    <i class="info-icon" data-tt-title="Junction (Link) Record — What it means" data-tt-body="A junction record is a connector between two things that can each belong to many of the other. Example: one deal can involve multiple spaces, and one space can appear in multiple deals. Rather than forcing a one-to-one pairing and losing data, a junction record sits in the middle and tracks every valid combination — like a row in a spreadsheet that says 'Deal 42 involves Suite 100.' You can have as many of those rows as needed.">i</i>
   </div>
   <div class="legend-item">
     <div class="legend-dot" style="background:var(--obj-agent);"></div>
     Agentforce Layer
     <i class="info-icon" data-tt-title="Agentforce Layer" data-tt-body="Salesforce's native AI agent infrastructure. Unlike third-party AI tools that need an integration layer to reach CRM data, Agentforce agents run inside the org — they read and act on Accounts, Opportunities, Leases, and Spaces directly, with no API calls, no latency, and no extra security surface to manage.">i</i>
   </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:#1E88E5; border-radius:50%;"></div>
-    Option A only
-    <i class="info-icon" data-tt-title="Option A — 3-Object Tenant Rep Path" data-tt-body="These nodes appear only when the Tenant Rep pipeline uses Option A: a dedicated Space Evaluation__c junction object to track candidate spaces before any deal is in play. Only real deals (post-LOI) become Opportunities. Toggle between A and B using the button in the top right to compare architectures." data-tt-note="Use the toggle in the header to switch between Option A and Option B.">i</i>
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:#00897B; border-radius:50%;"></div>
-    Option B only
-    <i class="info-icon" data-tt-title="Option B — 2-Object Tenant Rep Path" data-tt-body="These nodes appear only when the Tenant Rep pipeline uses Option B: Opportunities are created for every space from the moment it enters the broker's evaluation book — the same pattern as Landlord Rep. Pre-LOI Opportunities must be filtered out of pipeline reports. Fewer custom objects, one mental model for brokers." data-tt-note="Use the toggle in the header to switch between Option A and Option B.">i</i>
-  </div>
+</div>
+
+<!-- ARCHITECTURE NOTES -->
+<div class="arch-notes-title">How the data model is structured — key design decisions</div>
+<div class="arch-notes-banner">
+  <div class="arch-note-item"><span><strong>Parent–child deals:</strong> Each broker-client relationship starts with a parent "agreement" deal. Individual property transactions sit underneath it as children — so everything stays connected and reportable together.</span></div>
+  <div class="arch-note-item"><span><strong>Contact spanning companies:</strong> A contact who works across multiple companies (e.g. a tenant with multiple subsidiaries) is linked to all of them — no duplicate records needed.</span></div>
+  <div class="arch-note-item"><span><strong>Ownership transfers:</strong> Properties are linked to their owner in a way that allows ownership to change hands without losing any historical data about the building.</span></div>
+  <div class="arch-note-item"><span><strong>Space counts roll up automatically:</strong> The number of vacant, live, and expiring spaces on any property is calculated automatically — no manual tallying required.</span></div>
+  <div class="arch-note-item"><span><strong>Contract hierarchy:</strong> When a deal closes, the executed lease is automatically filed under the original rep agreement — giving a complete history of every deal ever done under one client relationship.</span></div>
 </div>
 
 <!-- DIAGRAM -->
@@ -1467,12 +1514,14 @@ Option B creates Opportunities from the moment a space enters the broker's book 
         </ul>
       </div>
 
-      <div class="node standard">
-        <div class="node-type">Standard · Opp Team <i class="info-icon" data-tt-title="Commission Split — from Opp Team Members" data-tt-body="Commission splits trace from the Opportunity Team Member records on the Space Lease or Placement Opportunity. Each broker on the deal has a split percentage stored there. On Closed Won, the Commission Reconciler Agentforce agent reads those splits and compares against FACTS payout data — flagging any discrepancy before it becomes an accounts-payable issue. No separate custom Commission object needed for standard split scenarios.">i</i></div>
-        <div class="node-name">Commission Split</div>
+      <div class="node custom">
+        <div class="node-type">Custom · Commission__c <i class="info-icon" data-tt-title="Commission__c — Standalone Commission Record" data-tt-body="Each closed lease generates a Commission__c record that captures the full payout picture: which brokers are paid, what percentage each receives, the dollar amount calculated from the lease terms, and whether it has been reconciled against FACTS. Linking Commission__c directly to the Executed Lease (not just the Opportunity) means the payout is tied to the actual signed deal — the rent amount, the term, the effective date — not just a pipeline record. The Commission Reconciler agent reads this object before invoices go out.">i</i></div>
+        <div class="node-name">Commission__c</div>
         <ul class="node-fields">
-          <li><span class="key">Source:</span> Opp Team Members</li>
-          <li><span class="key">Broker:</span> User record (split %)</li>
+          <li><span class="key">Lookup:</span> Executed Lease Contract</li>
+          <li><span class="key">Lookup:</span> Broker (User)</li>
+          <li><span class="key">Split %:</span> per broker on deal</li>
+          <li><span class="key">Amount:</span> calculated from lease terms</li>
           <li><span class="key">Reconcile:</span> → FACTS integration</li>
           <li><span class="key">Agent check:</span> pre-invoice flag</li>
         </ul>
@@ -1490,57 +1539,57 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 <!-- /DIAGRAM -->
 
 <!-- FORK COMPARISON TABLE -->
-<div class="section-label">Tenant Rep Pipeline — Option Comparison</div>
+<div class="section-label">Tenant Rep Pipeline — Option A vs. Option B</div>
 <div class="decision-table-section">
   <div class="decision-table-header">
-    <span class="fork-dot dot-a"></span> Option A &nbsp;·&nbsp; 3 Objects
-    &nbsp;&nbsp;
-    <span class="fork-dot dot-b"></span> Option B &nbsp;·&nbsp; 2 Objects
+    <span class="fork-dot dot-a"></span> Option A &nbsp;·&nbsp; Track candidates separately, create a deal only when it's real
+    &nbsp;&nbsp;&nbsp;
+    <span class="fork-dot dot-b"></span> Option B &nbsp;·&nbsp; Create a deal record for every space from day one
   </div>
   <table class="comparison">
     <thead>
       <tr>
-        <th>Dimension</th>
-        <th><span class="tag-a">Option A</span> — Space Evaluation__c junction</th>
-        <th><span class="tag-b">Option B</span> — Opportunity per space from book-stage</th>
+        <th>What changes</th>
+        <th><span class="tag-a">Option A</span> — Separate tracking for candidates</th>
+        <th><span class="tag-b">Option B</span> — One deal record per space, from the start</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>Custom objects</td>
-        <td>Requirement__c + Space Evaluation__c + Placement Opp (3)</td>
-        <td>Requirement__c only (2)</td>
+        <td>How it works</td>
+        <td>The broker maintains a shortlist of candidate spaces. Only when a space gets an LOI (letter of intent) does it become a formal deal record. Everything before that lives in a separate "evaluation" list.</td>
+        <td>The moment a broker adds a space to their book, it becomes a deal record — just like the Landlord Rep workflow. Most of these will never turn into signed leases, but they're tracked the same way from the start.</td>
       </tr>
       <tr>
-        <td>Opp records created</td>
-        <td>1 per executed lease</td>
-        <td>1 per space evaluated (most never close)</td>
+        <td>Deal pipeline accuracy</td>
+        <td>Every deal in the pipeline is a real, active deal. Reports and dashboards show only serious transactions. <span class="tag-rec">cleaner</span></td>
+        <td>The pipeline will include many spaces that are just being evaluated — not yet real deals. Every report needs a permanent filter to exclude these, or the numbers look inflated.</td>
       </tr>
       <tr>
-        <td>Pipeline reports</td>
-        <td>No filter needed — only real deals in pipeline <span class="tag-rec">cleaner</span></td>
-        <td>Must filter out pre-LOI Opps on every pipeline view</td>
+        <td>What happens to spaces that don't move forward</td>
+        <td>Rejected spaces stay in the evaluation list with a reason recorded — useful for understanding why spaces were passed on.</td>
+        <td>Rejected spaces become closed-lost deal records. The history is preserved, but it adds volume to the deal database over time.</td>
       </tr>
       <tr>
-        <td>Dead deal data</td>
-        <td>Lives on Space Evaluation__c — survives, queryable</td>
-        <td>Lives on Opp — survives, but inflates object volume</td>
+        <td>Broker experience</td>
+        <td>Landlord Rep and Tenant Rep brokers work slightly differently — Tenant Rep has an extra "candidate list" step before deals are created.</td>
+        <td>Both broker types work exactly the same way. One workflow to learn, one set of training materials.</td>
       </tr>
       <tr>
-        <td>Consistency with Landlord Rep</td>
-        <td>Different pattern — two mental models for brokers</td>
-        <td>Same pattern as Landlord Rep — one mental model</td>
+        <td>AI agent readiness</td>
+        <td>AI agents get a clean, unambiguous list of real deals to work with. No extra filtering or guesswork required.</td>
+        <td>AI agents need to be told to ignore early-stage records when working with the deal pipeline — adds complexity to every agent built on top of this data.</td>
       </tr>
       <tr>
-        <td>Agentforce readiness</td>
-        <td>Space Eval is a clean signal object for agents (rejection reasons, status)</td>
-        <td>Agent must filter Opp records by stage to find pre-LOI activity</td>
+        <td>Build complexity</td>
+        <td>Slightly more to build upfront — one additional tracking list beyond what Landlord Rep requires.</td>
+        <td>Simpler to build — same structure as Landlord Rep, just applied to Tenant Rep as well.</td>
       </tr>
       <tr>
         <td>Recommendation</td>
         <td colspan="2">
-          <span class="tag-a">Option A is recommended</span> if pipeline report integrity and agent signal clarity are priorities.
-          <span class="tag-b">Option B</span> if minimizing custom objects and broker training consistency outweigh the filter overhead.
+          <span class="tag-a">Option A is recommended</span> — the cleaner pipeline and AI-ready signals are worth the small upfront build cost. The extra candidate-tracking step reflects how Tenant Rep brokers actually work in practice.
+          <br><br><span class="tag-b">Option B</span> makes sense if simplicity and a single broker training experience take priority over pipeline accuracy.
         </td>
       </tr>
     </tbody>
@@ -1548,31 +1597,35 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 </div>
 
 <!-- OPEN DESIGN DECISIONS -->
-<div class="section-label">Open Design Decisions — Must Resolve Before Build</div>
+<div class="section-label">Open Questions — Must Be Answered Before Build Begins</div>
 <div class="open-decisions">
   <div class="decision-card">
-    <div class="decision-q">Multiple landlords on one rep agreement?</div>
-    <div class="decision-a">Use Opportunity Contact Roles (Role = Landlord Signatory) for individual signers. If co-owner entities are common, add Account-to-Account relationship — Property__c lookup to Account becomes a many-to-many. <em>Decide: edge case or regular occurrence?</em></div>
+    <div class="decision-q">Can a single rep agreement cover multiple landlords?</div>
+    <div class="decision-a">This happens when a property has co-owners — e.g. two entities who jointly own a building and both need to sign. <em>Question to answer: Is this a common scenario at M&M, or a rare edge case? The answer changes how the data model handles signatory tracking.</em></div>
   </div>
   <div class="decision-card">
-    <div class="decision-q">Prospect vs. Lead unification via Data Cloud?</div>
-    <div class="decision-a">Use standard Lead for MMI.com inbound. Data Cloud resolves identity across Lead and Contact before conversion. Avoids custom Prospect object and its duplication problem. <em>Requires Data Cloud licensing decision.</em></div>
+    <div class="decision-q">How should new inbound leads from MMI.com be handled?</div>
+    <div class="decision-a">Someone fills out a form on MMI.com — are they a brand-new contact, or someone already in the system under a different name or company? <em>Question to answer: Will M&M license Salesforce Data Cloud to automatically detect and merge duplicates? Without it, deduplication is a manual process.</em></div>
   </div>
   <div class="decision-card">
-    <div class="decision-q">Rollup strategy: child Opp → parent Opp?</div>
-    <div class="decision-a">No native rollup across lookup relationships. Choose: Apex trigger (full control, maintenance cost) or declarative rollup tool (lower code, dependency). <em>Assign an owner before sprint 1.</em></div>
+    <div class="decision-q">How should the total deal value roll up to the parent relationship?</div>
+    <div class="decision-a">A broker's overall relationship with a client (the parent deal) should reflect the combined value of all the individual transactions underneath it. Salesforce doesn't do this automatically. <em>Question to answer: Who owns this requirement — technology team or business? The two available approaches have different build and maintenance costs.</em></div>
   </div>
   <div class="decision-card">
-    <div class="decision-q">Opportunity stage values by record type?</div>
-    <div class="decision-a">Landlord Rep: Opportunity → Proposal → Onboarding → Active Engagement → Agreement Complete. Space Lease: Pre-Launch → Listing → Negotiation → Closed. <em>Broker sign-off required — cannot rename after live data exists.</em></div>
+    <div class="decision-q">What are the official stage names for each deal type?</div>
+    <div class="decision-a">Deal stages (e.g. "In Negotiation," "Agreement Signed") drive reports, dashboards, and broker quotas. Once real deals are in the system, stage names cannot be changed without corrupting historical data. <em>Question to answer: Brokers need to review and sign off on the exact stage names before build begins — this is a business decision, not a technical one.</em></div>
   </div>
   <div class="decision-card">
-    <div class="decision-q">Sub-lease tenant terminology?</div>
-    <div class="decision-a">Structurally correct to call the sub-lessee "Tenant" on the Sub-Lease object. Resolve in the data dictionary before field labels are built to avoid permanent inconsistency in reports. <em>Decision, not architecture.</em></div>
+    <div class="decision-q">What do we call the sub-lease occupant?</div>
+    <div class="decision-a">When a tenant sub-leases their space to another party, that party needs a label in the system. "Sub-Tenant" is the most accurate term, but it may conflict with how M&M's brokers currently talk about these relationships. <em>Question to answer: What term do brokers use today? That term should be used in the system to avoid confusion.</em></div>
   </div>
   <div class="decision-card">
-    <div class="decision-q">Requirement__c self-lookup depth?</div>
-    <div class="decision-a">For "expand to 10 locations" scenarios, the self-lookup hierarchy must be validated against Salesforce's UI path rendering limits. <em>Test with realistic multi-market expansion data before GA.</em></div>
+    <div class="decision-q">How many locations can a single tenant requirement cover?</div>
+    <div class="decision-a">A tenant might say "find me 10 locations across the country" — each location is tracked as a sub-requirement under the main one. There are practical limits on how deep this hierarchy can go before the system slows down. <em>Question to answer: What is the realistic maximum number of locations a single Tenant Rep engagement covers? This needs to be tested before launch.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">How should candidate space scores roll up to the overall requirement?</div>
+    <div class="decision-a">When a broker evaluates 20 spaces against a tenant's requirement, the system should show a summary score — "8 of 20 spaces are a strong fit." Salesforce doesn't calculate this automatically across related records. <em>Question to answer: Who is responsible for building this calculation — and should it update in real time or on a schedule? The answer determines the approach and maintenance cost.</em></div>
   </div>
 </div>
 
@@ -1609,6 +1662,32 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   </div>
 </div>
 
+<!-- DATA CLOUD LAYER -->
+<div class="section-label">Data Cloud — Identity &amp; Harmonization Layer</div>
+<div class="agent-layer" style="border-color: #1565C0; background: rgba(21,101,192,0.07); margin-bottom: 16px;">
+  <div class="agent-layer-title" style="color: #64B5F6;">
+    <span style="background:#64B5F6;"></span>
+    Data Cloud — sits beneath the data model, ensures every record is clean and unified
+  </div>
+  <div class="agent-grid">
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Identity Resolution</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Runs continuously across inbound sources</div>
+      <div class="agent-reads">Matches a new MMI.com lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
+    </div>
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Engagement Signal Harmonization</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across Auto-Dialer, MMI.com, email</div>
+      <div class="agent-reads">Combines broker call activity, website visits, and email opens into a single engagement profile per Account and Contact. This is what the At-Risk Relationship agent reads — without harmonization, signals from different systems would be invisible to each other.</div>
+    </div>
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Clean Records into Agentforce</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Feeds deduplicated, governed data upward</div>
+      <div class="agent-reads">Agentforce agents are only as good as the data they read. Data Cloud ensures every Account, Contact, and Activity the agents act on is accurate and deduplicated — not a patchwork of duplicates from five different source systems.</div>
+    </div>
+  </div>
+</div>
+
 <!-- INTEGRATIONS -->
 <div class="section-label">System Integrations</div>
 <div class="integration-row">
@@ -1618,18 +1697,11 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   <div class="int-chip">MMI.com <span>Listing sync · Space__c Status = Live</span></div>
   <div class="int-chip">Auto-Dialer <span>Activity capture · Task logging · all pipeline stages</span></div>
   <div class="int-chip">Signage Vendor <span>Space IDs · tracking #s · recycled on Closed Won</span></div>
-  <div class="int-chip">Data Cloud <span>Lead + Contact identity resolution · MMI.com unification</span></div>
 </div>
 
 <!-- FOOTNOTE -->
 <div class="footnote">
-  <strong>Architecture notes:</strong>
-  Parent_Opportunity__c is a custom self-lookup on Opportunity — not SFDC-native. All pipeline reports referencing Space Lease or Placement Opportunities require record type filters to exclude pre-deal records from quota rollups.
-  AccountContactRelation (standard) handles contacts who span multiple companies.
-  Property__c uses a lookup (not master-detail) to Account so ownership can be transferred without data loss.
-  Space__c uses master-detail to Property__c to enable native rollup summaries (Units Live, Vacant, Expiring).
-  Contract hierarchy (Rep Agreement → Executed Lease) uses standard Salesforce Parent Contract lookup — no custom field required.
-  &nbsp;·&nbsp; Prepared for Marcus &amp; Millichap CTO review &nbsp;·&nbsp; August 2026
+  Prepared for Marcus &amp; Millichap CTO review &nbsp;·&nbsp; August 2026
 </div>
 
 </div><!-- /tab-model -->
@@ -1649,7 +1721,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 
     <div class="parker-quote">
       <p>"Why should you ever log into Salesforce again?"</p>
-      <cite>— Parker Harris, Co-Founder, Salesforce &nbsp;·&nbsp; JLL Partnership Announcement, 2025</cite>
+      <cite>— Parker Harris, Co-Founder, Salesforce</cite>
     </div>
   </div>
 
@@ -1886,8 +1958,8 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     </div>
     <div class="principle-card">
       <div class="principle-number">Principle 06</div>
-      <div class="principle-title">JLL has already validated this pattern at enterprise scale</div>
-      <div class="principle-body">JLL's FALCON system implements the identical architecture: Salesforce data foundation (Sales Cloud + Data Cloud) + FALCON AI + external system connections (Yardi, Microsoft). The Broker Command Center in Slack and Voice-to-CRM are live in production. M&M is not the first mover — it is a fast follower with less technical debt.</div>
+      <div class="principle-title">This pattern is already in production at enterprise scale</div>
+      <div class="principle-body">Leading commercial real estate firms have implemented this identical architecture — Salesforce data foundation, AI agent layer, and headless broker surfaces — with Broker Command Centers and Voice-to-CRM live in production. M&M is not the first mover; it is a fast follower with the advantage of learning from what has already shipped.</div>
     </div>
   </div>
 
