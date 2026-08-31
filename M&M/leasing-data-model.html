@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M&M Leasing — Salesforce Data Architecture</title>
+<style>
+  :root {
+    --bg: #0A1628;
+    --bg-lane: #0D1E38;
+    --bg-card: #112244;
+    --border: #1E3A5F;
+    --obj-standard: #1B6CA8;
+    --obj-standard-light: #2B8CD8;
+    --obj-custom: #00897B;
+    --obj-custom-light: #00BFA5;
+    --obj-junction: #B06000;
+    --obj-junction-light: #F5A623;
+    --obj-agent: #6A1B9A;
+    --obj-agent-light: #AB47BC;
+    --fork-a: #1565C0;
+    --fork-b: #00695C;
+    --fork-highlight: #E8445A;
+    --text-primary: #E8F0FE;
+    --text-secondary: #8BAFD4;
+    --text-muted: #4A6A8A;
+    --text-label: #C8D6E5;
+    --connector: #2A4A7A;
+    --connector-active: #4A8ACA;
+    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* TAB NAVIGATION */
+  .tab-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    background: #071020;
+  }
+  .tab-btn {
+    padding: 14px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: all 0.2s ease;
+    letter-spacing: 0.2px;
+  }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.tab-active {
+    color: var(--text-primary);
+    border-bottom-color: #2B8CD8;
+  }
+  .tab-btn.tab-active-headless {
+    color: var(--text-primary);
+    border-bottom-color: #AB47BC;
+  }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* HEADER */
+  .header {
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+  }
+  .header-left p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  /* TOGGLE */
+  .fork-toggle {
+    display: flex;
+    background: #071020;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .fork-toggle button {
+    padding: 8px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .fork-toggle button.active-a {
+    background: var(--fork-a);
+    color: #fff;
+  }
+  .fork-toggle button.active-b {
+    background: var(--fork-b);
+    color: #fff;
+  }
+  .fork-toggle .divider {
+    width: 1px;
+    background: var(--border);
+  }
+  .fork-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 20px;
+    padding: 14px 48px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* DIAGRAM AREA */
+  .diagram {
+    padding: 32px 48px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  /* SWIM LANES */
+  .lane {
+    display: flex;
+    align-items: stretch;
+    min-height: 140px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .lane:last-child { border-bottom: none; }
+
+  .lane-label {
+    width: 160px;
+    flex-shrink: 0;
+    padding: 20px 16px 20px 0;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 24px;
+  }
+  .lane-label-inner {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    writing-mode: horizontal-lr;
+    line-height: 1.4;
+  }
+
+  .lane-content {
+    flex: 1;
+    padding: 20px 0 20px 24px;
+    border-left: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+  }
+
+  /* NODES */
+  .node {
+    border-radius: 6px;
+    padding: 10px 14px;
+    min-width: 148px;
+    max-width: 210px;
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
+    cursor: default;
+    position: relative;
+  }
+  .node:hover { transform: translateY(-1px); }
+
+  .node.standard {
+    background: rgba(27, 108, 168, 0.12);
+    border-color: var(--obj-standard);
+  }
+  .node.standard .node-type { color: var(--obj-standard-light); }
+
+  .node.custom {
+    background: rgba(0, 137, 123, 0.12);
+    border-color: var(--obj-custom);
+  }
+  .node.custom .node-type { color: var(--obj-custom-light); }
+
+  .node.junction {
+    background: rgba(176, 96, 0, 0.12);
+    border-color: var(--obj-junction);
+  }
+  .node.junction .node-type { color: var(--obj-junction-light); }
+
+  .node.agent {
+    background: rgba(106, 27, 154, 0.15);
+    border-color: var(--obj-agent);
+  }
+  .node.agent .node-type { color: var(--obj-agent-light); }
+
+  .node.fork-a-node {
+    background: rgba(21, 101, 192, 0.18);
+    border-color: #1E88E5;
+    border-style: dashed;
+  }
+  .node.fork-a-node .node-type { color: #64B5F6; }
+
+  .node.fork-b-node {
+    background: rgba(0, 105, 92, 0.18);
+    border-color: #00897B;
+    border-style: dashed;
+  }
+  .node.fork-b-node .node-type { color: #4DB6AC; }
+
+  .node-type {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.9;
+  }
+  .node-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .node-fields {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .node-fields li {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .node-fields li span.key {
+    color: var(--text-muted);
+  }
+  .node-record-types {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .rt-chip {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.07);
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+  }
+
+  /* FORK SECTION */
+  .fork-section {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    transition: all 0.3s ease;
+  }
+  .fork-panel {
+    border-radius: 8px;
+    padding: 14px;
+    transition: all 0.3s ease;
+  }
+  .fork-panel.option-a {
+    border: 1px dashed #1E88E5;
+    background: rgba(21, 101, 192, 0.06);
+  }
+  .fork-panel.option-b {
+    border: 1px dashed #00897B;
+    background: rgba(0, 105, 92, 0.06);
+  }
+  .fork-panel-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .option-a .fork-panel-label { color: #64B5F6; }
+  .option-b .fork-panel-label { color: #4DB6AC; }
+  .fork-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .option-a .fork-badge { background: rgba(30,136,229,0.3); color: #90CAF9; }
+  .option-b .fork-badge { background: rgba(0,137,123,0.3); color: #80CBC4; }
+
+  .fork-panel .nodes-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* HIGHLIGHTED NODE (active path) */
+  .node.highlighted-a {
+    box-shadow: 0 0 0 2px #1E88E5;
+  }
+  .node.highlighted-b {
+    box-shadow: 0 0 0 2px #00897B;
+  }
+
+  /* ANNOTATION */
+  .annotation {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 6px 10px;
+    border-left: 2px solid var(--border);
+    margin-left: 4px;
+    max-width: 220px;
+    line-height: 1.5;
+    align-self: center;
+  }
+  .annotation strong {
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* RELATIONSHIP LINES via SVG overlay */
+  .svg-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  /* DECISION TABLE */
+  .decision-table-section {
+    margin: 0 48px 48px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .decision-table-header {
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .decision-table-header .fork-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .decision-table-header .dot-a { background: #1E88E5; }
+  .decision-table-header .dot-b { background: #00897B; }
+
+  table.comparison {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.comparison th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  table.comparison td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(30,58,95,0.5);
+    color: var(--text-label);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  table.comparison tr:last-child td { border-bottom: none; }
+  table.comparison td:first-child {
+    font-weight: 600;
+    color: var(--text-secondary);
+    width: 160px;
+  }
+  .tag-a { color: #64B5F6; font-weight: 700; }
+  .tag-b { color: #4DB6AC; font-weight: 700; }
+  .tag-rec {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(245,166,35,0.2);
+    color: #F5A623;
+    font-weight: 700;
+    margin-left: 6px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+
+  /* OPEN DECISIONS */
+  .open-decisions {
+    margin: 0 48px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .decision-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+  }
+  .decision-card .decision-q {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .decision-card .decision-a {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .decision-card .decision-a em {
+    color: #F5A623;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 48px;
+    margin-bottom: 12px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* AGENT LAYER */
+  .agent-layer {
+    margin: 0 48px 16px;
+    border: 1px solid var(--obj-agent);
+    border-radius: 8px;
+    background: rgba(106, 27, 154, 0.07);
+    padding: 20px 24px;
+  }
+  .agent-layer-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--obj-agent-light);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .agent-layer-title::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--obj-agent-light);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .agent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .agent-card {
+    background: rgba(106, 27, 154, 0.12);
+    border: 1px solid rgba(171, 71, 188, 0.3);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .agent-card .agent-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--obj-agent-light);
+    margin-bottom: 4px;
+  }
+  .agent-card .agent-trigger {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    font-family: var(--font-mono);
+  }
+  .agent-card .agent-reads {
+    font-size: 10px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-top: 5px;
+  }
+
+  /* INTEGRATION ROW */
+  .integration-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 0 48px 48px;
+  }
+  .int-chip {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.02);
+  }
+  .int-chip span {
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+
+  /* DIMMED STATE */
+  .dim { opacity: 0.25; transition: opacity 0.3s ease; }
+  .bright { opacity: 1; transition: opacity 0.3s ease; }
+
+  /* ARCH NOTES BANNER */
+  .arch-notes-banner {
+    margin: 0 48px 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px 24px;
+  }
+  .arch-note-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .arch-note-item::before {
+    content: '→';
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .arch-note-item strong {
+    color: var(--text-primary);
+  }
+  .arch-notes-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 48px 8px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .arch-notes-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* FOOTNOTE */
+  .footnote {
+    padding: 12px 48px 20px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+  }
+  .footnote strong { color: var(--text-secondary); }
+
+  /* TOOLTIP SYSTEM */
+  .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    font-size: 9px;
+    font-weight: 700;
+    font-style: normal;
+    cursor: help;
+    flex-shrink: 0;
+    margin-left: 5px;
+    vertical-align: middle;
+    line-height: 1;
+    transition: border-color 0.15s, color 0.15s;
+    font-family: var(--font-ui);
+    position: relative;
+    top: -1px;
+  }
+  .info-icon:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+
+  #tooltip {
+    position: fixed;
+    z-index: 9999;
+    max-width: 320px;
+    background: #0D1E38;
+    border: 1px solid #2A4A7A;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-label);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  #tooltip.visible { opacity: 1; }
+  #tooltip .tt-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+  }
+  #tooltip .tt-body {
+    color: var(--text-secondary);
+  }
+  #tooltip .tt-note {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ===================================================
+     TAB 2 — HEADLESS ARCHITECTURE
+     =================================================== */
+
+  .hl-page {
+    padding: 40px 48px 80px;
+  }
+
+  .hl-hero {
+    margin-bottom: 48px;
+  }
+  .hl-hero-kicker {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--obj-agent-light);
+    margin-bottom: 12px;
+  }
+  .hl-hero h2 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    color: var(--text-primary);
+    line-height: 1.15;
+    max-width: 680px;
+    margin-bottom: 16px;
+  }
+  .hl-hero h2 em {
+    font-style: normal;
+    color: var(--obj-agent-light);
+  }
+  .hl-hero-sub {
+    font-size: 15px;
+    color: var(--text-secondary);
+    max-width: 620px;
+    line-height: 1.6;
+  }
+  .parker-quote {
+    margin-top: 28px;
+    padding: 18px 24px;
+    border-left: 3px solid var(--obj-agent-light);
+    background: rgba(106, 27, 154, 0.08);
+    border-radius: 0 8px 8px 0;
+    max-width: 580px;
+  }
+  .parker-quote p {
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .parker-quote cite {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: normal;
+    letter-spacing: 0.3px;
+  }
+
+  /* PROBLEM / SOLUTION BANNER */
+  .ps-banner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    margin-bottom: 48px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .ps-col {
+    padding: 24px 28px;
+  }
+  .ps-col.problem { background: rgba(220, 50, 50, 0.06); }
+  .ps-col.solution { background: rgba(0, 137, 123, 0.08); }
+  .ps-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    background: rgba(255,255,255,0.02);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    font-size: 20px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .ps-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .ps-col.problem .ps-label { color: #EF5350; }
+  .ps-col.solution .ps-label { color: var(--obj-custom-light); }
+  .ps-col h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .ps-col p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch-section {
+    margin-bottom: 48px;
+  }
+  .arch-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .arch-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .arch-diagram {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* Top row: experience surfaces */
+  .arch-surfaces {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .surface-cell {
+    padding: 18px 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s;
+  }
+  .surface-cell:last-child { border-right: none; }
+  .surface-cell:hover { background: rgba(255,255,255,0.04); }
+  .surface-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .surface-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .surface-desc {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* Middle: API / Agent connective tissue */
+  .arch-middleware {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 16px 32px;
+    background: rgba(106, 27, 154, 0.07);
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid rgba(171, 71, 188, 0.3);
+    flex-wrap: wrap;
+  }
+  .middleware-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--obj-agent-light);
+    font-weight: 600;
+  }
+  .middleware-item::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--obj-agent-light);
+    animation: pulse 2s infinite;
+  }
+  .middleware-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--obj-agent-light);
+    margin: 0 8px;
+    opacity: 0.6;
+  }
+
+  /* Bottom: Salesforce data foundation */
+  .arch-foundation {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(27, 108, 168, 0.06);
+  }
+  .foundation-cell {
+    padding: 16px 18px;
+    border-right: 1px solid var(--border);
+  }
+  .foundation-cell:last-child { border-right: none; }
+  .foundation-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--obj-standard-light);
+    margin-bottom: 8px;
+  }
+  .foundation-objects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .fo-chip {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: rgba(27, 108, 168, 0.2);
+    border: 1px solid rgba(43, 140, 216, 0.3);
+    color: var(--obj-standard-light);
+    font-family: var(--font-mono);
+    letter-spacing: 0.2px;
+  }
+
+  /* SURFACE DETAIL CARDS */
+  .surface-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .surface-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 22px;
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .surface-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(43, 140, 216, 0.4);
+  }
+  .sc-icon {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .sc-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .sc-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .sc-objects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .sc-obj {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: rgba(0, 137, 123, 0.15);
+    border: 1px solid rgba(0, 191, 165, 0.3);
+    color: var(--obj-custom-light);
+    font-family: var(--font-mono);
+  }
+
+  /* AMBIENT CRM */
+  .ambient-section {
+    margin-bottom: 48px;
+  }
+  .ambient-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .ambient-step {
+    flex: 1;
+    padding: 20px 18px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .ambient-step:last-child { border-right: none; }
+  .ambient-step-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: rgba(43, 140, 216, 0.2);
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    line-height: 1;
+  }
+  .ambient-step-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .ambient-step-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .ambient-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.02);
+    border-right: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  /* PRINCIPLE CARDS */
+  .principle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .principle-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: rgba(255,255,255,0.02);
+  }
+  .principle-number {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .principle-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .principle-body {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* CALLOUT BOX */
+  .callout-box {
+    border: 1px solid rgba(171, 71, 188, 0.4);
+    border-radius: 8px;
+    padding: 22px 28px;
+    background: rgba(106, 27, 154, 0.07);
+    margin-bottom: 48px;
+  }
+  .callout-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--obj-agent-light);
+    margin-bottom: 10px;
+    letter-spacing: 0.2px;
+  }
+  .callout-box p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .callout-box strong { color: var(--text-primary); }
+
+</style>
+</head>
+<body>
+
+<!-- GLOBAL TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn tab-active" id="tab-btn-model" onclick="switchTab('model')">Data Model</button>
+  <button class="tab-btn" id="tab-btn-headless" onclick="switchTab('headless')">Headless UI</button>
+</div>
+
+<!-- ============================================================
+     TAB 1 — DATA MODEL
+     ============================================================ -->
+<div class="tab-pane active" id="tab-model">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>Marcus &amp; Millichap — Leasing Platform Data Architecture</h1>
+    <p>Scalable + Agentic Data Model &nbsp;·&nbsp; Personas: Landlord Rep + Tenant Rep</p>
+  </div>
+  <div class="header-right">
+    <div class="fork-toggle">
+      <button id="btn-a" class="active-a" onclick="setOption('A')">Option A &nbsp;·&nbsp; 3 Objects</button>
+      <div class="divider"></div>
+      <button id="btn-b" onclick="setOption('B')">Option B &nbsp;·&nbsp; 2 Objects</button>
+    </div>
+    <div class="fork-label">
+      Tenant Rep pipeline architecture decision
+      <i class="info-icon" style="margin-left:6px;" data-tt-title="Why are there two options?" data-tt-body="In Landlord Rep, the broker markets known spaces — one Opportunity per space is straightforward. In Tenant Rep, the broker evaluates 20–30 candidate spaces before the client shortlists one. The question is what Salesforce object holds that early evaluation activity.
+
+Option A uses a dedicated Space Evaluation object for pre-LOI activity, keeping Opportunities reserved for real deals. Cleaner pipeline, cleaner agent signals, but one extra custom object to build and maintain.
+
+Option B creates Opportunities from the moment a space enters the broker's book — same pattern as Landlord Rep, one mental model. The tradeoff: most of those Opportunities will never close, so every pipeline report needs a permanent filter to exclude pre-LOI records." data-tt-note="This is an open architectural decision that must be resolved before build begins.">i</i>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--obj-standard);"></div>
+    Standard Salesforce Object
+    <i class="info-icon" data-tt-title="Standard Salesforce Object" data-tt-body="Built-in objects that ship with every Salesforce org — Account, Contact, Opportunity, Contract, Lead. No custom development required. All standard features (reports, workflows, mobile, API) work natively on these objects.">i</i>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--obj-custom);"></div>
+    Custom Object
+    <i class="info-icon" data-tt-title="Custom Object" data-tt-body="Objects built specifically for M&M's leasing domain — Property__c, Space__c, Requirement__c, Lease Parties. These don't exist out of the box; they're created once during implementation and then behave identically to standard objects (reports, automation, API access all work the same way).">i</i>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--obj-junction);"></div>
+    Junction (Link) Record
+    <i class="info-icon" data-tt-title="Junction (Link) Record — What it means" data-tt-body="A junction record is a connector between two things that can each belong to many of the other. Example: one deal can involve multiple spaces, and one space can appear in multiple deals. Rather than forcing a one-to-one pairing and losing data, a junction record sits in the middle and tracks every valid combination — like a row in a spreadsheet that says 'Deal 42 involves Suite 100.' You can have as many of those rows as needed.">i</i>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--obj-agent);"></div>
+    Agentforce Layer
+    <i class="info-icon" data-tt-title="Agentforce Layer" data-tt-body="Salesforce's native AI agent infrastructure. Unlike third-party AI tools that need an integration layer to reach CRM data, Agentforce agents run inside the org — they read and act on Accounts, Opportunities, Leases, and Spaces directly, with no API calls, no latency, and no extra security surface to manage.">i</i>
+  </div>
+</div>
+
+<!-- ARCHITECTURE NOTES -->
+<div class="arch-notes-title">How the data model is structured — key design decisions</div>
+<div class="arch-notes-banner">
+  <div class="arch-note-item"><span><strong>Parent–child deals:</strong> Each broker-client relationship starts with a parent "agreement" deal. Individual property transactions sit underneath it as children — so everything stays connected and reportable together.</span></div>
+  <div class="arch-note-item"><span><strong>Contact spanning companies:</strong> A contact who works across multiple companies (e.g. a tenant with multiple subsidiaries) is linked to all of them — no duplicate records needed.</span></div>
+  <div class="arch-note-item"><span><strong>Ownership transfers:</strong> Properties are linked to their owner in a way that allows ownership to change hands without losing any historical data about the building.</span></div>
+  <div class="arch-note-item"><span><strong>Space counts roll up automatically:</strong> The number of vacant, live, and expiring spaces on any property is calculated automatically — no manual tallying required.</span></div>
+  <div class="arch-note-item"><span><strong>Contract hierarchy:</strong> When a deal closes, the executed lease is automatically filed under the original rep agreement — giving a complete history of every deal ever done under one client relationship.</span></div>
+</div>
+
+<!-- DIAGRAM -->
+<div class="diagram">
+
+  <!-- LANE 1: Accounts & Parties -->
+  <div class="lane">
+    <div class="lane-label"><div class="lane-label-inner">Accounts<br>&amp; Parties</div></div>
+    <div class="lane-content">
+
+      <div class="node standard">
+        <div class="node-type">Standard · Account</div>
+        <div class="node-name">Account</div>
+        <ul class="node-fields">
+          <li><span class="key">RT:</span> Owner / Tenant / Vendor</li>
+          <li><span class="key">Status:</span> Target → Qualified</li>
+          <li><span class="key">Hierarchy:</span> Parent Account</li>
+        </ul>
+        <div class="node-record-types">
+          <span class="rt-chip">Owner</span>
+          <span class="rt-chip">Tenant</span>
+          <span class="rt-chip">Vendor</span>
+        </div>
+      </div>
+
+      <div class="node standard">
+        <div class="node-type">Standard · Contact</div>
+        <div class="node-name">Contact</div>
+        <ul class="node-fields">
+          <li><span class="key">AccountId:</span> Primary employer</li>
+          <li><span class="key">ACR:</span> Multi-company spans</li>
+          <li><span class="key">Status:</span> Identified → Engaged</li>
+        </ul>
+      </div>
+
+      <div class="node standard">
+        <div class="node-type">Standard · User <i class="info-icon" data-tt-title="Broker — Salesforce User" data-tt-body="Every leasing broker in M&M is a Salesforce User with a Role (Landlord Rep Broker, Tenant Rep Broker) and a geographic Territory. This is the actor who drives Opportunities, owns Requirement__c records, and appears on Opportunity Team Members for commission splits. User records are also what Agentforce agents surface notifications to — the data flows from CRM to the broker, not through a separate portal.">i</i></div>
+        <div class="node-name">Broker (User)</div>
+        <ul class="node-fields">
+          <li><span class="key">Role:</span> Landlord Rep / Tenant Rep</li>
+          <li><span class="key">Territory:</span> Market assignment</li>
+          <li><span class="key">OppTeam:</span> Commission split role</li>
+        </ul>
+        <div class="node-record-types">
+          <span class="rt-chip">Landlord Rep</span>
+          <span class="rt-chip">Tenant Rep</span>
+        </div>
+      </div>
+
+      <div class="node standard" id="node-lead">
+        <div class="node-type">Standard · Lead <i class="info-icon" data-tt-title="Prospect vs. Lead — Open Decision" data-tt-body="The data model originally referenced a 'Prospect' object. The recommendation here is to use Salesforce's standard Lead instead. MMI.com inbound and auto-dialer contacts enter as Leads. Data Cloud resolves identity — matching a Lead against an existing Contact before conversion. Once qualified, the Lead is converted natively into an Account + Contact + Opportunity. This avoids building a custom Prospect object and the deduplication problem that comes with it." data-tt-note="Requires Data Cloud licensing decision. Must be resolved before build.">i</i></div>
+        <div class="node-name">Lead</div>
+        <ul class="node-fields">
+          <li><span class="key">Source:</span> MMI.com / Auto-dialer</li>
+          <li><span class="key">Status:</span> New → Qualified</li>
+          <li><span class="key">Convert →</span> Account + Contact</li>
+        </ul>
+      </div>
+
+      <div class="annotation">
+        <strong>Three Account record types</strong>
+        Owner (property owner), Tenant (occupier), and Vendor (signage, services). Vendor Account links to Property__c and Space__c for vendor relationship tracking — distinct from the Signage Vendor system integration.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LANE 2: Properties & Spaces -->
+  <div class="lane">
+    <div class="lane-label"><div class="lane-label-inner">Properties<br>&amp; Spaces</div></div>
+    <div class="lane-content">
+
+      <div class="node custom">
+        <div class="node-type">Custom · Property__c</div>
+        <div class="node-name">Property__c</div>
+        <ul class="node-fields">
+          <li><span class="key">Lookup:</span> Account (Owner)</li>
+          <li><span class="key">Lookup:</span> Account (Vendor — optional)</li>
+          <li><span class="key">Status:</span> Active / Archived</li>
+          <li><span class="key">Rollups:</span> Units Live / Vacant / Expiring</li>
+          <li><span class="key">Sync:</span> MMI.com listing</li>
+        </ul>
+      </div>
+
+      <div class="node custom">
+        <div class="node-type">Custom · Space__c</div>
+        <div class="node-name">Space__c</div>
+        <ul class="node-fields">
+          <li><span class="key">MD to:</span> Property__c</li>
+          <li><span class="key">Status:</span> Vacant → Leased</li>
+          <li><span class="key">SignageID:</span> Vendor tracking #</li>
+          <li><span class="key">ListingFields:</span> SF, rate, term</li>
+        </ul>
+      </div>
+
+      <div class="node standard">
+        <div class="node-type">Standard · Task/Activity <i class="info-icon" data-tt-title="Activity / Task — Engagement History" data-tt-body="Every broker call, email, and auto-dialer interaction logs as a standard Salesforce Task or Event against the Account or Contact. Auto-dialer integrates via the Activity Capture API — calls post as Tasks automatically, no manual logging required. This feeds the engagement-score logic for the At-Risk Relationship Agentforce agent (no Activity in 60 days = flag). Activity History reports pull directly from this standard object — no custom build required.">i</i></div>
+        <div class="node-name">Activity / Task</div>
+        <ul class="node-fields">
+          <li><span class="key">Related to:</span> Account / Contact / Opp</li>
+          <li><span class="key">Source:</span> Auto-Dialer / Manual</li>
+          <li><span class="key">Type:</span> Call / Email / Meeting</li>
+          <li><span class="key">Agent trigger:</span> 60d no activity</li>
+        </ul>
+      </div>
+
+      <div class="annotation">
+        <strong>Master-detail</strong>
+        Space__c is master-detail to Property__c — enables native rollup summaries. Ownership change on Property uses lookup, not MD, so it can be reassigned.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LANE 3: Engagement -->
+  <div class="lane">
+    <div class="lane-label"><div class="lane-label-inner">Engagement<br>(Rep Agreements)</div></div>
+    <div class="lane-content">
+
+      <div class="node standard">
+        <div class="node-type">Standard · Opportunity <i class="info-icon" data-tt-title="Parent Opportunity — Rep Agreement" data-tt-body="This Opportunity represents winning the right to represent the client — not a specific deal. For Landlord Rep, Closed Won means the landlord has signed the listing agreement. For Tenant Rep, Closed Won means the tenant has signed the rep agreement. All subsequent deal activity runs under child Opportunities that link back to this parent via a custom self-lookup field (Parent_Opportunity__c). Note: this parent-child relationship is custom — not native to Salesforce — and requires all pipeline reports to filter by record type.">i</i></div>
+        <div class="node-name">Parent Opportunity</div>
+        <ul class="node-fields">
+          <li><span class="key">RT:</span> Landlord Rep / Tenant Rep</li>
+          <li><span class="key">Account:</span> Landlord or Tenant Acc</li>
+          <li><span class="key">Owner:</span> Broker (User)</li>
+          <li><span class="key">Closed Won =</span> Agreement executed</li>
+        </ul>
+        <div class="node-record-types">
+          <span class="rt-chip">Landlord Rep</span>
+          <span class="rt-chip">Tenant Rep</span>
+        </div>
+      </div>
+
+      <div class="node junction">
+        <div class="node-type">Junction · Opp ↔ Property <i class="info-icon" data-tt-title="Opportunity Property — Junction Object" data-tt-body="A rep agreement can cover multiple properties — a landlord who owns three buildings signs one agreement covering all three. This junction object holds that relationship. Without it, you'd have to choose one property per Opportunity and lose the others. Each row in this junction links one Opportunity to one Property; a parent Opp with three buildings has three junction rows.">i</i></div>
+        <div class="node-name">Opportunity<br>Property</div>
+        <ul class="node-fields">
+          <li><span class="key">Lookup:</span> Opportunity</li>
+          <li><span class="key">Lookup:</span> Property__c</li>
+          <li>One parent Opp → many Properties</li>
+        </ul>
+      </div>
+
+      <div class="node standard">
+        <div class="node-type">Standard · Contract <i class="info-icon" data-tt-title="Rep Agreement Contract" data-tt-body="Created automatically when the Parent Opportunity reaches Closed Won. This is the master contract record covering the broker's right to represent the client. For Landlord Rep, this is the Exclusive Listing Agreement. For Tenant Rep, this is the Tenant Rep Agreement. Child contracts (Executed Leases) link back here via the Parent Contract lookup — creating a hierarchy: Rep Agreement → Executed Lease 1, Executed Lease 2, etc.">i</i></div>
+        <div class="node-name">Rep Agreement<br>Contract</div>
+        <ul class="node-fields">
+          <li><span class="key">AccountId:</span> Landlord / Tenant</li>
+          <li><span class="key">Created:</span> on Opp Closed Won</li>
+          <li><span class="key">RT:</span> Active Listing / Tenant Rep</li>
+          <li><span class="key">Children:</span> Executed Lease Contracts</li>
+        </ul>
+        <div class="node-record-types">
+          <span class="rt-chip">Active Listing</span>
+          <span class="rt-chip">Tenant Rep Agmt</span>
+        </div>
+      </div>
+
+      <div class="node standard" id="node-opp-team">
+        <div class="node-type">Standard · Opp Team <i class="info-icon" data-tt-title="Opportunity Team Members — Commission Splits" data-tt-body="Every leasing broker on a deal is added as an Opportunity Team Member with a role (Primary Broker, Co-Broker, Referral). The commission split percentage lives on this record. When the deal closes, the Commission Reconciler Agentforce agent reads these splits against the FACTS integration to flag any discrepancy before the invoice goes out. This is a standard Salesforce feature — no custom object needed for basic split tracking.">i</i></div>
+        <div class="node-name">Opp Team Members</div>
+        <ul class="node-fields">
+          <li><span class="key">User:</span> Broker record</li>
+          <li><span class="key">Role:</span> Primary / Co-Broker / Referral</li>
+          <li><span class="key">Split %:</span> Commission allocation</li>
+          <li>→ FACTS reconciliation on close</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LANE 4: Transaction Pipeline -->
+  <div class="lane">
+    <div class="lane-label"><div class="lane-label-inner">Transaction<br>Pipeline</div></div>
+    <div class="lane-content">
+
+      <div class="node standard">
+        <div class="node-type">Standard · Opportunity</div>
+        <div class="node-name">Space Lease Opp<br><small style="font-size:10px;font-weight:400;color:var(--text-muted)">(Landlord Rep)</small></div>
+        <ul class="node-fields">
+          <li><span class="key">RT:</span> Space Lease</li>
+          <li><span class="key">Parent:</span> Landlord Rep Opp</li>
+          <li><span class="key">Account:</span> Landlord Acc</li>
+          <li><span class="key">Stages:</span> Pre-Launch → Closed</li>
+        </ul>
+      </div>
+
+      <div class="node junction">
+        <div class="node-type">Junction · Opp ↔ Space <i class="info-icon" data-tt-title="Opportunity Space — Junction Object" data-tt-body="A single deal can involve multiple spaces — for example, a tenant leasing both Suite 100 and Suite 200 in the same building. This junction links Opportunities to the specific Space__c records being transacted, so each space can independently track status, LOI state, and ultimately flip to 'Leased' on Closed Won.">i</i></div>
+        <div class="node-name">Opportunity<br>Space</div>
+        <ul class="node-fields">
+          <li><span class="key">Lookup:</span> Opportunity</li>
+          <li><span class="key">Lookup:</span> Space__c</li>
+          <li>One Opp → multiple Spaces</li>
+        </ul>
+      </div>
+
+      <div class="node standard">
+        <div class="node-type">Standard · Opp Contact Role</div>
+        <div class="node-name">Contact Roles</div>
+        <ul class="node-fields">
+          <li><span class="key">Roles:</span> Landlord / Tenant</li>
+          <li>Prospect converts → Contact here</li>
+        </ul>
+      </div>
+
+      <!-- FORK SECTION -->
+      <div class="fork-section" id="fork-section">
+
+        <div class="fork-panel option-a" id="panel-a">
+          <div class="fork-panel-label">
+            <span class="fork-badge">A</span>
+            3-Object Path — Tenant Rep
+            <i class="info-icon" data-tt-title="Option A: Space Evaluation__c" data-tt-body="Tenant Rep brokers evaluate 20–30 spaces before a client shortlists one. Option A tracks that activity on a dedicated Space Evaluation__c junction object (one row per client × space evaluated). Only when a space is shortlisted and an LOI goes out does a Placement Opportunity get created. Result: every Opportunity in the system represents a real, active deal — pipeline reports need no filtering." data-tt-note="Recommended if pipeline integrity and clean Agentforce signals are the priority.">i</i>
+          </div>
+          <div class="nodes-row">
+            <div class="node custom fork-a-node">
+              <div class="node-type">Custom · Requirement__c</div>
+              <div class="node-name">Requirement__c</div>
+              <ul class="node-fields">
+                <li><span class="key">Lookup:</span> Contract (Tenant Rep)</li>
+                <li><span class="key">Self-lookup:</span> Parent Requirement</li>
+                <li><span class="key">Fields:</span> Market, criteria, count, status</li>
+              </ul>
+            </div>
+            <div class="node junction fork-a-node">
+              <div class="node-type">Junction · Space Eval</div>
+              <div class="node-name">Space Evaluation__c</div>
+              <ul class="node-fields">
+                <li><span class="key">Lookup:</span> Requirement__c</li>
+                <li><span class="key">Lookup:</span> Space__c</li>
+                <li><span class="key">Status:</span> In Book → Toured</li>
+                <li><span class="key">Rejection:</span> reason field</li>
+              </ul>
+            </div>
+            <div class="node standard fork-a-node">
+              <div class="node-type">Standard · Opportunity</div>
+              <div class="node-name">Placement Opp</div>
+              <ul class="node-fields">
+                <li><span class="key">RT:</span> Placement</li>
+                <li><span class="key">Created at:</span> LOI / shortlist</li>
+                <li><span class="key">Stages:</span> LOI → Closed Won</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="fork-panel option-b" id="panel-b" style="display:none;">
+          <div class="fork-panel-label">
+            <span class="fork-badge">B</span>
+            2-Object Path — Tenant Rep
+            <i class="info-icon" data-tt-title="Option B: Opportunity per Space" data-tt-body="Option B mirrors Landlord Rep exactly: create one Opportunity per space from the moment it enters the broker's evaluation book. No new custom objects — Requirement__c is the only addition. The tradeoff: most of these Opportunities will never close. Every pipeline report, quota rollup, and dashboard tile must permanently filter out pre-LOI records. One mental model for brokers across both personas." data-tt-note="Recommended if minimizing custom objects and broker training consistency outweigh report filter overhead.">i</i>
+          </div>
+          <div class="nodes-row">
+            <div class="node custom fork-b-node">
+              <div class="node-type">Custom · Requirement__c</div>
+              <div class="node-name">Requirement__c</div>
+              <ul class="node-fields">
+                <li><span class="key">Lookup:</span> Contract (Tenant Rep)</li>
+                <li><span class="key">Self-lookup:</span> Parent Requirement</li>
+                <li><span class="key">Fields:</span> Market, criteria, count, status</li>
+              </ul>
+            </div>
+            <div class="node standard fork-b-node">
+              <div class="node-type">Standard · Opportunity</div>
+              <div class="node-name">Space Opp (per space)</div>
+              <ul class="node-fields">
+                <li><span class="key">RT:</span> Space Lease</li>
+                <li><span class="key">Created at:</span> market evaluation</li>
+                <li><span class="key">Forecast:</span> excluded until LOI</li>
+                <li><span class="key">Stages:</span> In Book → Closed Won</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LANE 5: Executed Lease & Commissions -->
+  <div class="lane">
+    <div class="lane-label"><div class="lane-label-inner">Executed<br>Lease &amp;<br>Commissions</div></div>
+    <div class="lane-content">
+
+      <div class="node standard">
+        <div class="node-type">Standard · Contract <i class="info-icon" data-tt-title="Executed Lease Contract" data-tt-body="Created automatically on Space Lease or Placement Opportunity Closed Won. This is a child Contract — it links to the parent Rep Agreement Contract via Salesforce's native Parent Contract lookup, creating a two-level hierarchy: Rep Agreement → Executed Lease(s). The executed lease holds all commercial terms: start/end dates, rent, options, escalations. This is also the record Lease Expiry agents monitor.">i</i></div>
+        <div class="node-name">Executed Lease</div>
+        <ul class="node-fields">
+          <li><span class="key">Parent Contract:</span> Rep Agreement</li>
+          <li><span class="key">Created:</span> on Space Lease Closed Won</li>
+          <li><span class="key">RT:</span> Executed Lease</li>
+          <li><span class="key">Terms:</span> Start / End / Rent / Options</li>
+        </ul>
+      </div>
+
+      <div class="node custom">
+        <div class="node-type">Custom · Lease Parties</div>
+        <div class="node-name">Lease Parties</div>
+        <ul class="node-fields">
+          <li><span class="key">Lookup:</span> Executed Lease Contract</li>
+          <li><span class="key">Role:</span> Landlord / Tenant</li>
+          <li><span class="key">Legal Entity Name</span></li>
+          <li><span class="key">Lookup:</span> Account + Contact</li>
+        </ul>
+      </div>
+
+      <div class="node custom">
+        <div class="node-type">Custom · Sub-Lease</div>
+        <div class="node-name">Sub-Lease</div>
+        <ul class="node-fields">
+          <li><span class="key">Lookup:</span> Parent Lease Contract</li>
+          <li><span class="key">Parties:</span> Sub-Landlord / Sub-Tenant</li>
+          <li><span class="key">Lookup:</span> Account + Contact</li>
+        </ul>
+      </div>
+
+      <div class="node custom">
+        <div class="node-type">Custom · Commission__c <i class="info-icon" data-tt-title="Commission__c — Standalone Commission Record" data-tt-body="Each closed lease generates a Commission__c record that captures the full payout picture: which brokers are paid, what percentage each receives, the dollar amount calculated from the lease terms, and whether it has been reconciled against FACTS. Linking Commission__c directly to the Executed Lease (not just the Opportunity) means the payout is tied to the actual signed deal — the rent amount, the term, the effective date — not just a pipeline record. The Commission Reconciler agent reads this object before invoices go out.">i</i></div>
+        <div class="node-name">Commission__c</div>
+        <ul class="node-fields">
+          <li><span class="key">Lookup:</span> Executed Lease Contract</li>
+          <li><span class="key">Lookup:</span> Broker (User)</li>
+          <li><span class="key">Split %:</span> per broker on deal</li>
+          <li><span class="key">Amount:</span> calculated from lease terms</li>
+          <li><span class="key">Reconcile:</span> → FACTS integration</li>
+          <li><span class="key">Agent check:</span> pre-invoice flag</li>
+        </ul>
+      </div>
+
+      <div class="annotation">
+        <strong>Contract hierarchy</strong>
+        Rep Agreement Contract → Executed Lease Contract via Parent Contract lookup. Native Salesforce — no custom field needed. Gives a full history per client: every lease ever closed under one rep agreement.
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<!-- /DIAGRAM -->
+
+<!-- FORK COMPARISON TABLE -->
+<div class="section-label">Tenant Rep Pipeline — Option A vs. Option B</div>
+<div class="decision-table-section">
+  <div class="decision-table-header">
+    <span class="fork-dot dot-a"></span> Option A &nbsp;·&nbsp; Track candidates separately, create a deal only when it's real
+    &nbsp;&nbsp;&nbsp;
+    <span class="fork-dot dot-b"></span> Option B &nbsp;·&nbsp; Create a deal record for every space from day one
+  </div>
+  <table class="comparison">
+    <thead>
+      <tr>
+        <th>What changes</th>
+        <th><span class="tag-a">Option A</span> — Separate tracking for candidates</th>
+        <th><span class="tag-b">Option B</span> — One deal record per space, from the start</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>How it works</td>
+        <td>The broker maintains a shortlist of candidate spaces. Only when a space gets an LOI (letter of intent) does it become a formal deal record. Everything before that lives in a separate "evaluation" list.</td>
+        <td>The moment a broker adds a space to their book, it becomes a deal record — just like the Landlord Rep workflow. Most of these will never turn into signed leases, but they're tracked the same way from the start.</td>
+      </tr>
+      <tr>
+        <td>Deal pipeline accuracy</td>
+        <td>Every deal in the pipeline is a real, active deal. Reports and dashboards show only serious transactions. <span class="tag-rec">cleaner</span></td>
+        <td>The pipeline will include many spaces that are just being evaluated — not yet real deals. Every report needs a permanent filter to exclude these, or the numbers look inflated.</td>
+      </tr>
+      <tr>
+        <td>What happens to spaces that don't move forward</td>
+        <td>Rejected spaces stay in the evaluation list with a reason recorded — useful for understanding why spaces were passed on.</td>
+        <td>Rejected spaces become closed-lost deal records. The history is preserved, but it adds volume to the deal database over time.</td>
+      </tr>
+      <tr>
+        <td>Broker experience</td>
+        <td>Landlord Rep and Tenant Rep brokers work slightly differently — Tenant Rep has an extra "candidate list" step before deals are created.</td>
+        <td>Both broker types work exactly the same way. One workflow to learn, one set of training materials.</td>
+      </tr>
+      <tr>
+        <td>AI agent readiness</td>
+        <td>AI agents get a clean, unambiguous list of real deals to work with. No extra filtering or guesswork required.</td>
+        <td>AI agents need to be told to ignore early-stage records when working with the deal pipeline — adds complexity to every agent built on top of this data.</td>
+      </tr>
+      <tr>
+        <td>Build complexity</td>
+        <td>Slightly more to build upfront — one additional tracking list beyond what Landlord Rep requires.</td>
+        <td>Simpler to build — same structure as Landlord Rep, just applied to Tenant Rep as well.</td>
+      </tr>
+      <tr>
+        <td>Recommendation</td>
+        <td colspan="2">
+          <span class="tag-a">Option A is recommended</span> — the cleaner pipeline and AI-ready signals are worth the small upfront build cost. The extra candidate-tracking step reflects how Tenant Rep brokers actually work in practice.
+          <br><br><span class="tag-b">Option B</span> makes sense if simplicity and a single broker training experience take priority over pipeline accuracy.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- OPEN DESIGN DECISIONS -->
+<div class="section-label">Open Questions — Must Be Answered Before Build Begins</div>
+<div class="open-decisions">
+  <div class="decision-card">
+    <div class="decision-q">Can a single rep agreement cover multiple landlords?</div>
+    <div class="decision-a">This happens when a property has co-owners — e.g. two entities who jointly own a building and both need to sign. <em>Question to answer: Is this a common scenario at M&M, or a rare edge case? The answer changes how the data model handles signatory tracking.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">How should new inbound leads from MMI.com be handled?</div>
+    <div class="decision-a">Someone fills out a form on MMI.com — are they a brand-new contact, or someone already in the system under a different name or company? <em>Question to answer: Will M&M license Salesforce Data Cloud to automatically detect and merge duplicates? Without it, deduplication is a manual process.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">How should the total deal value roll up to the parent relationship?</div>
+    <div class="decision-a">A broker's overall relationship with a client (the parent deal) should reflect the combined value of all the individual transactions underneath it. Salesforce doesn't do this automatically. <em>Question to answer: Who owns this requirement — technology team or business? The two available approaches have different build and maintenance costs.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">What are the official stage names for each deal type?</div>
+    <div class="decision-a">Deal stages (e.g. "In Negotiation," "Agreement Signed") drive reports, dashboards, and broker quotas. Once real deals are in the system, stage names cannot be changed without corrupting historical data. <em>Question to answer: Brokers need to review and sign off on the exact stage names before build begins — this is a business decision, not a technical one.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">What do we call the sub-lease occupant?</div>
+    <div class="decision-a">When a tenant sub-leases their space to another party, that party needs a label in the system. "Sub-Tenant" is the most accurate term, but it may conflict with how M&M's brokers currently talk about these relationships. <em>Question to answer: What term do brokers use today? That term should be used in the system to avoid confusion.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">How many locations can a single tenant requirement cover?</div>
+    <div class="decision-a">A tenant might say "find me 10 locations across the country" — each location is tracked as a sub-requirement under the main one. There are practical limits on how deep this hierarchy can go before the system slows down. <em>Question to answer: What is the realistic maximum number of locations a single Tenant Rep engagement covers? This needs to be tested before launch.</em></div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-q">How should candidate space scores roll up to the overall requirement?</div>
+    <div class="decision-a">When a broker evaluates 20 spaces against a tenant's requirement, the system should show a summary score — "8 of 20 spaces are a strong fit." Salesforce doesn't calculate this automatically across related records. <em>Question to answer: Who is responsible for building this calculation — and should it update in real time or on a schedule? The answer determines the approach and maintenance cost.</em></div>
+  </div>
+</div>
+
+<!-- AGENTFORCE LAYER -->
+<div class="section-label">Agentforce Layer — Native Agent Use Cases</div>
+<div class="agent-layer">
+  <div class="agent-layer-title">Agentforce — reads from the same object model, no integration layer</div>
+  <div class="agent-grid">
+    <div class="agent-card">
+      <div class="agent-name">At-Risk Relationship Agent</div>
+      <div class="agent-trigger">Trigger: Account engagement score drops / no Activity in 60d</div>
+      <div class="agent-reads">Reads: Account, Contact, Activity/Task History, Opportunity history → surfaces to broker with context</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">Requirement Matcher</div>
+      <div class="agent-trigger">Trigger: New Space__c Status = Vacant</div>
+      <div class="agent-reads">Reads: Requirement__c criteria, Space__c listing fields, Property__c market data → scores fit, notifies tenant rep brokers</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">LOI Drafter</div>
+      <div class="agent-trigger">Trigger: Opportunity Stage = LOI</div>
+      <div class="agent-reads">Reads: Space__c terms, prior Executed Lease Contracts for similar spaces, Contact Roles → drafts via Luminance</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">Lease Expiry Outreach</div>
+      <div class="agent-trigger">Trigger: Executed Lease end date milestone (12mo, 6mo, 3mo)</div>
+      <div class="agent-reads">Reads: Lease Contract, Tenant Account, Space__c → enrolls in renewal campaign, alerts broker</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">Commission Reconciler</div>
+      <div class="agent-trigger">Trigger: Space Lease Opp Closed Won</div>
+      <div class="agent-reads">Reads: Executed Lease terms, Opp Team Members (splits), FACTS integration → flags discrepancies before invoice</div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA CLOUD LAYER -->
+<div class="section-label">Data Cloud — Identity &amp; Harmonization Layer</div>
+<div class="agent-layer" style="border-color: #1565C0; background: rgba(21,101,192,0.07); margin-bottom: 16px;">
+  <div class="agent-layer-title" style="color: #64B5F6;">
+    <span style="background:#64B5F6;"></span>
+    Data Cloud — sits beneath the data model, ensures every record is clean and unified
+  </div>
+  <div class="agent-grid">
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Identity Resolution</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Runs continuously across inbound sources</div>
+      <div class="agent-reads">Matches a new MMI.com lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
+    </div>
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Engagement Signal Harmonization</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across Auto-Dialer, MMI.com, email</div>
+      <div class="agent-reads">Combines broker call activity, website visits, and email opens into a single engagement profile per Account and Contact. This is what the At-Risk Relationship agent reads — without harmonization, signals from different systems would be invisible to each other.</div>
+    </div>
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Clean Records into Agentforce</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Feeds deduplicated, governed data upward</div>
+      <div class="agent-reads">Agentforce agents are only as good as the data they read. Data Cloud ensures every Account, Contact, and Activity the agents act on is accurate and deduplicated — not a patchwork of duplicates from five different source systems.</div>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGRATIONS -->
+<div class="section-label">System Integrations</div>
+<div class="integration-row">
+  <div class="int-chip">Luminance <span>LOI + Lease drafting · e-signature prep</span></div>
+  <div class="int-chip">DocuSign <span>Contract execution · e-signature</span></div>
+  <div class="int-chip">FACTS <span>Commission payments · reconciliation</span></div>
+  <div class="int-chip">MMI.com <span>Listing sync · Space__c Status = Live</span></div>
+  <div class="int-chip">Auto-Dialer <span>Activity capture · Task logging · all pipeline stages</span></div>
+  <div class="int-chip">Signage Vendor <span>Space IDs · tracking #s · recycled on Closed Won</span></div>
+</div>
+
+<!-- FOOTNOTE -->
+<div class="footnote">
+  Prepared for Marcus &amp; Millichap CTO review &nbsp;·&nbsp; August 2026
+</div>
+
+</div><!-- /tab-model -->
+
+
+<!-- ============================================================
+     TAB 2 — HEADLESS / SALESFORCE AS BACKEND
+     ============================================================ -->
+<div class="tab-pane" id="tab-headless">
+<div class="hl-page">
+
+  <!-- HERO -->
+  <div class="hl-hero">
+    <div class="hl-hero-kicker">Salesforce Headless 360 · Agentic Architecture</div>
+    <h2>Build the data model once.<br>Surface it <em>everywhere brokers work.</em></h2>
+    <p class="hl-hero-sub">The M&M leasing data model is not a CRM project. It is a data foundation — one source of truth for every Property, Space, Opportunity, and Lease. The question is not what lives in Salesforce. It is where brokers interact with it.</p>
+
+    <div class="parker-quote">
+      <p>"Why should you ever log into Salesforce again?"</p>
+      <cite>— Parker Harris, Co-Founder, Salesforce</cite>
+    </div>
+  </div>
+
+  <!-- PROBLEM / SOLUTION -->
+  <div class="ps-banner">
+    <div class="ps-col problem">
+      <div class="ps-label">The problem</div>
+      <h3>Brokers will never use CRM.</h3>
+      <p>Every CRM adoption study in commercial real estate reaches the same conclusion: brokers are revenue-generating principals, not data-entry clerks. Asking them to log into a UI to update deal stages, log calls, or mark spaces leased is a losing proposition — adoption stays at 20–30%, the data rots, and the platform fails.</p>
+    </div>
+    <div class="ps-divider">→</div>
+    <div class="ps-col solution">
+      <div class="ps-label">The solution</div>
+      <h3>Brokers never have to use CRM.</h3>
+      <p>Salesforce Headless 360 decouples the data model from the interface. The rich object model M&M builds — Accounts, Properties, Spaces, Leases, Commission Splits — becomes a back-end API and AI context layer. Brokers interact with it through whatever surface they already live in: Microsoft Teams, Outlook, a voice call, a GPT-powered command interface, or a custom MMI.com broker portal.</p>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE DIAGRAM -->
+  <div class="arch-section">
+    <div class="arch-title">Headless 360 — Experience Layer over Salesforce Data Foundation</div>
+
+    <div class="arch-diagram">
+
+      <!-- ROW 1: Experience surfaces -->
+      <div class="arch-surfaces">
+        <div class="surface-cell">
+          <span class="surface-icon">💬</span>
+          <div class="surface-name">Teams / Slack</div>
+          <div class="surface-desc">AgenticOS Broker Command Center — deal updates, alerts, and actions without leaving the chat app</div>
+        </div>
+        <div class="surface-cell">
+          <span class="surface-icon">📧</span>
+          <div class="surface-name">Outlook</div>
+          <div class="surface-desc">Einstein for Outlook — AI reads email context, suggests CRM updates, logs automatically on send</div>
+        </div>
+        <div class="surface-cell">
+          <span class="surface-icon">🎤</span>
+          <div class="surface-name">Voice / Phone</div>
+          <div class="surface-desc">Voice-to-CRM — auto-dialer calls transcribed, summarized, and logged as Activities without broker input</div>
+        </div>
+        <div class="surface-cell">
+          <span class="surface-icon">🤖</span>
+          <div class="surface-name">GPT / AI Chat</div>
+          <div class="surface-desc">Natural language queries against Salesforce data — "what spaces match this tenant's requirement?"</div>
+        </div>
+        <div class="surface-cell">
+          <span class="surface-icon">🌐</span>
+          <div class="surface-name">MMI.com Portal</div>
+          <div class="surface-desc">Custom broker portal — Experience Cloud or bespoke React app, powered by Salesforce API</div>
+        </div>
+      </div>
+
+      <!-- ROW 2: Agentforce middleware -->
+      <div class="arch-middleware">
+        <span class="middleware-label">Agentforce + APIs</span>
+        <div class="middleware-item">Ambient CRM writes on broker's behalf</div>
+        <div class="middleware-item">Broker approves, not inputs</div>
+        <div class="middleware-item">Agentforce reads &amp; acts on object model</div>
+        <div class="middleware-item">REST / GraphQL / MuleSoft for external surfaces</div>
+      </div>
+
+      <!-- ROW 3: Salesforce data foundation -->
+      <div class="arch-foundation">
+        <div class="foundation-cell">
+          <div class="foundation-label">Parties</div>
+          <div class="foundation-objects">
+            <span class="fo-chip">Account</span>
+            <span class="fo-chip">Contact</span>
+            <span class="fo-chip">User (Broker)</span>
+            <span class="fo-chip">Lead</span>
+          </div>
+        </div>
+        <div class="foundation-cell">
+          <div class="foundation-label">Properties</div>
+          <div class="foundation-objects">
+            <span class="fo-chip">Property__c</span>
+            <span class="fo-chip">Space__c</span>
+            <span class="fo-chip">Activity/Task</span>
+          </div>
+        </div>
+        <div class="foundation-cell">
+          <div class="foundation-label">Pipeline</div>
+          <div class="foundation-objects">
+            <span class="fo-chip">Opportunity</span>
+            <span class="fo-chip">Requirement__c</span>
+            <span class="fo-chip">Space Eval__c</span>
+            <span class="fo-chip">Opp Team</span>
+          </div>
+        </div>
+        <div class="foundation-cell">
+          <div class="foundation-label">Leases &amp; Commissions</div>
+          <div class="foundation-objects">
+            <span class="fo-chip">Contract</span>
+            <span class="fo-chip">Lease Parties</span>
+            <span class="fo-chip">Sub-Lease</span>
+            <span class="fo-chip">Commission Split</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SURFACE DETAIL CARDS -->
+  <div class="arch-title">Experience Surfaces — What Each Looks Like in Practice</div>
+  <div class="surface-cards">
+
+    <div class="surface-card">
+      <span class="sc-icon">💬</span>
+      <div class="sc-name">AgenticOS Broker Command Center</div>
+      <div class="sc-desc">A Slack or Teams bot powered by Agentforce. Brokers ask questions and approve actions in natural language — "close the 5th floor deal at 222 Main" updates the Opportunity, fires the Contract creation Flow, and posts the space listing change to MMI.com, all from a single message. Nothing writes to Salesforce without broker approval.</div>
+      <div class="sc-objects">
+        <span class="sc-obj">Opportunity</span>
+        <span class="sc-obj">Space__c</span>
+        <span class="sc-obj">Contract</span>
+        <span class="sc-obj">Activity</span>
+      </div>
+    </div>
+
+    <div class="surface-card">
+      <span class="sc-icon">🎤</span>
+      <div class="sc-name">Voice-to-CRM (Ambient CRM)</div>
+      <div class="sc-desc">Auto-dialer calls are transcribed in real time. Agentforce reads the transcript and proposes: log a Task, update Opportunity stage, flag a new Requirement, or create a follow-up. The broker sees a single approval card — one tap, CRM is updated. The data model records the broker's work without the broker's manual effort.</div>
+      <div class="sc-objects">
+        <span class="sc-obj">Task / Activity</span>
+        <span class="sc-obj">Opportunity</span>
+        <span class="sc-obj">Requirement__c</span>
+        <span class="sc-obj">Contact</span>
+      </div>
+    </div>
+
+    <div class="surface-card">
+      <span class="sc-icon">📧</span>
+      <div class="sc-name">Einstein for Outlook</div>
+      <div class="sc-desc">Email thread context is read by Agentforce in the Outlook sidebar. Relevant Opportunity, Contact, and Space records surface automatically. Draft replies pull in current lease terms, expiry dates, and space availability from Salesforce. Replies log against the Contact and Opportunity without leaving Outlook.</div>
+      <div class="sc-objects">
+        <span class="sc-obj">Contact</span>
+        <span class="sc-obj">Opportunity</span>
+        <span class="sc-obj">Space__c</span>
+        <span class="sc-obj">Contract</span>
+      </div>
+    </div>
+
+    <div class="surface-card">
+      <span class="sc-icon">🤖</span>
+      <div class="sc-name">GPT / AI Natural Language Interface</div>
+      <div class="sc-desc">A broker types "which of my Tenant Rep clients have a lease expiring in the next 12 months and no renewal discussion open?" and gets an answer from live Salesforce data in seconds — without a report, a login, or a filter. Powered by the M&M data model as an API context source via Agentforce Data Cloud connections.</div>
+      <div class="sc-objects">
+        <span class="sc-obj">Contract</span>
+        <span class="sc-obj">Opportunity</span>
+        <span class="sc-obj">Account</span>
+        <span class="sc-obj">Requirement__c</span>
+      </div>
+    </div>
+
+    <div class="surface-card">
+      <span class="sc-icon">🌐</span>
+      <div class="sc-name">Custom MMI.com Broker Portal</div>
+      <div class="sc-desc">A custom web application — built with React or Salesforce Experience Cloud — that surfaces the Salesforce object model in an M&M-branded interface. The broker sees their pipeline, property listings, and tenant requirements in a purpose-built UX. Salesforce is the API server; the portal is the design system. No Salesforce Lightning UI required.</div>
+      <div class="sc-objects">
+        <span class="sc-obj">Opportunity</span>
+        <span class="sc-obj">Property__c</span>
+        <span class="sc-obj">Space__c</span>
+        <span class="sc-obj">Requirement__c</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AMBIENT CRM FLOW -->
+  <div class="ambient-section">
+    <div class="arch-title">Ambient CRM — How a Broker Call Becomes a CRM Record</div>
+    <div class="ambient-flow">
+      <div class="ambient-step">
+        <div class="ambient-step-num">01</div>
+        <div class="ambient-step-title">Broker makes a call</div>
+        <div class="ambient-step-desc">Auto-dialer connects. Broker talks to a landlord about a vacant space. No logging, no typing — the call is recorded and transcribed in real time.</div>
+      </div>
+      <div class="ambient-arrow">→</div>
+      <div class="ambient-step">
+        <div class="ambient-step-num">02</div>
+        <div class="ambient-step-title">Agentforce reads transcript</div>
+        <div class="ambient-step-desc">Within seconds, Agentforce identifies the Account, Contact, and Space__c mentioned. It drafts: a Task record, an Opportunity stage update, and a note — pre-filled from the conversation.</div>
+      </div>
+      <div class="ambient-arrow">→</div>
+      <div class="ambient-step">
+        <div class="ambient-step-num">03</div>
+        <div class="ambient-step-title">Broker sees approval card</div>
+        <div class="ambient-step-desc">A push notification or Teams message shows a single approval card: "Log this call? Update stage to Negotiation?" — with one-tap approve or edit.</div>
+      </div>
+      <div class="ambient-arrow">→</div>
+      <div class="ambient-step">
+        <div class="ambient-step-num">04</div>
+        <div class="ambient-step-title">Broker approves</div>
+        <div class="ambient-step-desc">One tap. The Task, stage update, and Opportunity note write to Salesforce instantly. The broker never opened a browser, never typed a stage, never logged in.</div>
+      </div>
+      <div class="ambient-arrow">→</div>
+      <div class="ambient-step">
+        <div class="ambient-step-num">05</div>
+        <div class="ambient-step-title">Data model is current</div>
+        <div class="ambient-step-desc">The pipeline reflects reality. The lease expiry agent fires on time. The requirement matcher has fresh activity signals. CRM adoption is 100% — because the broker approved, not entered.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGIC PRINCIPLES -->
+  <div class="arch-title">Why This Is the Right Architecture for M&M</div>
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="principle-number">Principle 01</div>
+      <div class="principle-title">The data model is the asset, not the UI</div>
+      <div class="principle-body">The investment M&M makes in Account, Property, Space, Opportunity, and Lease relationships is durable. It survives UI changes, Salesforce releases, and AI tool generations. Headless architecture means the UI can be replaced — the data cannot be.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-number">Principle 02</div>
+      <div class="principle-title">Agentforce requires rich data to be useful</div>
+      <div class="principle-body">AI agents are only as good as the data they read. A Requirement Matcher agent that queries a rich Requirement__c object with market, criteria, and status fields is categorically more useful than one reading flat spreadsheet rows. The data model built in Tab 1 is the prerequisite for everything in this tab.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-number">Principle 03</div>
+      <div class="principle-title">Broker adoption follows the broker's context</div>
+      <div class="principle-body">Brokers live in email, phone calls, and deal conversations. The system that captures their work most completely is the one that meets them there — not the one with the best CRM UI. Ambient capture via voice, email, and chat surfaces is how M&M achieves real adoption.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-number">Principle 04</div>
+      <div class="principle-title">Nothing writes without broker approval</div>
+      <div class="principle-body">Every ambient capture pattern — voice transcription, email context, AI suggestion — surfaces a broker approval card before writing to Salesforce. The broker is the authority, the AI is the assistant. This is the "JiLL pattern": AI drafts, broker approves, CRM stays clean.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-number">Principle 05</div>
+      <div class="principle-title">M&M does not need a bespoke system to be differentiated</div>
+      <div class="principle-body">The differentiation is not in the code — it is in the data model, the broker workflows, the AI agents, and the integration decisions that encode M&M's leasing expertise. Salesforce provides the infrastructure; M&M's competitive advantage is what lives in it.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-number">Principle 06</div>
+      <div class="principle-title">This pattern is already in production at enterprise scale</div>
+      <div class="principle-body">Leading commercial real estate firms have implemented this identical architecture — Salesforce data foundation, AI agent layer, and headless broker surfaces — with Broker Command Centers and Voice-to-CRM live in production. M&M is not the first mover; it is a fast follower with the advantage of learning from what has already shipped.</div>
+    </div>
+  </div>
+
+  <!-- CALLOUT -->
+  <div class="callout-box">
+    <h4>The CTO Decision</h4>
+    <p>The question is not "should we build or buy a CRM." The question is: <strong>should we build and maintain a custom leasing application</strong> that replicates what Salesforce already does — object model, security, mobile, AI, integrations — while simultaneously hiring an engineering team to keep it current with AI capabilities that are evolving every six months? Or should we <strong>invest that same engineering capacity in the data model, the broker workflows, and the Agentforce agents</strong> that encode M&M's actual competitive knowledge — using Salesforce as the infrastructure those agents run on? The data model in Tab 1 is the moat. The headless architecture in this tab is how brokers access it without ever knowing it's Salesforce.</p>
+  </div>
+
+</div><!-- /hl-page -->
+</div><!-- /tab-headless -->
+
+
+<!-- TOOLTIP -->
+<div id="tooltip">
+  <div class="tt-title" id="tt-title"></div>
+  <div class="tt-body" id="tt-body"></div>
+  <div class="tt-note" id="tt-note" style="display:none;"></div>
+</div>
+
+<script>
+  // TOOLTIP ENGINE
+  const tooltip = document.getElementById('tooltip');
+  const ttTitle = document.getElementById('tt-title');
+  const ttBody = document.getElementById('tt-body');
+  const ttNote = document.getElementById('tt-note');
+  let hideTimer = null;
+
+  function showTooltip(el, e) {
+    clearTimeout(hideTimer);
+    ttTitle.textContent = el.dataset.ttTitle || '';
+    ttBody.textContent = el.dataset.ttBody || '';
+    const note = el.dataset.ttNote;
+    if (note) {
+      ttNote.textContent = note;
+      ttNote.style.display = 'block';
+    } else {
+      ttNote.style.display = 'none';
+    }
+    tooltip.classList.add('visible');
+    positionTooltip(e);
+  }
+
+  function positionTooltip(e) {
+    const pad = 14;
+    const tw = tooltip.offsetWidth || 300;
+    const th = tooltip.offsetHeight || 120;
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+    if (x + tw > window.innerWidth - pad) x = e.clientX - tw - pad;
+    if (y + th > window.innerHeight - pad) y = e.clientY - th - pad;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  }
+
+  function hideTooltip() {
+    hideTimer = setTimeout(() => tooltip.classList.remove('visible'), 80);
+  }
+
+  document.addEventListener('mouseover', function(e) {
+    const icon = e.target.closest('.info-icon');
+    if (icon) showTooltip(icon, e);
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (tooltip.classList.contains('visible')) positionTooltip(e);
+  });
+  document.addEventListener('mouseout', function(e) {
+    if (e.target.closest('.info-icon')) hideTooltip();
+  });
+
+  // OPTION A / B TOGGLE
+  function setOption(opt) {
+    const btnA = document.getElementById('btn-a');
+    const btnB = document.getElementById('btn-b');
+    const panelA = document.getElementById('panel-a');
+    const panelB = document.getElementById('panel-b');
+
+    if (opt === 'A') {
+      btnA.className = 'active-a';
+      btnB.className = '';
+      panelA.style.display = 'block';
+      panelB.style.display = 'none';
+    } else {
+      btnA.className = '';
+      btnB.className = 'active-b';
+      panelA.style.display = 'none';
+      panelB.style.display = 'block';
+    }
+  }
+
+  // TAB SWITCHING
+  function switchTab(tab) {
+    document.getElementById('tab-model').classList.remove('active');
+    document.getElementById('tab-headless').classList.remove('active');
+    document.getElementById('tab-btn-model').className = 'tab-btn';
+    document.getElementById('tab-btn-headless').className = 'tab-btn';
+
+    if (tab === 'model') {
+      document.getElementById('tab-model').classList.add('active');
+      document.getElementById('tab-btn-model').className = 'tab-btn tab-active';
+    } else {
+      document.getElementById('tab-headless').classList.add('active');
+      document.getElementById('tab-btn-headless').className = 'tab-btn tab-active-headless';
+    }
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>
