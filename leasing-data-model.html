@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>M&M Leasing — Salesforce Data Architecture</title>
+<title>Brokerage on Salesforce — Leasing Platform Data Architecture</title>
 <style>
   :root {
     --bg: #0A1628;
@@ -1271,7 +1271,7 @@
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
-    <h1>Marcus &amp; Millichap — Leasing Platform Data Architecture</h1>
+    <h1>Brokerage on Salesforce — Leasing Platform Data Architecture</h1>
     <p>Scalable + Agentic Data Model &nbsp;·&nbsp; Personas: Landlord Rep + Tenant Rep</p>
   </div>
   <div class="header-right">
@@ -1391,7 +1391,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   <div class="legend-item">
     <div class="legend-dot" style="background:var(--obj-custom);"></div>
     Custom Object
-    <i class="info-icon" data-tt-title="Custom Object" data-tt-body="Objects built specifically for M&M's leasing domain — Property__c, Space__c, Requirement__c, Lease Parties. These don't exist out of the box; they're created once during implementation and then behave identically to standard objects (reports, automation, API access all work the same way).">i</i>
+    <i class="info-icon" data-tt-title="Custom Object" data-tt-body="Objects built specifically for a brokerage's leasing domain — Property__c, Space__c, Requirement__c, Lease Parties. These don't exist out of the box; they're created once during implementation and then behave identically to standard objects (reports, automation, API access all work the same way).">i</i>
   </div>
   <div class="legend-item">
     <div class="legend-dot" style="background:var(--obj-junction);"></div>
@@ -1439,7 +1439,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
       </div>
 
       <div class="node standard">
-        <div class="node-type">Standard · User <i class="info-icon" data-tt-title="Broker — Salesforce User" data-tt-body="Every leasing broker in M&M is a Salesforce User with a Role (Landlord Rep Broker, Tenant Rep Broker) and a geographic Territory. This is the actor who drives Opportunities, owns Requirement__c records, and appears on Opportunity Team Members for commission splits. User records are also what Agentforce agents surface notifications to — the data flows from CRM to the broker, not through a separate portal.">i</i></div>
+        <div class="node-type">Standard · User <i class="info-icon" data-tt-title="Broker — Salesforce User" data-tt-body="Every leasing broker is a Salesforce User with a Role (Landlord Rep Broker, Tenant Rep Broker) and a geographic Territory. This is the actor who drives Opportunities, owns Requirement__c records, and appears on Opportunity Team Members for commission splits. User records are also what Agentforce agents surface notifications to — the data flows from CRM to the broker, not through a separate portal.">i</i></div>
         <div class="node-name">Broker (User)</div>
         <ul class="node-fields">
           <li><span class="key">Role:</span> Landlord Rep / Tenant Rep</li>
@@ -1453,10 +1453,10 @@ Option B creates Opportunities from the moment a space enters the broker's book 
       </div>
 
       <div class="node standard" id="node-lead">
-        <div class="node-type">Standard · Lead <i class="info-icon" data-tt-title="Prospect vs. Lead — Open Decision" data-tt-body="The data model originally referenced a 'Prospect' object. The recommendation here is to use Salesforce's standard Lead instead. MMI.com inbound and auto-dialer contacts enter as Leads. Data Cloud resolves identity — matching a Lead against an existing Contact before conversion. Once qualified, the Lead is converted natively into an Account + Contact + Opportunity. This avoids building a custom Prospect object and the deduplication problem that comes with it." data-tt-note="Requires Data Cloud licensing decision. Must be resolved before build.">i</i></div>
+        <div class="node-type">Standard · Lead <i class="info-icon" data-tt-title="Prospect vs. Lead — Open Decision" data-tt-body="The data model originally referenced a 'Prospect' object. The recommendation here is to use Salesforce's standard Lead instead. Inbound web leads and auto-dialer contacts enter as Leads. Data Cloud resolves identity — matching a Lead against an existing Contact before conversion. Once qualified, the Lead is converted natively into an Account + Contact + Opportunity. This avoids building a custom Prospect object and the deduplication problem that comes with it." data-tt-note="Requires Data Cloud licensing decision. Must be resolved before build.">i</i></div>
         <div class="node-name">Lead</div>
         <ul class="node-fields">
-          <li><span class="key">Source:</span> MMI.com / Auto-dialer</li>
+          <li><span class="key">Source:</span> Web / Auto-dialer</li>
           <li><span class="key">Status:</span> New → Qualified</li>
           <li><span class="key">Convert →</span> Account + Contact</li>
         </ul>
@@ -1464,7 +1464,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 
       <div class="annotation">
         <strong>Three Account record types</strong>
-        Owner (property owner), Tenant (occupier), and Vendor (signage, services). Vendor Account links to Property__c and Space__c for vendor relationship tracking — distinct from the Signage Vendor system integration.
+        Owner (property owner), Tenant (occupier), and Vendor (signage, services). Vendor Account links to Property__c and Space__c for vendor relationship tracking.
       </div>
 
     </div>
@@ -1483,7 +1483,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
           <li><span class="key">Lookup:</span> Account (Vendor — optional)</li>
           <li><span class="key">Status:</span> Active / Archived</li>
           <li><span class="key">Rollups:</span> Units Live / Vacant / Expiring</li>
-          <li><span class="key">Sync:</span> MMI.com listing</li>
+          <li><span class="key">Sync:</span> Listing portal</li>
         </ul>
       </div>
 
@@ -1493,7 +1493,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
         <ul class="node-fields">
           <li><span class="key">MD to:</span> Property__c</li>
           <li><span class="key">Status:</span> Vacant → Leased</li>
-          <li><span class="key">SignageID:</span> Vendor tracking #</li>
+          <li><span class="key">Vendor ID:</span> External tracking #</li>
           <li><span class="key">ListingFields:</span> SF, rate, term</li>
         </ul>
       </div>
@@ -1563,13 +1563,13 @@ Option B creates Opportunities from the moment a space enters the broker's book 
       </div>
 
       <div class="node standard" id="node-opp-team">
-        <div class="node-type">Standard · Opp Team <i class="info-icon" data-tt-title="Opportunity Team Members — Commission Splits" data-tt-body="Every leasing broker on a deal is added as an Opportunity Team Member with a role (Primary Broker, Co-Broker, Referral). The commission split percentage lives on this record. When the deal closes, the Commission Reconciler Agentforce agent reads these splits against the FACTS integration to flag any discrepancy before the invoice goes out. This is a standard Salesforce feature — no custom object needed for basic split tracking.">i</i></div>
+        <div class="node-type">Standard · Opp Team <i class="info-icon" data-tt-title="Opportunity Team Members — Commission Splits" data-tt-body="Every leasing broker on a deal is added as an Opportunity Team Member with a role (Primary Broker, Co-Broker, Referral). The commission split percentage lives on this record. When the deal closes, the Commission Reconciler Agentforce agent reads these splits against the commission system integration to flag any discrepancy before the invoice goes out. This is a standard Salesforce feature — no custom object needed for basic split tracking.">i</i></div>
         <div class="node-name">Opp Team Members</div>
         <ul class="node-fields">
           <li><span class="key">User:</span> Broker record</li>
           <li><span class="key">Role:</span> Primary / Co-Broker / Referral</li>
           <li><span class="key">Split %:</span> Commission allocation</li>
-          <li>→ FACTS reconciliation on close</li>
+          <li>→ Commission system reconciliation on close</li>
         </ul>
       </div>
 
@@ -1724,14 +1724,14 @@ Option B creates Opportunities from the moment a space enters the broker's book 
       </div>
 
       <div class="node custom">
-        <div class="node-type">Custom · Commission__c <i class="info-icon" data-tt-title="Commission__c — Standalone Commission Record" data-tt-body="Each closed lease generates a Commission__c record that captures the full payout picture: which brokers are paid, what percentage each receives, the dollar amount calculated from the lease terms, and whether it has been reconciled against FACTS. Linking Commission__c directly to the Executed Lease (not just the Opportunity) means the payout is tied to the actual signed deal — the rent amount, the term, the effective date — not just a pipeline record. The Commission Reconciler agent reads this object before invoices go out.">i</i></div>
+        <div class="node-type">Custom · Commission__c <i class="info-icon" data-tt-title="Commission__c — Standalone Commission Record" data-tt-body="Each closed lease generates a Commission__c record that captures the full payout picture: which brokers are paid, what percentage each receives, the dollar amount calculated from the lease terms, and whether it has been reconciled against the commission system. Linking Commission__c directly to the Executed Lease (not just the Opportunity) means the payout is tied to the actual signed deal — the rent amount, the term, the effective date — not just a pipeline record. The Commission Reconciler agent reads this object before invoices go out.">i</i></div>
         <div class="node-name">Commission__c</div>
         <ul class="node-fields">
           <li><span class="key">Lookup:</span> Executed Lease Contract</li>
           <li><span class="key">Lookup:</span> Broker (User)</li>
           <li><span class="key">Split %:</span> per broker on deal</li>
           <li><span class="key">Amount:</span> calculated from lease terms</li>
-          <li><span class="key">Reconcile:</span> → FACTS integration</li>
+          <li><span class="key">Reconcile:</span> → Commission system</li>
           <li><span class="key">Agent check:</span> pre-invoice flag</li>
         </ul>
       </div>
@@ -1810,11 +1810,11 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 <div class="open-decisions">
   <div class="decision-card">
     <div class="decision-q">Can a single rep agreement cover multiple landlords?</div>
-    <div class="decision-a">This happens when a property has co-owners — e.g. two entities who jointly own a building and both need to sign. <em>Question to answer: Is this a common scenario at M&M, or a rare edge case? The answer changes how the data model handles signatory tracking.</em></div>
+    <div class="decision-a">This happens when a property has co-owners — e.g. two entities who jointly own a building and both need to sign. <em>Question to answer: Is this a common scenario in your business, or a rare edge case? The answer changes how the data model handles signatory tracking.</em></div>
   </div>
   <div class="decision-card">
-    <div class="decision-q">How should new inbound leads from MMI.com be handled?</div>
-    <div class="decision-a">Someone fills out a form on MMI.com — are they a brand-new contact, or someone already in the system under a different name or company? <em>Question to answer: Will M&M license Salesforce Data Cloud to automatically detect and merge duplicates? Without it, deduplication is a manual process.</em></div>
+    <div class="decision-q">How should new inbound leads from your website be handled?</div>
+    <div class="decision-a">Someone fills out a form — are they a brand-new contact, or someone already in the system under a different name or company? <em>Question to answer: Will you license Salesforce Data Cloud to automatically detect and merge duplicates? Without it, deduplication is a manual process.</em></div>
   </div>
   <div class="decision-card">
     <div class="decision-q">How should the total deal value roll up to the parent relationship?</div>
@@ -1826,7 +1826,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   </div>
   <div class="decision-card">
     <div class="decision-q">What do we call the sub-lease occupant?</div>
-    <div class="decision-a">When a tenant sub-leases their space to another party, that party needs a label in the system. "Sub-Tenant" is the most accurate term, but it may conflict with how M&M's brokers currently talk about these relationships. <em>Question to answer: What term do brokers use today? That term should be used in the system to avoid confusion.</em></div>
+    <div class="decision-a">When a tenant sub-leases their space to another party, that party needs a label in the system. "Sub-Tenant" is the most accurate term, but it may conflict with how your brokers currently talk about these relationships. <em>Question to answer: What term do brokers use today? That term should be used in the system to avoid confusion.</em></div>
   </div>
   <div class="decision-card">
     <div class="decision-q">How many locations can a single tenant requirement cover?</div>
@@ -1856,7 +1856,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="agent-card">
       <div class="agent-name">LOI Drafter</div>
       <div class="agent-trigger">Trigger: Opportunity Stage = LOI</div>
-      <div class="agent-reads">Reads: Space__c terms, prior Executed Lease Contracts for similar spaces, Contact Roles → drafts via Luminance</div>
+      <div class="agent-reads">Reads: Space__c terms, prior Executed Lease Contracts for similar spaces, Contact Roles → drafts via lease drafting integration</div>
     </div>
     <div class="agent-card">
       <div class="agent-name">Lease Expiry Outreach</div>
@@ -1866,7 +1866,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="agent-card">
       <div class="agent-name">Commission Reconciler</div>
       <div class="agent-trigger">Trigger: Space Lease Opp Closed Won</div>
-      <div class="agent-reads">Reads: Executed Lease terms, Opp Team Members (splits), FACTS integration → flags discrepancies before invoice</div>
+      <div class="agent-reads">Reads: Executed Lease terms, Opp Team Members (splits), commission system → flags discrepancies before invoice</div>
     </div>
   </div>
 </div>
@@ -1882,11 +1882,11 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
       <div class="agent-name" style="color:#64B5F6;">Identity Resolution</div>
       <div class="agent-trigger" style="color: var(--text-muted);">Runs continuously across inbound sources</div>
-      <div class="agent-reads">Matches a new MMI.com lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
+      <div class="agent-reads">Matches a new inbound lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
     </div>
     <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
       <div class="agent-name" style="color:#64B5F6;">Engagement Signal Harmonization</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across Auto-Dialer, MMI.com, email</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across auto-dialer, web, email</div>
       <div class="agent-reads">Combines broker call activity, website visits, and email opens into a single engagement profile per Account and Contact. This is what the At-Risk Relationship agent reads — without harmonization, signals from different systems would be invisible to each other.</div>
     </div>
     <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
@@ -1900,17 +1900,12 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 <!-- INTEGRATIONS -->
 <div class="section-label">System Integrations</div>
 <div class="integration-row">
-  <div class="int-chip">Luminance <span>LOI + Lease drafting · e-signature prep</span></div>
+  <div class="int-chip">Yardi <span>Property &amp; lease data sync · source of record for financials</span></div>
+  <div class="int-chip">Microsoft 365 <span>Outlook email logging · Teams alerts · calendar sync</span></div>
   <div class="int-chip">DocuSign <span>Contract execution · e-signature</span></div>
-  <div class="int-chip">FACTS <span>Commission payments · reconciliation</span></div>
-  <div class="int-chip">MMI.com <span>Listing sync · Space__c Status = Live</span></div>
+  <div class="int-chip">Commission System <span>Commission payments · reconciliation</span></div>
+  <div class="int-chip">Listing Portal <span>Listing sync · Space__c Status = Live</span></div>
   <div class="int-chip">Auto-Dialer <span>Activity capture · Task logging · all pipeline stages</span></div>
-  <div class="int-chip">Signage Vendor <span>Space IDs · tracking #s · recycled on Closed Won</span></div>
-</div>
-
-<!-- FOOTNOTE -->
-<div class="footnote">
-  Prepared for Marcus &amp; Millichap CTO review &nbsp;·&nbsp; August 2026
 </div>
 
 </div><!-- /tab-model -->
@@ -1926,7 +1921,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   <div class="hl-hero">
     <div class="hl-hero-kicker">Salesforce Headless 360 · Agentic Architecture</div>
     <h2>Build the data model once.<br>Surface it <em>everywhere brokers work.</em></h2>
-    <p class="hl-hero-sub">The M&M leasing data model is not a CRM project. It is a data foundation — one source of truth for every Property, Space, Opportunity, and Lease. The question is not what lives in Salesforce. It is where brokers interact with it.</p>
+    <p class="hl-hero-sub">A brokerage's Salesforce data model is not a CRM project. It is a data foundation — one source of truth for every Property, Space, Opportunity, and Lease. The question is not what lives in Salesforce. It is where brokers interact with it.</p>
 
     <div class="parker-quote">
       <p>"Why should you ever log into Salesforce again?"</p>
@@ -1945,7 +1940,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="ps-col solution">
       <div class="ps-label">The solution</div>
       <h3>Brokers never have to use CRM.</h3>
-      <p>Salesforce Headless 360 decouples the data model from the interface. The rich object model M&M builds — Accounts, Properties, Spaces, Leases, Commission Splits — becomes a back-end API and AI context layer. Brokers interact with it through whatever surface they already live in: Microsoft Teams, Outlook, a voice call, a GPT-powered command interface, or a custom MMI.com broker portal.</p>
+      <p>Salesforce Headless 360 decouples the data model from the interface. The rich object model a brokerage builds — Accounts, Properties, Spaces, Leases, Commission Splits — becomes a back-end API and AI context layer. Brokers interact with it through whatever surface they already live in: Microsoft Teams, Outlook, a voice call, a GPT-powered command interface, or a custom broker portal.</p>
     </div>
   </div>
 
@@ -1979,7 +1974,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
         </div>
         <div class="surface-cell">
           <span class="surface-icon">🌐</span>
-          <div class="surface-name">MMI.com Portal</div>
+          <div class="surface-name">Custom Broker Portal</div>
           <div class="surface-desc">Custom broker portal — Experience Cloud or bespoke React app, powered by Salesforce API</div>
         </div>
       </div>
@@ -2042,7 +2037,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="surface-card">
       <span class="sc-icon">💬</span>
       <div class="sc-name">AgenticOS Broker Command Center</div>
-      <div class="sc-desc">A Slack or Teams bot powered by Agentforce. Brokers ask questions and approve actions in natural language — "close the 5th floor deal at 222 Main" updates the Opportunity, fires the Contract creation Flow, and posts the space listing change to MMI.com, all from a single message. Nothing writes to Salesforce without broker approval.</div>
+      <div class="sc-desc">A Slack or Teams bot powered by Agentforce. Brokers ask questions and approve actions in natural language — "close the 5th floor deal at 222 Main" updates the Opportunity, fires the Contract creation Flow, and syncs the space listing status, all from a single message. Nothing writes to Salesforce without broker approval.</div>
       <div class="sc-objects">
         <span class="sc-obj">Opportunity</span>
         <span class="sc-obj">Space__c</span>
@@ -2078,7 +2073,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="surface-card">
       <span class="sc-icon">🤖</span>
       <div class="sc-name">GPT / AI Natural Language Interface</div>
-      <div class="sc-desc">A broker types "which of my Tenant Rep clients have a lease expiring in the next 12 months and no renewal discussion open?" and gets an answer from live Salesforce data in seconds — without a report, a login, or a filter. Powered by the M&M data model as an API context source via Agentforce Data Cloud connections.</div>
+      <div class="sc-desc">A broker types "which of my Tenant Rep clients have a lease expiring in the next 12 months and no renewal discussion open?" and gets an answer from live Salesforce data in seconds — without a report, a login, or a filter. Powered by the brokerage data model as an API context source via Agentforce Data Cloud connections.</div>
       <div class="sc-objects">
         <span class="sc-obj">Contract</span>
         <span class="sc-obj">Opportunity</span>
@@ -2089,8 +2084,8 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 
     <div class="surface-card">
       <span class="sc-icon">🌐</span>
-      <div class="sc-name">Custom MMI.com Broker Portal</div>
-      <div class="sc-desc">A custom web application — built with React or Salesforce Experience Cloud — that surfaces the Salesforce object model in an M&M-branded interface. The broker sees their pipeline, property listings, and tenant requirements in a purpose-built UX. Salesforce is the API server; the portal is the design system. No Salesforce Lightning UI required.</div>
+      <div class="sc-name">Custom Broker Portal</div>
+      <div class="sc-desc">A custom web application — built with React or Salesforce Experience Cloud — that surfaces the Salesforce object model in a branded interface. The broker sees their pipeline, property listings, and tenant requirements in a purpose-built UX. Salesforce is the API server; the portal is the design system. No Salesforce Lightning UI required.</div>
       <div class="sc-objects">
         <span class="sc-obj">Opportunity</span>
         <span class="sc-obj">Property__c</span>
@@ -2138,12 +2133,12 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   </div>
 
   <!-- STRATEGIC PRINCIPLES -->
-  <div class="arch-title">Why This Is the Right Architecture for M&M</div>
+  <div class="arch-title">Why This Is the Right Architecture for Commercial Brokerage</div>
   <div class="principle-grid">
     <div class="principle-card">
       <div class="principle-number">Principle 01</div>
       <div class="principle-title">The data model is the asset, not the UI</div>
-      <div class="principle-body">The investment M&M makes in Account, Property, Space, Opportunity, and Lease relationships is durable. It survives UI changes, Salesforce releases, and AI tool generations. Headless architecture means the UI can be replaced — the data cannot be.</div>
+      <div class="principle-body">The investment a brokerage makes in Account, Property, Space, Opportunity, and Lease relationships is durable. It survives UI changes, Salesforce releases, and AI tool generations. Headless architecture means the UI can be replaced — the data cannot be.</div>
     </div>
     <div class="principle-card">
       <div class="principle-number">Principle 02</div>
@@ -2153,7 +2148,7 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     <div class="principle-card">
       <div class="principle-number">Principle 03</div>
       <div class="principle-title">Broker adoption follows the broker's context</div>
-      <div class="principle-body">Brokers live in email, phone calls, and deal conversations. The system that captures their work most completely is the one that meets them there — not the one with the best CRM UI. Ambient capture via voice, email, and chat surfaces is how M&M achieves real adoption.</div>
+      <div class="principle-body">Brokers live in email, phone calls, and deal conversations. The system that captures their work most completely is the one that meets them there — not the one with the best CRM UI. Ambient capture via voice, email, and chat surfaces is how brokerage firms achieve real adoption.</div>
     </div>
     <div class="principle-card">
       <div class="principle-number">Principle 04</div>
@@ -2162,20 +2157,20 @@ Option B creates Opportunities from the moment a space enters the broker's book 
     </div>
     <div class="principle-card">
       <div class="principle-number">Principle 05</div>
-      <div class="principle-title">M&M does not need a bespoke system to be differentiated</div>
-      <div class="principle-body">The differentiation is not in the code — it is in the data model, the broker workflows, the AI agents, and the integration decisions that encode M&M's leasing expertise. Salesforce provides the infrastructure; M&M's competitive advantage is what lives in it.</div>
+      <div class="principle-title">A brokerage does not need a bespoke system to be differentiated</div>
+      <div class="principle-body">The differentiation is not in the code — it is in the data model, the broker workflows, the AI agents, and the integration decisions that encode a firm's leasing expertise. Salesforce provides the infrastructure; the competitive advantage is what lives in it.</div>
     </div>
     <div class="principle-card">
       <div class="principle-number">Principle 06</div>
       <div class="principle-title">This pattern is already in production at enterprise scale</div>
-      <div class="principle-body">Leading commercial real estate firms have implemented this identical architecture — Salesforce data foundation, AI agent layer, and headless broker surfaces — with Broker Command Centers and Voice-to-CRM live in production. M&M is not the first mover; it is a fast follower with the advantage of learning from what has already shipped.</div>
+      <div class="principle-body">Leading commercial real estate firms have implemented this identical architecture — Salesforce data foundation, AI agent layer, and headless broker surfaces — with Broker Command Centers and Voice-to-CRM live in production. This pattern is proven; the advantage is in learning from what has already shipped.</div>
     </div>
   </div>
 
   <!-- CALLOUT -->
   <div class="callout-box">
     <h4>The CTO Decision</h4>
-    <p>The question is not "should we build or buy a CRM." The question is: <strong>should we build and maintain a custom leasing application</strong> that replicates what Salesforce already does — object model, security, mobile, AI, integrations — while simultaneously hiring an engineering team to keep it current with AI capabilities that are evolving every six months? Or should we <strong>invest that same engineering capacity in the data model, the broker workflows, and the Agentforce agents</strong> that encode M&M's actual competitive knowledge — using Salesforce as the infrastructure those agents run on? The data model in Tab 1 is the moat. The headless architecture in this tab is how brokers access it without ever knowing it's Salesforce.</p>
+    <p>The question is not "should we build or buy a CRM." The question is: <strong>should we build and maintain a custom leasing application</strong> that replicates what Salesforce already does — object model, security, mobile, AI, integrations — while simultaneously hiring an engineering team to keep it current with AI capabilities that are evolving every six months? Or should we <strong>invest that same engineering capacity in the data model, the broker workflows, and the Agentforce agents</strong> that encode a firm's actual competitive knowledge — using Salesforce as the infrastructure those agents run on? The data model in Tab 1 is the moat. The headless architecture in this tab is how brokers access it without ever knowing it's Salesforce.</p>
   </div>
 
 </div><!-- /hl-page -->
