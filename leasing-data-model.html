@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brokerage on Salesforce — Leasing Platform Data Architecture</title>
+<link rel="stylesheet" href="https://unpkg.com/@salesforce-ux/design-system@2.264.0/assets/styles/salesforce-lightning-design-system.min.css">
 <style>
   :root {
+    /* Brand palette */
     --bg: #0A1628;
     --bg-lane: #0D1E38;
     --bg-card: #112244;
@@ -29,6 +31,21 @@
     --connector-active: #4A8ACA;
     --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
     --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+    /* SLDS global token overrides — dark navy palette */
+    --slds-g-color-neutral-base-100: #0A1628;
+    --slds-g-color-neutral-base-95:  #0D1E38;
+    --slds-g-color-neutral-base-90:  #112244;
+    --slds-g-color-border-base-1:    #1E3A5F;
+    --slds-g-color-border-base-2:    #2A4A7A;
+    --slds-g-color-border-base-3:    #1E3A5F;
+    --slds-g-color-border-base-4:    #1E3A5F;
+    --slds-g-color-neutral-base-10:  #E8F0FE;
+    --slds-g-color-neutral-base-30:  #8BAFD4;
+    --slds-g-color-neutral-base-50:  #4A6A8A;
+    --slds-g-color-brand-base-60:    #2B8CD8;
+    --slds-g-color-brand-base-50:    #1B6CA8;
+    --slds-g-font-family-base:       -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -143,28 +160,38 @@
     text-align: right;
   }
 
-  /* LEGEND */
+  /* LEGEND — SLDS badge row */
   .legend {
     display: flex;
-    gap: 20px;
+    gap: var(--slds-g-spacing-3, 12px);
     padding: 14px 48px;
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-weight: 500;
   }
-  .legend-dot {
-    width: 10px;
-    height: 10px;
+  .legend-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--slds-g-radius-border-pill, 15rem);
+    border: 1px solid;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .legend-badge-dot {
+    width: 8px;
+    height: 8px;
     border-radius: 2px;
     flex-shrink: 0;
   }
+  .legend-badge.standard  { border-color: var(--obj-standard);  color: var(--obj-standard-light);  background: rgba(27,108,168,0.12); }
+  .legend-badge.custom    { border-color: var(--obj-custom);    color: var(--obj-custom-light);    background: rgba(0,137,123,0.12); }
+  .legend-badge.junction  { border-color: var(--obj-junction);  color: var(--obj-junction-light);  background: rgba(176,96,0,0.12); }
+  .legend-badge.agentforce{ border-color: var(--obj-agent);     color: var(--obj-agent-light);     background: rgba(106,27,154,0.12); }
 
   /* DIAGRAM AREA */
   .diagram {
@@ -600,101 +627,147 @@
   .dim { opacity: 0.25; transition: opacity 0.3s ease; }
   .bright { opacity: 1; transition: opacity 0.3s ease; }
 
-  /* ARCH NOTES BANNER */
-  .arch-notes-banner {
-    margin: 0 48px 8px;
+  /* ARCH NOTES — SLDS media object list */
+  .arch-notes-section {
+    margin: var(--slds-g-spacing-6, 24px) 48px var(--slds-g-spacing-2, 8px);
+  }
+  .arch-notes-section .slds-section__title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--slds-g-spacing-3, 12px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .arch-notes-section .slds-section__title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .arch-notes-list {
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--slds-g-radius-border-3, 8px);
     background: rgba(255,255,255,0.02);
-    padding: 16px 20px;
+    padding: var(--slds-g-spacing-4, 16px) var(--slds-g-spacing-5, 20px);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 10px 24px;
+    gap: var(--slds-g-spacing-3, 12px) var(--slds-g-spacing-6, 24px);
   }
   .arch-note-item {
     display: flex;
-    gap: 8px;
     align-items: flex-start;
+    gap: var(--slds-g-spacing-3, 10px);
     font-size: 11px;
     color: var(--text-secondary);
     line-height: 1.5;
   }
-  .arch-note-item::before {
-    content: '→';
-    color: var(--text-muted);
+  .arch-note-num {
     flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(43,140,216,0.15);
+    border: 1px solid var(--obj-standard);
+    color: var(--obj-standard-light);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 1px;
   }
-  .arch-note-item strong {
-    color: var(--text-primary);
-  }
-  /* PERSONA BANNER */
-  /* PERSONA SECTION */
+  .arch-note-item strong { color: var(--text-primary); }
+  /* PERSONA SECTION — SLDS card + grid + badge pattern */
   .persona-section {
-    margin: 24px 48px 0;
+    margin: var(--slds-g-spacing-6, 24px) 48px 0;
   }
   .persona-banner {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr 44px 1fr;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--slds-g-radius-border-3, 8px);
     overflow: hidden;
   }
+  /* slds-card override for dark theme */
+  .persona-banner .slds-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
   .persona-col {
-    padding: 24px 28px;
+    padding: var(--slds-g-spacing-6, 24px) var(--slds-g-spacing-6, 28px);
   }
   .persona-col.landlord {
-    background: linear-gradient(135deg, rgba(100,160,255,0.07) 0%, rgba(100,160,255,0.03) 100%);
+    background: rgba(43,140,216,0.05);
     border-right: 1px solid var(--border);
   }
   .persona-col.tenant {
-    background: linear-gradient(135deg, rgba(160,100,255,0.07) 0%, rgba(160,100,255,0.03) 100%);
+    background: rgba(171,71,188,0.05);
   }
   .persona-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: var(--slds-g-spacing-3, 12px);
+    margin-bottom: var(--slds-g-spacing-4, 14px);
   }
   .persona-icon {
     width: 36px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: var(--slds-g-radius-border-2, 6px);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
     flex-shrink: 0;
   }
-  .persona-col.landlord .persona-icon { background: rgba(100,160,255,0.15); }
-  .persona-col.tenant .persona-icon { background: rgba(160,100,255,0.15); }
-  .persona-header-text {}
+  .persona-col.landlord .persona-icon { background: rgba(43,140,216,0.15); }
+  .persona-col.tenant   .persona-icon { background: rgba(171,71,188,0.15); }
+  /* Persona tag uses slds-badge pattern — override for brand colors */
   .persona-tag {
+    display: inline-block;
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    margin-bottom: 2px;
+    padding: 2px 8px;
+    border-radius: var(--slds-g-radius-border-pill, 15rem);
+    border: 1px solid;
+    margin-bottom: var(--slds-g-spacing-1, 4px);
+    line-height: 1.4;
   }
-  .persona-col.landlord .persona-tag { color: var(--obj-standard-light); }
-  .persona-col.tenant .persona-tag { color: var(--obj-custom-light); }
+  .persona-col.landlord .persona-tag {
+    color: var(--obj-standard-light);
+    border-color: var(--obj-standard);
+    background: rgba(27,108,168,0.12);
+  }
+  .persona-col.tenant .persona-tag {
+    color: var(--obj-custom-light);
+    border-color: var(--obj-custom);
+    background: rgba(0,137,123,0.12);
+  }
   .persona-headline {
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--text-primary);
     line-height: 1.2;
   }
+  /* 2×2 detail cards — slds-box pattern */
   .persona-row-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
+    gap: var(--slds-g-spacing-2, 8px);
+    margin-bottom: var(--slds-g-spacing-4, 16px);
   }
   .persona-card {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 10px 12px;
+    border-radius: var(--slds-g-radius-border-2, 6px);
+    padding: var(--slds-g-spacing-2, 8px) var(--slds-g-spacing-3, 12px);
   }
   .persona-card-label {
     font-size: 8px;
@@ -710,6 +783,7 @@
     line-height: 1.35;
     font-weight: 500;
   }
+  /* Pipeline steps — slds-badge_lightest pattern */
   .persona-pipeline {
     display: flex;
     align-items: center;
@@ -721,15 +795,15 @@
     font-weight: 600;
     color: var(--text-secondary);
     white-space: nowrap;
-    padding: 5px 9px;
+    padding: 4px 9px;
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border);
-    border-radius: 5px;
+    border-radius: var(--slds-g-radius-border-pill, 15rem);
   }
   .pipeline-arrow {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--text-muted);
-    padding: 0 3px;
+    padding: 0 4px;
     flex-shrink: 0;
   }
   .persona-vs {
@@ -750,30 +824,11 @@
     text-orientation: mixed;
   }
   .persona-connector {
-    margin: 12px 0 0;
+    margin: var(--slds-g-spacing-3, 12px) 0 0;
     font-size: 12px;
     color: var(--text-muted);
     font-style: italic;
     line-height: 1.5;
-  }
-
-  .arch-notes-title {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin: 0 48px 8px;
-    margin-top: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .arch-notes-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
   }
 
   /* FOOTNOTE */
@@ -1371,38 +1426,55 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   <div class="persona-connector">The data model below supports the different workflows of Landlord Rep and Tenant Rep brokers — they share the same foundation but diverge in how the deal pipeline is structured, just like their business.</div>
 </div>
 
-<!-- ARCHITECTURE NOTES -->
-<div class="arch-notes-title">Key design decisions in this data model</div>
-<div class="arch-notes-banner">
-  <div class="arch-note-item"><span><strong>Parent–child deals:</strong> Each broker-client relationship starts with a parent "agreement" deal. Individual property transactions sit underneath it as children — so everything stays connected and reportable together.</span></div>
-  <div class="arch-note-item"><span><strong>Contact spanning companies:</strong> A contact who works across multiple companies (e.g. a tenant with multiple subsidiaries) is linked to all of them — no duplicate records needed.</span></div>
-  <div class="arch-note-item"><span><strong>Ownership transfers:</strong> Properties are linked to their owner in a way that allows ownership to change hands without losing any historical data about the building.</span></div>
-  <div class="arch-note-item"><span><strong>Space counts roll up automatically:</strong> The number of vacant, live, and expiring spaces on any property is calculated automatically — no manual tallying required.</span></div>
-  <div class="arch-note-item"><span><strong>Contract hierarchy:</strong> When a deal closes, the executed lease is automatically filed under the original rep agreement — giving a complete history of every deal ever done under one client relationship.</span></div>
+<!-- ARCHITECTURE NOTES — slds-media numbered list -->
+<div class="arch-notes-section">
+  <div class="slds-section__title">Key design decisions in this data model</div>
+  <div class="arch-notes-list">
+    <div class="arch-note-item">
+      <div class="arch-note-num">1</div>
+      <div><strong>Parent–child deals:</strong> Each broker-client relationship starts with a parent "agreement" deal. Individual property transactions sit underneath it as children — so everything stays connected and reportable together.</div>
+    </div>
+    <div class="arch-note-item">
+      <div class="arch-note-num">2</div>
+      <div><strong>Contact spanning companies:</strong> A contact who works across multiple companies (e.g. a tenant with multiple subsidiaries) is linked to all of them — no duplicate records needed.</div>
+    </div>
+    <div class="arch-note-item">
+      <div class="arch-note-num">3</div>
+      <div><strong>Ownership transfers:</strong> Properties are linked to their owner in a way that allows ownership to change hands without losing any historical data about the building.</div>
+    </div>
+    <div class="arch-note-item">
+      <div class="arch-note-num">4</div>
+      <div><strong>Space counts roll up automatically:</strong> The number of vacant, live, and expiring spaces on any property is calculated automatically — no manual tallying required.</div>
+    </div>
+    <div class="arch-note-item">
+      <div class="arch-note-num">5</div>
+      <div><strong>Contract hierarchy:</strong> When a deal closes, the executed lease is automatically filed under the original rep agreement — giving a complete history of every deal ever done under one client relationship.</div>
+    </div>
+  </div>
 </div>
 
-<!-- LEGEND -->
+<!-- LEGEND — slds-badge row -->
 <div class="legend">
-  <div class="legend-item">
-    <div class="legend-dot" style="background:var(--obj-standard);"></div>
-    Standard Salesforce Object
+  <span class="legend-badge standard">
+    <span class="legend-badge-dot" style="background:var(--obj-standard);"></span>
+    Standard Object
     <i class="info-icon" data-tt-title="Standard Salesforce Object" data-tt-body="Built-in objects that ship with every Salesforce org — Account, Contact, Opportunity, Contract, Lead. No custom development required. All standard features (reports, workflows, mobile, API) work natively on these objects.">i</i>
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:var(--obj-custom);"></div>
+  </span>
+  <span class="legend-badge custom">
+    <span class="legend-badge-dot" style="background:var(--obj-custom);"></span>
     Custom Object
     <i class="info-icon" data-tt-title="Custom Object" data-tt-body="Objects built specifically for a brokerage's leasing domain — Property__c, Space__c, Requirement__c, Lease Parties. These don't exist out of the box; they're created once during implementation and then behave identically to standard objects (reports, automation, API access all work the same way).">i</i>
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:var(--obj-junction);"></div>
+  </span>
+  <span class="legend-badge junction">
+    <span class="legend-badge-dot" style="background:var(--obj-junction);"></span>
     Junction (Link) Record
     <i class="info-icon" data-tt-title="Junction (Link) Record — What it means" data-tt-body="A junction record is a connector between two things that can each belong to many of the other. Example: one deal can involve multiple spaces, and one space can appear in multiple deals. Rather than forcing a one-to-one pairing and losing data, a junction record sits in the middle and tracks every valid combination — like a row in a spreadsheet that says 'Deal 42 involves Suite 100.' You can have as many of those rows as needed.">i</i>
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot" style="background:var(--obj-agent);"></div>
+  </span>
+  <span class="legend-badge agentforce">
+    <span class="legend-badge-dot" style="background:var(--obj-agent);"></span>
     Agentforce Layer
     <i class="info-icon" data-tt-title="Agentforce Layer" data-tt-body="Salesforce's native AI agent infrastructure. Unlike third-party AI tools that need an integration layer to reach CRM data, Agentforce agents run inside the org — they read and act on Accounts, Opportunities, Leases, and Spaces directly, with no API calls, no latency, and no extra security surface to manage.">i</i>
-  </div>
+  </span>
 </div>
 
 <!-- DIAGRAM -->
