@@ -20,6 +20,8 @@
     --obj-junction-light: #F5A623;
     --obj-agent: #6A1B9A;
     --obj-agent-light: #AB47BC;
+    --obj-datacloud: #1565C0;
+    --obj-datacloud-light: #64B5F6;
     --fork-a: #1565C0;
     --fork-b: #00695C;
     --fork-highlight: #E8445A;
@@ -50,12 +52,14 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text-primary);
-    font-family: var(--font-ui);
+  html, body {
+    background: var(--bg) !important;
+    background-color: var(--bg) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-ui) !important;
     min-height: 100vh;
     padding: 0;
+    border-radius: 0 !important;
   }
 
   /* TAB NAVIGATION */
@@ -545,9 +549,26 @@
   .agent-layer {
     margin: 0 48px 16px;
     border: 1px solid var(--obj-agent);
-    border-radius: 8px;
+    border-radius: var(--slds-g-radius-border-3, 8px);
     background: rgba(106, 27, 154, 0.07);
-    padding: 20px 24px;
+    padding: var(--slds-g-spacing-5, 20px) var(--slds-g-spacing-6, 24px);
+  }
+  .agent-layer.data-cloud {
+    border-color: var(--obj-datacloud);
+    background: rgba(21, 101, 192, 0.07);
+  }
+  .agent-layer.data-cloud .agent-layer-title {
+    color: var(--obj-datacloud-light);
+  }
+  .agent-layer.data-cloud .agent-layer-title::before {
+    background: var(--obj-datacloud-light);
+  }
+  .agent-layer.data-cloud .agent-card {
+    background: rgba(21, 101, 192, 0.12);
+    border-color: rgba(100, 181, 246, 0.3);
+  }
+  .agent-layer.data-cloud .agent-card .agent-name {
+    color: var(--obj-datacloud-light);
   }
   .agent-layer-title {
     font-size: 11px;
@@ -579,8 +600,8 @@
   .agent-card {
     background: rgba(106, 27, 154, 0.12);
     border: 1px solid rgba(171, 71, 188, 0.3);
-    border-radius: 6px;
-    padding: 10px 12px;
+    border-radius: var(--slds-g-radius-border-2, 6px);
+    padding: var(--slds-g-spacing-2, 8px) var(--slds-g-spacing-3, 12px);
   }
   .agent-card .agent-name {
     font-size: 11px;
@@ -1854,25 +1875,24 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 
 <!-- DATA CLOUD LAYER -->
 <div class="section-label">Data Cloud — Identity &amp; Harmonization Layer</div>
-<div class="agent-layer" style="border-color: #1565C0; background: rgba(21,101,192,0.07); margin-bottom: 16px;">
-  <div class="agent-layer-title" style="color: #64B5F6;">
-    <span style="background:#64B5F6;"></span>
+<div class="agent-layer data-cloud">
+  <div class="agent-layer-title">
     Data Cloud — sits beneath the data model, ensures every record is clean and unified
   </div>
   <div class="agent-grid">
-    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
-      <div class="agent-name" style="color:#64B5F6;">Identity Resolution</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Runs continuously across inbound sources</div>
+    <div class="agent-card">
+      <div class="agent-name">Identity Resolution</div>
+      <div class="agent-trigger">Runs continuously across inbound sources</div>
       <div class="agent-reads">Matches a new inbound lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
     </div>
-    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
-      <div class="agent-name" style="color:#64B5F6;">Engagement Signal Harmonization</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across auto-dialer, web, email</div>
+    <div class="agent-card">
+      <div class="agent-name">Engagement Signal Harmonization</div>
+      <div class="agent-trigger">Aggregates across auto-dialer, web, email</div>
       <div class="agent-reads">Combines broker call activity, website visits, and email opens into a single engagement profile per Account and Contact. This is what the At-Risk Relationship agent reads — without harmonization, signals from different systems would be invisible to each other.</div>
     </div>
-    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
-      <div class="agent-name" style="color:#64B5F6;">Clean Records into Agentforce</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Feeds deduplicated, governed data upward</div>
+    <div class="agent-card">
+      <div class="agent-name">Clean Records into Agentforce</div>
+      <div class="agent-trigger">Feeds deduplicated, governed data upward</div>
       <div class="agent-reads">Agentforce agents are only as good as the data they read. Data Cloud ensures every Account, Contact, and Activity the agents act on is accurate and deduplicated — not a patchwork of duplicates from five different source systems.</div>
     </div>
   </div>
