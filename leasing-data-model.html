@@ -1819,6 +1819,76 @@ Option B creates Opportunities from the moment a space enters the broker's book 
 </div>
 <!-- /DIAGRAM -->
 
+<!-- AGENTFORCE LAYER -->
+<div class="section-label">Agentforce Layer — Native Agent Use Cases</div>
+<div class="agent-layer">
+  <div class="agent-layer-title">Agentforce — reads from the same object model, no integration layer</div>
+  <div class="agent-grid">
+    <div class="agent-card">
+      <div class="agent-name">At-Risk Relationship Agent</div>
+      <div class="agent-trigger">Trigger: Account engagement score drops / no Activity in 60d</div>
+      <div class="agent-reads">Reads: Account, Contact, Activity/Task History, Opportunity history → surfaces to broker with context</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">Requirement Matcher</div>
+      <div class="agent-trigger">Trigger: New Space__c Status = Vacant</div>
+      <div class="agent-reads">Reads: Requirement__c criteria, Space__c listing fields, Property__c market data → scores fit, notifies tenant rep brokers</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">LOI Drafter</div>
+      <div class="agent-trigger">Trigger: Opportunity Stage = LOI</div>
+      <div class="agent-reads">Reads: Space__c terms, prior Executed Lease Contracts for similar spaces, Contact Roles → drafts via lease drafting integration</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">Lease Expiry Outreach</div>
+      <div class="agent-trigger">Trigger: Executed Lease end date milestone (12mo, 6mo, 3mo)</div>
+      <div class="agent-reads">Reads: Lease Contract, Tenant Account, Space__c → enrolls in renewal campaign, alerts broker</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name">Commission Reconciler</div>
+      <div class="agent-trigger">Trigger: Space Lease Opp Closed Won</div>
+      <div class="agent-reads">Reads: Executed Lease terms, Opp Team Members (splits), commission system → flags discrepancies before invoice</div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA CLOUD LAYER -->
+<div class="section-label">Data Cloud — Identity &amp; Harmonization Layer</div>
+<div class="agent-layer" style="border-color: #1565C0; background: rgba(21,101,192,0.07); margin-bottom: 16px;">
+  <div class="agent-layer-title" style="color: #64B5F6;">
+    <span style="background:#64B5F6;"></span>
+    Data Cloud — sits beneath the data model, ensures every record is clean and unified
+  </div>
+  <div class="agent-grid">
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Identity Resolution</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Runs continuously across inbound sources</div>
+      <div class="agent-reads">Matches a new inbound lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
+    </div>
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Engagement Signal Harmonization</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across auto-dialer, web, email</div>
+      <div class="agent-reads">Combines broker call activity, website visits, and email opens into a single engagement profile per Account and Contact. This is what the At-Risk Relationship agent reads — without harmonization, signals from different systems would be invisible to each other.</div>
+    </div>
+    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
+      <div class="agent-name" style="color:#64B5F6;">Clean Records into Agentforce</div>
+      <div class="agent-trigger" style="color: var(--text-muted);">Feeds deduplicated, governed data upward</div>
+      <div class="agent-reads">Agentforce agents are only as good as the data they read. Data Cloud ensures every Account, Contact, and Activity the agents act on is accurate and deduplicated — not a patchwork of duplicates from five different source systems.</div>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGRATIONS -->
+<div class="section-label">System Integrations</div>
+<div class="integration-row">
+  <div class="int-chip">Yardi <span>Property &amp; lease data sync · source of record for financials</span></div>
+  <div class="int-chip">Microsoft 365 <span>Outlook email logging · Teams alerts · calendar sync</span></div>
+  <div class="int-chip">DocuSign <span>Contract execution · e-signature</span></div>
+  <div class="int-chip">Commission System <span>Commission payments · reconciliation</span></div>
+  <div class="int-chip">Listing Portal <span>Listing sync · Space__c Status = Live</span></div>
+  <div class="int-chip">Auto-Dialer <span>Activity capture · Task logging · all pipeline stages</span></div>
+</div>
+
 <!-- FORK COMPARISON TABLE -->
 <div class="section-label">Tenant Rep Pipeline — Option A vs. Option B</div>
 <div class="decision-table-section">
@@ -1910,75 +1980,6 @@ Option B creates Opportunities from the moment a space enters the broker's book 
   </div>
 </div>
 
-<!-- AGENTFORCE LAYER -->
-<div class="section-label">Agentforce Layer — Native Agent Use Cases</div>
-<div class="agent-layer">
-  <div class="agent-layer-title">Agentforce — reads from the same object model, no integration layer</div>
-  <div class="agent-grid">
-    <div class="agent-card">
-      <div class="agent-name">At-Risk Relationship Agent</div>
-      <div class="agent-trigger">Trigger: Account engagement score drops / no Activity in 60d</div>
-      <div class="agent-reads">Reads: Account, Contact, Activity/Task History, Opportunity history → surfaces to broker with context</div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-name">Requirement Matcher</div>
-      <div class="agent-trigger">Trigger: New Space__c Status = Vacant</div>
-      <div class="agent-reads">Reads: Requirement__c criteria, Space__c listing fields, Property__c market data → scores fit, notifies tenant rep brokers</div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-name">LOI Drafter</div>
-      <div class="agent-trigger">Trigger: Opportunity Stage = LOI</div>
-      <div class="agent-reads">Reads: Space__c terms, prior Executed Lease Contracts for similar spaces, Contact Roles → drafts via lease drafting integration</div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-name">Lease Expiry Outreach</div>
-      <div class="agent-trigger">Trigger: Executed Lease end date milestone (12mo, 6mo, 3mo)</div>
-      <div class="agent-reads">Reads: Lease Contract, Tenant Account, Space__c → enrolls in renewal campaign, alerts broker</div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-name">Commission Reconciler</div>
-      <div class="agent-trigger">Trigger: Space Lease Opp Closed Won</div>
-      <div class="agent-reads">Reads: Executed Lease terms, Opp Team Members (splits), commission system → flags discrepancies before invoice</div>
-    </div>
-  </div>
-</div>
-
-<!-- DATA CLOUD LAYER -->
-<div class="section-label">Data Cloud — Identity &amp; Harmonization Layer</div>
-<div class="agent-layer" style="border-color: #1565C0; background: rgba(21,101,192,0.07); margin-bottom: 16px;">
-  <div class="agent-layer-title" style="color: #64B5F6;">
-    <span style="background:#64B5F6;"></span>
-    Data Cloud — sits beneath the data model, ensures every record is clean and unified
-  </div>
-  <div class="agent-grid">
-    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
-      <div class="agent-name" style="color:#64B5F6;">Identity Resolution</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Runs continuously across inbound sources</div>
-      <div class="agent-reads">Matches a new inbound lead or auto-dialer contact against existing Contacts before creating a duplicate. Ensures one clean record per person, not one per source system.</div>
-    </div>
-    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
-      <div class="agent-name" style="color:#64B5F6;">Engagement Signal Harmonization</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Aggregates across auto-dialer, web, email</div>
-      <div class="agent-reads">Combines broker call activity, website visits, and email opens into a single engagement profile per Account and Contact. This is what the At-Risk Relationship agent reads — without harmonization, signals from different systems would be invisible to each other.</div>
-    </div>
-    <div class="agent-card" style="background: rgba(21,101,192,0.12); border-color: rgba(100,181,246,0.3);">
-      <div class="agent-name" style="color:#64B5F6;">Clean Records into Agentforce</div>
-      <div class="agent-trigger" style="color: var(--text-muted);">Feeds deduplicated, governed data upward</div>
-      <div class="agent-reads">Agentforce agents are only as good as the data they read. Data Cloud ensures every Account, Contact, and Activity the agents act on is accurate and deduplicated — not a patchwork of duplicates from five different source systems.</div>
-    </div>
-  </div>
-</div>
-
-<!-- INTEGRATIONS -->
-<div class="section-label">System Integrations</div>
-<div class="integration-row">
-  <div class="int-chip">Yardi <span>Property &amp; lease data sync · source of record for financials</span></div>
-  <div class="int-chip">Microsoft 365 <span>Outlook email logging · Teams alerts · calendar sync</span></div>
-  <div class="int-chip">DocuSign <span>Contract execution · e-signature</span></div>
-  <div class="int-chip">Commission System <span>Commission payments · reconciliation</span></div>
-  <div class="int-chip">Listing Portal <span>Listing sync · Space__c Status = Live</span></div>
-  <div class="int-chip">Auto-Dialer <span>Activity capture · Task logging · all pipeline stages</span></div>
-</div>
 
 </div><!-- /tab-model -->
 
